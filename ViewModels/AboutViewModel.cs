@@ -22,7 +22,7 @@ namespace SupernoteDesktopClient.ViewModels
             AppVersion = $"Version - {GetAssemblyVersion()}";
         }
 
-        private string GetAssemblyVersion()
+        private static string GetAssemblyVersion()
         {
             Version versionObject = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
 

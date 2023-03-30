@@ -30,10 +30,14 @@ namespace SupernoteDesktopClient
                 // App Host
                 services.AddHostedService<ApplicationHostService>();
 
+                // Framework services
                 services.AddSingleton<IPageService, PageService>();
                 services.AddSingleton<IThemeService, ThemeService>();
                 services.AddSingleton<ITaskBarService, TaskBarService>();
                 services.AddSingleton<ISnackbarService, SnackbarService>();
+
+                // Custom services
+                services.AddSingleton<IUsbHubDetector, UsbHubDetector>();
 
                 // Service containing navigation, same as INavigationWindow... but without window
                 services.AddSingleton<INavigationService, NavigationService>();

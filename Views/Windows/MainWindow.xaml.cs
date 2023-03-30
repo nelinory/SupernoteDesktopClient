@@ -68,7 +68,7 @@ namespace SupernoteDesktopClient.Views.Windows
 
         private void RootNavigation_Navigated(INavigation sender, RoutedNavigationEventArgs e)
         {
-            if (sender is not NavigationCompact navigationCompact)
+            if (sender is not NavigationCompact)
                 return;
 
             // hide breadcrumb header for target DashboardPage

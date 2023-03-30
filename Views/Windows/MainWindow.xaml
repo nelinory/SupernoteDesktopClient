@@ -60,7 +60,7 @@
                         Navigation="{Binding ElementName=RootNavigation, Mode=OneWay}" />
                 </Grid>
             </Border>
-            <ui:Snackbar x:Name="RootSnackbar" MaxWidth="800"/>
+            <ui:Snackbar x:Name="RootSnackbar" Timeout="3000" MaxWidth="800"/>
         </Grid>
     </Grid>
 </ui:UiWindow>
