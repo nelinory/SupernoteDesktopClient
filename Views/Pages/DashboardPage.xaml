@@ -20,51 +20,70 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" VerticalAlignment="Center" FontSize="28" FontWeight="Medium" Text="{Binding Source={x:Static sys:DateTime.Today}, StringFormat='{}{0:dddd, MMMM dd, yyyy}'}"/>
-
-        <StackPanel Grid.Row="2" Margin="0,24,0,0">
-            <ui:CardAction
-                        Grid.Row="1"
-                        Margin="0,32,0,0"
+        <TextBlock Grid.Row="0" VerticalAlignment="Center" FontSize="28" FontWeight="Medium"
+                   Text="{Binding Source={x:Static sys:DateTime.Today}, StringFormat='{}{0:dddd, MMMM dd, yyyy}'}"/>
+        <ui:CardControl Grid.Row="0"
+                        Margin="0,12,0,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Stretch"
+                        Icon="{Binding ViewModel.ConnectedStatusIcon, Mode=OneWay}">
+            <ui:CardControl.Header>
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock FontSize="14" FontWeight="Medium" Text="{Binding ViewModel.ConnectedStatusText, Mode=OneWay}"/>
+                    <TextBlock FontSize="12" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Text="Connected status"/>
+                </StackPanel>
+            </ui:CardControl.Header>
+        </ui:CardControl>
+        
+        <StackPanel Grid.Row="1">
+            <ui:CardControl
+                        Margin="0,12,0,0"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
-                        Icon="Notebook24"
-                        IsChevronVisible="False">
-            <StackPanel>
-                <TextBlock
-                                Margin="0"
-                                FontSize="13"
-                                FontWeight="Medium"
-                                Text="Supernote:"
-                                TextWrapping="WrapWithOverflow" />
-                <TextBlock
-                                FontSize="10"
-                                Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                                Text="Model number"
-                                TextWrapping="WrapWithOverflow" />
-            </StackPanel>
-        </ui:CardAction>
-        <ui:CardAction
-                        Grid.Row="2"
+                        Icon="Notebook24">
+                <ui:CardControl.Header>
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock FontSize="14" FontWeight="Medium" Text="{Binding ViewModel.ModelNumber, Mode=OneWay}"/>
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Text="Model number"/>
+                    </StackPanel>
+                </ui:CardControl.Header>
+            </ui:CardControl>
+            <ui:CardControl
                         Margin="0,12,0,0"
+                        HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
-                        Icon="Info24"
-                        IsChevronVisible="False">
-            <StackPanel>
-                <TextBlock
-                                Margin="0"
-                                FontSize="13"
-                                FontWeight="Medium"
-                                Text="Serial Number:"
-                                TextWrapping="WrapWithOverflow" />
-                    <TextBlock
-                                Margin="0"
-                                FontSize="13"
-                                FontWeight="Medium"
-                                Text="Protocol:"
-                                TextWrapping="WrapWithOverflow" />
-                </StackPanel>
-        </ui:CardAction>
+                        Icon="Info24">
+                <ui:CardControl.Header>
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock FontSize="14" FontWeight="Medium" Text="{Binding ViewModel.SerialNumber, Mode=OneWay}"/>
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Text="Device serial number"/>
+                    </StackPanel>
+                </ui:CardControl.Header>
+            </ui:CardControl>
+            <ui:CardControl
+                        Margin="0,12,0,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Icon="{Binding ViewModel.BatteryPowerIcon, Mode=OneWay}">
+                <ui:CardControl.Header>
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock FontSize="14" FontWeight="Medium" Text="{Binding ViewModel.BatteryPowerText, Mode=OneWay}"/>
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Text="Battery power level"/>
+                    </StackPanel>
+                </ui:CardControl.Header>
+            </ui:CardControl>
+            <ui:CardControl
+                        Margin="0,12,0,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Icon="DataPie24">
+                <ui:CardControl.Header>
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock FontSize="14" FontWeight="Medium" Text="{Binding ViewModel.DeviceSpaceAvailable, Mode=OneWay}"/>
+                        <TextBlock FontSize="12" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Text="Device available space"/>
+                    </StackPanel>
+                </ui:CardControl.Header>
+            </ui:CardControl>            
         </StackPanel>
     </Grid>
 </ui:UiPage>
