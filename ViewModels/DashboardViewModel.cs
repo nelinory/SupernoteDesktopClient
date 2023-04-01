@@ -1,6 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using MediaDevices;
+using SupernoteDesktopClient.Extensions;
 using SupernoteDesktopClient.Services;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using Wpf.Ui.Common;
@@ -15,6 +18,7 @@ namespace SupernoteDesktopClient.ViewModels
         private readonly ISnackbarService _snackbarService;
         private readonly IUsbHubDetector _usbHubDetector;
 
+        private const string _supernoteDeviceId = "VID_2207&PID_0011";
         private const string _connectedStatusIcon_on = "PlugConnected24";
         private const string _connectedStatusIcon_off = "PlugDisconnected24";
         private const string _connectedStatusText_on = "Connected";
@@ -34,6 +38,9 @@ namespace SupernoteDesktopClient.ViewModels
 
         [ObservableProperty]
         private string _serialNumber;
+
+        [ObservableProperty]
+        private string _serialNumberMasked;
 
         [ObservableProperty]
         private string _batteryPowerIcon;
@@ -64,6 +71,12 @@ namespace SupernoteDesktopClient.ViewModels
             UpdateDashboard(false);
         }
 
+        [RelayCommand]
+        private void CopySerialNumberToClipboard(string serialNumber)
+        {
+            System.Windows.Clipboard.SetText(serialNumber);
+        }
+
         private void UsbHubDetector_UsbHubStateChanged(string deviceId, bool isConnected)
         {
             // events are invoked on a separate thread
@@ -75,24 +88,30 @@ namespace SupernoteDesktopClient.ViewModels
 
         private void UpdateDashboard(bool usbHubStateChanged)
         {
-            _mediaDevice = MediaDevice.GetDevices().FirstOrDefault();
+            // if running under visual studio, do not select specific device
+            if (Debugger.IsAttached == true)
+                _mediaDevice = MediaDevice.GetDevices().FirstOrDefault();
+            else
+                _mediaDevice = MediaDevice.GetDevices().Where(p => p.DeviceId.Contains(_supernoteDeviceId, System.StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+
             _mediaDriveInfo = null;
             if (_mediaDevice?.IsConnected == false)
             {
                 _mediaDevice.Connect();
-                _mediaDriveInfo = _mediaDevice.GetDrives().FirstOrDefault();
+                _mediaDriveInfo = _mediaDevice?.GetDrives().FirstOrDefault();
             }
 
             ConnectedStatusIcon = (_mediaDevice?.IsConnected == true) ? _connectedStatusIcon_on : _connectedStatusIcon_off;
             ConnectedStatusText = (_mediaDevice?.IsConnected == true) ? _connectedStatusText_on : _connectedStatusText_off;
-            ModelNumber = (_mediaDevice?.IsConnected == true) ? _mediaDevice?.Model : "N/A";
+            ModelNumber = (_mediaDevice?.IsConnected == true) ? _mediaDevice?.Model  : "N/A";
             SerialNumber = (_mediaDevice?.IsConnected == true) ? _mediaDevice?.SerialNumber : "N/A";
+            SerialNumberMasked = SerialNumber.MaskSerialNumber();
 
             string batteryPower;
             if (_mediaDevice?.PowerLevel < 100)
-                batteryPower = _mediaDevice?.PowerLevel.ToString().Substring(1);
+                batteryPower = _mediaDevice?.PowerLevel.ToString().Substring(0, 1);
             else
-                batteryPower = _mediaDevice?.PowerLevel.ToString().Substring(2);
+                batteryPower = _mediaDevice?.PowerLevel.ToString().Substring(0, 2);
             BatteryPowerIcon = (_mediaDevice?.IsConnected == true) ? $"Battery{batteryPower}24" : "Battery124";
             BatteryPowerText = (_mediaDevice?.IsConnected == true) ? _mediaDevice?.PowerLevel + "%" : "N/A";
 
@@ -106,7 +125,7 @@ namespace SupernoteDesktopClient.ViewModels
             if (usbHubStateChanged == true)
             {
                 if (_mediaDevice?.IsConnected == true)
-                    _snackbarService.Show("Information", $"Device: {_mediaDevice?.Model} connected.", SymbolRegular.Notebook24, ControlAppearance.Success);
+                    _snackbarService.Show("Information", $"Device: {ModelNumber} connected.", SymbolRegular.Notebook24, ControlAppearance.Success);
                 else
                     _snackbarService.Show("Information", $"Device: disconnected.", SymbolRegular.Notebook24, ControlAppearance.Caution);
             }
