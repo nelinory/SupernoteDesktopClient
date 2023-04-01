@@ -35,4 +35,8 @@
 		<Resource Include="Assets\applicationIcon-256.png" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="_Screenshots\" />
+	</ItemGroup>
+
 </Project>
