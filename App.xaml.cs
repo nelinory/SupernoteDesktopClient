@@ -1,14 +1,18 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SupernoteDesktopClient.Core.Win32Api;
 using SupernoteDesktopClient.Models;
 using SupernoteDesktopClient.Services;
+using System.Diagnostics;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
 using Wpf.Ui.Mvvm.Contracts;
 using Wpf.Ui.Mvvm.Services;
+using System.Threading;
 
 namespace SupernoteDesktopClient
 {
@@ -17,6 +21,8 @@ namespace SupernoteDesktopClient
     /// </summary>
     public partial class App
     {
+        private static readonly Mutex _appMutex = new Mutex(true, "C5FDA39A-40DA-4C77-842B-0C878F0D73C2");
+
         // The.NET Generic Host provides dependency injection, configuration, logging, and other services.
         // https://docs.microsoft.com/dotnet/core/extensions/generic-host
         // https://docs.microsoft.com/dotnet/core/extensions/dependency-injection
@@ -74,6 +80,8 @@ namespace SupernoteDesktopClient
         /// </summary>
         private async void OnStartup(object sender, StartupEventArgs e)
         {
+            ForceSingleInstance();
+
             await _host.StartAsync();
         }
 
@@ -87,12 +95,38 @@ namespace SupernoteDesktopClient
             _host.Dispose();
         }
 
+
         /// <summary>
         /// Occurs when an exception is thrown by an application but not handled.
         /// </summary>
         private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             // For more info see https://docs.microsoft.com/en-us/dotnet/api/system.windows.application.dispatcherunhandledexception?view=windowsdesktop-6.0
+        }
+
+        private static void ForceSingleInstance()
+        {
+            if (_appMutex.WaitOne(TimeSpan.Zero, true) == true)
+            {
+                _appMutex.ReleaseMutex();
+
+                // show splash window
+                SplashScreen splash = new SplashScreen("Spash.png");
+                splash.Show(true, true);
+            }
+            else
+            {
+                Process[] processes = Process.GetProcessesByName(Assembly.GetEntryAssembly().GetName().Name);
+                {
+                    if (processes.Length > 0)
+                    {
+                        NativeMethods.ShowWindowEx(processes[0].MainWindowHandle, NativeMethods.SW_RESTORE_WINDOW);
+                        NativeMethods.SetForegroundWindowEx(processes[0].MainWindowHandle);
+                    }
+                }
+
+                Application.Current.Shutdown();
+            }
         }
     }
 }

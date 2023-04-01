@@ -11,10 +11,9 @@
              d:DataContext="{d:DesignInstance local:MainWindow,
                                      IsDesignTimeCreatable=False}"
              ExtendsContentIntoTitleBar="True"
-             WindowBackdropType="Mica"
+             WindowBackdropType="Auto"
              WindowCornerPreference="Default"
              WindowStartupLocation="CenterScreen"
-             ResizeMode="CanResizeWithGrip"
              mc:Ignorable="d">
     <Grid>
         <Grid.ColumnDefinitions>
