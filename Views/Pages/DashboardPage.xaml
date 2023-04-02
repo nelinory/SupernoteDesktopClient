@@ -6,7 +6,6 @@
            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
            xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
            xmlns:sys="clr-namespace:System;assembly=mscorlib"
-           Title="DashboardPage"
            d:DataContext="{d:DesignInstance local:DashboardPage, IsDesignTimeCreatable=False}"
            d:DesignHeight="600"
            d:DesignWidth="800"
@@ -14,10 +13,9 @@
            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
            mc:Ignorable="d">
 
-    <Grid Margin="56,32"
+    <Grid Margin="56,10"
           VerticalAlignment="Top">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -32,8 +30,7 @@
                         VerticalAlignment="Stretch"
                         Icon="{Binding ViewModel.ConnectedStatusIcon, Mode=OneWay}">
             <ui:CardControl.Header>
-                <StackPanel Grid.Column="0"
-                            VerticalAlignment="Center">
+                <StackPanel VerticalAlignment="Center">
                     <TextBlock FontSize="14"
                                FontWeight="Medium"
                                Text="{Binding ViewModel.ConnectedStatusText, Mode=OneWay}" />
@@ -74,9 +71,9 @@
                                    Text="Device serial number" />
                     </StackPanel>
                 </ui:CardControl.Header>
-                <ui:Button FontSize="18"
-                           Icon="CopyAdd24"
-                           ToolTip="Copy serial number to clipboard"
+                <ui:Button Icon="CopyAdd24"
+                           Content="Copy"
+                           ToolTip="Copies the serial number to clipboard"
                            Command="{Binding ViewModel.CopySerialNumberToClipboardCommand, Mode=OneWay}"
                            CommandParameter="{Binding ViewModel.SerialNumber, Mode=OneWay}" />
             </ui:CardControl>

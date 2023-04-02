@@ -115,6 +115,7 @@ namespace SupernoteDesktopClient.ViewModels
             BatteryPowerIcon = (_mediaDevice?.IsConnected == true) ? $"Battery{batteryPower}24" : "Battery124";
             BatteryPowerText = (_mediaDevice?.IsConnected == true) ? _mediaDevice?.PowerLevel + "%" : "N/A";
 
+            // TODO: Cleanup bytes to GB conversion
             decimal freeSpace = (_mediaDriveInfo != null) ? (decimal)_mediaDriveInfo?.AvailableFreeSpace / (1024 * 1024 * 1024) : 0;
             decimal totalSpace = (_mediaDriveInfo != null) ? (decimal)_mediaDriveInfo?.TotalSize / (1024 * 1024 * 1024) : 0;
             decimal freeSpacePercent = (_mediaDriveInfo != null) ? (freeSpace / totalSpace) * 100 : 0;

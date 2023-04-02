@@ -6,7 +6,6 @@
            xmlns:local="clr-namespace:SupernoteDesktopClient.Views.Pages"
            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
            xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-           Title="SettingsPage"
            d:DataContext="{d:DesignInstance local:SettingsPage,
                                      IsDesignTimeCreatable=False}"
            d:DesignHeight="450"
@@ -50,6 +49,10 @@
                       Content="Microsoft.Extensions.Hosting"
                       Icon="Link24"
                       NavigateUri="https://www.nuget.org/packages/Microsoft.Extensions.Hosting" />
+        <ui:Hyperlink Cursor="Hand"
+                      Content="System.Management"
+                      Icon="Link24"
+                      NavigateUri="https://www.nuget.org/packages/System.Management" />        
         <ui:Hyperlink Cursor="Hand"
                       Content="Wpfui"
                       Icon="Link24"

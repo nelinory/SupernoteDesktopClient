@@ -36,6 +36,14 @@ namespace SupernoteDesktopClient.ViewModels
                     PageType = typeof(Views.Pages.DashboardPage)
                 },
                 new NavigationSeparator(),
+                new NavigationItem()
+                {
+                    Content = "Sync",
+                    PageTag = "sync",
+                    ToolTip = "Sync",
+                    Icon = SymbolRegular.ArrowSyncCircle24,
+                    PageType = typeof(Views.Pages.SyncPage)
+                },
                 //new NavigationItem()
                 //{
                 //    Content = "Note",

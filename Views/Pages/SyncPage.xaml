@@ -1,0 +1,116 @@
+﻿<ui:UiPage x:Class="SupernoteDesktopClient.Views.Pages.SyncPage"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:local="clr-namespace:SupernoteDesktopClient.Views.Pages"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+           d:DataContext="{d:DesignInstance local:SettingsPage,
+                                     IsDesignTimeCreatable=False}"
+           d:DesignHeight="450"
+           d:DesignWidth="800"
+           d:Background="{DynamicResource ApplicationBackgroundBrush}"
+           Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+           mc:Ignorable="d">
+
+    <StackPanel Margin="56,0">
+        <ui:CardControl Grid.Row="0"
+                        Margin="0,12,0,0"
+                        VerticalAlignment="Stretch">
+            <ui:CardControl.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel VerticalAlignment="Center"
+                                Grid.Column="0">
+                        <TextBlock Grid.Column="0"
+                                   FontSize="14"
+                                   FontWeight="Medium"
+                                   Text="Source folder:" />
+                        <TextBlock Grid.Column="0"
+                                   FontSize="12"
+                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                   Text="Supernote source folder" />
+                        <TextBlock Grid.Column="0"
+                                   Margin="0, 12, 0, 0"
+                                   FontSize="14"
+                                   FontWeight="Medium"
+                                   Text="Target folder:" />
+                        <TextBlock Grid.Column="0"
+                                   FontSize="12"
+                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                   Text="Local target folder" />
+                    </StackPanel>
+                    <StackPanel VerticalAlignment="Top"
+                                Grid.Column="1">
+                        <ui:TextBox Grid.Column="1"
+                                    Margin="10, 0, 0, 0"
+                                    IsReadOnly="True"
+                                    ClearButtonEnabled="False">\Supernote</ui:TextBox>
+                        <ui:TextBox Grid.Column="1"
+                                    Margin="10, 12, 0, 0"
+                                    IsReadOnly="True"
+                                    ClearButtonEnabled="False">C:\Temp\Backups</ui:TextBox>
+                    </StackPanel>
+                </Grid>
+            </ui:CardControl.Header>
+            <ui:Button Icon="ArrowSync24"
+                       Content="Synchronize"
+                       Command="{Binding ViewModel.CopySerialNumberToClipboardCommand, Mode=OneWay}"
+                       CommandParameter="{Binding ViewModel.SerialNumber, Mode=OneWay}" />
+        </ui:CardControl>
+
+        <ui:CardControl Grid.Row="0"
+                        Margin="0,12,0,0"
+                        VerticalAlignment="Stretch">
+            <ui:CardControl.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel VerticalAlignment="Top"
+                                Grid.Column="0">
+                        <TextBlock Grid.Column="0"
+                                   FontSize="14"
+                                   FontWeight="Medium"
+                                   Text="Previous backups:" />
+                    </StackPanel>
+                    <StackPanel VerticalAlignment="Top"
+                                Grid.Column="1">
+                        <ui:TextBox Grid.Column="1"
+                                    Margin="24, 0, 0, 0"
+                                    IsReadOnly="True"
+                                    ClearButtonEnabled="False">C:\Temp\Backups\sn_09232023_141532.zip</ui:TextBox>
+                        <ui:TextBox Grid.Column="1"
+                                    Margin="24, 12, 0, 0"
+                                    IsReadOnly="True"
+                                    ClearButtonEnabled="False">C:\Temp\Backups\sn_09222023_131532.zip</ui:TextBox>
+                        <ui:TextBox Grid.Column="1"
+                                    Margin="24, 12, 0, 0"
+                                    IsReadOnly="True"
+                                    ClearButtonEnabled="False">C:\Temp\Backups\sn_09212023_121532.zip</ui:TextBox>
+                        <ui:TextBox Grid.Column="1"
+                                    Margin="24, 12, 0, 0"
+                                    IsReadOnly="True"
+                                    ClearButtonEnabled="False">C:\Temp\Backups\sn_09202023_111532.zip</ui:TextBox>
+                        <ui:TextBox Grid.Column="1"
+                                    Margin="24, 12, 0, 0"
+                                    IsReadOnly="True"
+                                    ClearButtonEnabled="False">C:\Temp\Backups\sn_09192023_101532.zip</ui:TextBox>
+                        <ui:TextBox Grid.Column="1"
+                                    Margin="24, 12, 0, 0"
+                                    IsReadOnly="True"
+                                    ClearButtonEnabled="False">C:\Temp\Backups\sn_09182023_091532.zip</ui:TextBox>
+                        <ui:TextBox Grid.Column="1"
+                                    Margin="24, 12, 0, 0"
+                                    IsReadOnly="True"
+                                    ClearButtonEnabled="False">C:\Temp\Backups\sn_09172023_081532.zip</ui:TextBox>                        
+                    </StackPanel>
+                </Grid>
+            </ui:CardControl.Header>
+        </ui:CardControl>        
+    </StackPanel>
+</ui:UiPage>

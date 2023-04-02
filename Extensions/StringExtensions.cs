@@ -2,7 +2,7 @@
 
 namespace SupernoteDesktopClient.Extensions
 {
-    internal static class Extensions
+    internal static class StringExtensions
     {
         public static string MaskSerialNumber(this string value)
         {

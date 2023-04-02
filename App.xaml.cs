@@ -59,6 +59,8 @@ namespace SupernoteDesktopClient
                 services.AddScoped<ViewModels.DashboardViewModel>();
                 services.AddScoped<Views.Pages.SettingsPage>();
                 services.AddScoped<ViewModels.SettingsViewModel>();
+                services.AddScoped<Views.Pages.SyncPage>();
+                services.AddScoped<ViewModels.SyncViewModel>();
 
                 // Configuration
                 services.Configure<AppConfig>(context.Configuration.GetSection(nameof(AppConfig)));
