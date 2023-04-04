@@ -5,7 +5,6 @@
              xmlns:local="clr-namespace:SupernoteDesktopClient.Views.Windows"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-             Title="{Binding ViewModel.ApplicationTitle, Mode=OneWay}"
              Width="1200"
              Height="700"
              d:DataContext="{d:DesignInstance local:MainWindow,
@@ -29,7 +28,7 @@
                               Navigated="RootNavigation_Navigated">
         </ui:NavigationCompact>
 
-        <ui:TitleBar Title="{Binding ViewModel.ApplicationTitle, Mode=OneWay}"
+        <ui:TitleBar Title="Supernote Desktop Client"
                      Grid.Row="0"
                      Grid.Column="0"
                      Grid.ColumnSpan="2"
@@ -57,8 +56,8 @@
                 </Grid>
             </Border>
             <ui:Snackbar x:Name="RootSnackbar"
-                         Timeout="3000"
-                         MaxWidth="800" />
+                         Timeout="5000"
+                         MaxWidth="700" />
         </Grid>
     </Grid>
 </ui:UiWindow>

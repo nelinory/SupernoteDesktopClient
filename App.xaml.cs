@@ -4,15 +4,16 @@ using Microsoft.Extensions.Hosting;
 using SupernoteDesktopClient.Core.Win32Api;
 using SupernoteDesktopClient.Models;
 using SupernoteDesktopClient.Services;
-using System.Diagnostics;
+using SupernoteDesktopClient.Services.Contracts;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
 using Wpf.Ui.Mvvm.Contracts;
 using Wpf.Ui.Mvvm.Services;
-using System.Threading;
 
 namespace SupernoteDesktopClient
 {
@@ -44,6 +45,7 @@ namespace SupernoteDesktopClient
 
                 // Custom services
                 services.AddSingleton<IUsbHubDetector, UsbHubDetector>();
+                services.AddSingleton<IMediaDeviceService, MediaDeviceService>();
 
                 // Service containing navigation, same as INavigationWindow... but without window
                 services.AddSingleton<INavigationService, NavigationService>();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SupernoteDesktopClient.Services.Contracts;
+using System;
 using System.ComponentModel;
 using System.Management;
 

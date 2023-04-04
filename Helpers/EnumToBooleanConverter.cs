@@ -11,7 +11,7 @@ namespace SupernoteDesktopClient.Helpers
             if (parameter is not String enumString)
                 throw new ArgumentException("ExceptionEnumToBooleanConverterParameterMustBeAnEnumName");
 
-            if (!Enum.IsDefined(typeof(Wpf.Ui.Appearance.ThemeType), value))
+            if (Enum.IsDefined(typeof(Wpf.Ui.Appearance.ThemeType), value) == false)
                 throw new ArgumentException("ExceptionEnumToBooleanConverterValueMustBeAnEnum");
 
             var enumValue = Enum.Parse(typeof(Wpf.Ui.Appearance.ThemeType), enumString);

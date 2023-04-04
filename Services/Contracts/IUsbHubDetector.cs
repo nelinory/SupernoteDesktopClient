@@ -1,4 +1,4 @@
-﻿namespace SupernoteDesktopClient.Services
+﻿namespace SupernoteDesktopClient.Services.Contracts
 {
     public interface IUsbHubDetector
     {
