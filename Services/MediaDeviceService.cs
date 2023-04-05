@@ -1,6 +1,6 @@
 ﻿using MediaDevices;
 using SupernoteDesktopClient.Services.Contracts;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SupernoteDesktopClient.Services
@@ -9,8 +9,17 @@ namespace SupernoteDesktopClient.Services
     {
         private const string _supernoteDeviceId = "VID_2207&PID_0011";
 
-        public MediaDevice Device { get; set; }
-        public MediaDriveInfo DriveInfo { get; set; }
+        private MediaDevice _device;
+        public MediaDevice Device
+        {
+            get { return _device; }
+        }
+
+        private MediaDriveInfo _driveInfo;
+        public MediaDriveInfo DriveInfo
+        {
+            get { return _driveInfo; }
+        }
 
         public MediaDeviceService()
         {
@@ -19,21 +28,25 @@ namespace SupernoteDesktopClient.Services
 
         public void UpdateMediaDeviceInfo()
         {
-            if (Device?.IsConnected == true)
-                Device.Disconnect();
+            List<MediaDevice> tmpDevices = MediaDevice.GetDevices().ToList();
+            MediaDevice tmpDevice = tmpDevices.Where(p => p.DeviceId.Contains(_supernoteDeviceId, System.StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
 
-            // if running under visual studio, do not select specific device
-            if (Debugger.IsAttached == true)
-                Device = MediaDevice.GetDevices().FirstOrDefault();
+            if (_device == null)
+                _device = tmpDevice;
             else
-                Device = MediaDevice.GetDevices().Where(p => p.DeviceId.Contains(_supernoteDeviceId, System.StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
-
-            DriveInfo = null;
-            if (Device?.IsConnected == false)
             {
-                Device.Connect();
-                DriveInfo = Device?.GetDrives().FirstOrDefault();
+                if (_device != tmpDevice && _device.IsConnected == true)
+                    _device.Disconnect();
+
+                _device = tmpDevice;
             }
+
+            if (_device != null && _device.IsConnected == false)
+                _device.Connect();
+
+            _driveInfo = null;
+            if (_device != null && _device.IsConnected == true)
+                _driveInfo = _device.GetDrives().FirstOrDefault();
         }
     }
 }

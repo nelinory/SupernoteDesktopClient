@@ -1,12 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using MediaDevices;
 using SupernoteDesktopClient.Models;
 using SupernoteDesktopClient.Services.Contracts;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
 using System.Windows;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Common;
@@ -19,14 +15,9 @@ namespace SupernoteDesktopClient.ViewModels
 {
     public partial class MainWindowViewModel : ObservableObject
     {
-        private const string _supernoteDeviceId = "VID_2207&PID_0011";
-
         // services
         private readonly ISnackbarService _snackbarService;
         private readonly IUsbHubDetector _usbHubDetector;
-
-        private MediaDevice _mediaDevice;
-        private string _lastConnectedDeviceModel;
 
         [ObservableProperty]
         private ObservableCollection<INavigationControl> _navigationItems = new();
@@ -44,8 +35,6 @@ namespace SupernoteDesktopClient.ViewModels
             _usbHubDetector.UsbHubStateChanged += UsbHubDetector_UsbHubStateChanged;
 
             BuildNavigationMenu();
-
-            RefreshMediaDeviceInstance();
         }
 
         private void BuildNavigationMenu()
@@ -150,38 +139,16 @@ namespace SupernoteDesktopClient.ViewModels
             // events are invoked on a separate thread
             Application.Current.Dispatcher.Invoke(() =>
             {
-                RefreshMediaDeviceInstance();
-
                 // notification on usb connect/disconnect
                 // TODO: Add option in settings
                 if (isConnected == true)
-                    _snackbarService.Show("Information", $"Device: {(_lastConnectedDeviceModel != null ? _lastConnectedDeviceModel : "N/A")} connected.", SymbolRegular.Notebook24, ControlAppearance.Success);
+                    _snackbarService.Show("Information", $"Device: {deviceId} connected.", SymbolRegular.Notebook24, ControlAppearance.Success);
                 else
-                    _snackbarService.Show("Information", $"Device: {(_lastConnectedDeviceModel != null ? _lastConnectedDeviceModel : "N/A")} disconnected.", SymbolRegular.Notebook24, ControlAppearance.Caution);
+                    _snackbarService.Show("Information", $"Device disconnected.", SymbolRegular.Notebook24, ControlAppearance.Caution);
+
+                // Notify all subscribers
+                WeakReferenceMessenger.Default.Send(new MediaDeviceChangedMessage(deviceId));
             });
-        }
-
-        private void RefreshMediaDeviceInstance()
-        {
-            if (_mediaDevice != null)
-                _mediaDevice.Disconnect();
-
-            List<MediaDevice> mediaDeviceList = MediaDevice.GetDevices().ToList();
-
-            // if running under visual studio, do not select specific device
-            if (Debugger.IsAttached == true)
-                _mediaDevice = mediaDeviceList.FirstOrDefault();
-            else
-                _mediaDevice = mediaDeviceList.Where(p => p.DeviceId.Contains(_supernoteDeviceId, System.StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
-
-            if (_mediaDevice?.IsConnected == false)
-                _mediaDevice.Connect();
-
-            if (_mediaDevice != null)
-                _lastConnectedDeviceModel = _mediaDevice.Model;
-
-            // Notify all subscribers
-            WeakReferenceMessenger.Default.Send(new MediaDeviceChangedMessage(_mediaDevice));
         }
     }
 }

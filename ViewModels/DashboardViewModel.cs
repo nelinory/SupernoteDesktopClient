@@ -85,11 +85,10 @@ namespace SupernoteDesktopClient.ViewModels
             BatteryPowerIcon = (_mediaDeviceService.Device?.IsConnected == true) ? $"Battery{batteryPower}24" : "Battery124";
             BatteryPowerText = (_mediaDeviceService.Device?.IsConnected == true) ? _mediaDeviceService.Device?.PowerLevel + "%" : "N/A";
 
-            // TODO: Cleanup bytes to GB conversion
-            decimal freeSpace = (_mediaDeviceService.DriveInfo != null) ? (decimal)_mediaDeviceService.DriveInfo?.AvailableFreeSpace / (1024 * 1024 * 1024) : 0;
-            decimal totalSpace = (_mediaDeviceService.DriveInfo != null) ? (decimal)_mediaDeviceService.DriveInfo?.TotalSize / (1024 * 1024 * 1024) : 0;
-            decimal freeSpacePercent = (_mediaDeviceService.DriveInfo != null) ? (freeSpace / totalSpace) * 100 : 0;
-            DeviceSpaceAvailable = (_mediaDeviceService.DriveInfo != null) ? $"{freeSpace.ToString("F2")}GB free of {totalSpace.ToString("F2")}GB ({freeSpacePercent.ToString("F2")}% free space)" : "N/A";
+            long freeSpace = (_mediaDeviceService.DriveInfo != null) ? (long)_mediaDeviceService.DriveInfo?.AvailableFreeSpace : 0;
+            long totalSpace = (_mediaDeviceService.DriveInfo != null) ? (long)_mediaDeviceService.DriveInfo?.TotalSize : 0;
+            decimal freeSpacePercent = (_mediaDeviceService.DriveInfo != null) ? (freeSpace / (decimal)totalSpace) * 100 : 0;
+            DeviceSpaceAvailable = (_mediaDeviceService.DriveInfo != null) ? $"{freeSpace.GetDataSizeAsString()} free of {totalSpace.GetDataSizeAsString()} ({freeSpacePercent.ToString("F2")}% free space)" : "N/A";
         }
     }
 }

@@ -4,9 +4,9 @@ namespace SupernoteDesktopClient.Services.Contracts
 {
     public interface IMediaDeviceService
     {
-        MediaDevice Device { get; set; }
-        
-        MediaDriveInfo DriveInfo { get; set; }
+        MediaDevice Device { get; }
+
+        MediaDriveInfo DriveInfo { get; }
 
         void UpdateMediaDeviceInfo();
     }
