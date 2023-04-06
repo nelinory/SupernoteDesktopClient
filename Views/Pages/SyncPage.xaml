@@ -2,16 +2,21 @@
            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:converters="clr-namespace:SupernoteDesktopClient.Converters"
            xmlns:local="clr-namespace:SupernoteDesktopClient.Views.Pages"
            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
            xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-           d:DataContext="{d:DesignInstance local:SettingsPage,
+           d:DataContext="{d:DesignInstance local:SyncPage,
                                      IsDesignTimeCreatable=False}"
            d:DesignHeight="450"
            d:DesignWidth="800"
            d:Background="{DynamicResource ApplicationBackgroundBrush}"
            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
            mc:Ignorable="d">
+    <ui:UiPage.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter" />
+    </ui:UiPage.Resources>
 
     <StackPanel Margin="56,0">
         <ui:CardControl Grid.Row="0"
@@ -48,18 +53,26 @@
                         <ui:TextBox Grid.Column="1"
                                     Margin="10, 0, 0, 0"
                                     IsReadOnly="True"
-                                    ClearButtonEnabled="False">\Supernote</ui:TextBox>
+                                    ClearButtonEnabled="False"
+                                    Text="{Binding ViewModel.SourceFolder, Mode=OneWay}" />
                         <ui:TextBox Grid.Column="1"
                                     Margin="10, 12, 0, 0"
                                     IsReadOnly="True"
-                                    ClearButtonEnabled="False">C:\Temp\Backups</ui:TextBox>
+                                    ClearButtonEnabled="False"
+                                    Text="{Binding ViewModel.TargetFolder, Mode=OneWay}" />
                     </StackPanel>
                 </Grid>
             </ui:CardControl.Header>
-            <ui:Button Icon="ArrowSync24"
-                       Content="Synchronize"
-                       Command="{Binding ViewModel.CopySerialNumberToClipboardCommand, Mode=OneWay}"
-                       CommandParameter="{Binding ViewModel.SerialNumber, Mode=OneWay}" />
+            <Grid Width="120px">
+                <ui:Button Icon="ArrowSync24"
+                           Content="Synchronize"
+                           IsEnabled="{Binding ViewModel.IsSyncEnabled}"
+                           Command="{Binding ViewModel.ExecuteSyncCommand, Mode=OneWay}"
+                           Visibility="{Binding ViewModel.IsSyncRunning, Converter={StaticResource BoolToVisibilityInversionConverter}}" />
+                <ui:ProgressRing Visibility="{Binding ViewModel.IsSyncRunning, Converter={StaticResource BoolToVisibilityConverter}}"
+                                 IsIndeterminate="True"
+                                 HorizontalAlignment="Center" />
+            </Grid>
         </ui:CardControl>
 
         <ui:CardControl Grid.Row="0"
@@ -80,37 +93,9 @@
                     </StackPanel>
                     <StackPanel VerticalAlignment="Top"
                                 Grid.Column="1">
-                        <ui:TextBox Grid.Column="1"
-                                    Margin="24, 0, 0, 0"
-                                    IsReadOnly="True"
-                                    ClearButtonEnabled="False">C:\Temp\Backups\sn_09232023_141532.zip</ui:TextBox>
-                        <ui:TextBox Grid.Column="1"
-                                    Margin="24, 12, 0, 0"
-                                    IsReadOnly="True"
-                                    ClearButtonEnabled="False">C:\Temp\Backups\sn_09222023_131532.zip</ui:TextBox>
-                        <ui:TextBox Grid.Column="1"
-                                    Margin="24, 12, 0, 0"
-                                    IsReadOnly="True"
-                                    ClearButtonEnabled="False">C:\Temp\Backups\sn_09212023_121532.zip</ui:TextBox>
-                        <ui:TextBox Grid.Column="1"
-                                    Margin="24, 12, 0, 0"
-                                    IsReadOnly="True"
-                                    ClearButtonEnabled="False">C:\Temp\Backups\sn_09202023_111532.zip</ui:TextBox>
-                        <ui:TextBox Grid.Column="1"
-                                    Margin="24, 12, 0, 0"
-                                    IsReadOnly="True"
-                                    ClearButtonEnabled="False">C:\Temp\Backups\sn_09192023_101532.zip</ui:TextBox>
-                        <ui:TextBox Grid.Column="1"
-                                    Margin="24, 12, 0, 0"
-                                    IsReadOnly="True"
-                                    ClearButtonEnabled="False">C:\Temp\Backups\sn_09182023_091532.zip</ui:TextBox>
-                        <ui:TextBox Grid.Column="1"
-                                    Margin="24, 12, 0, 0"
-                                    IsReadOnly="True"
-                                    ClearButtonEnabled="False">C:\Temp\Backups\sn_09172023_081532.zip</ui:TextBox>                        
                     </StackPanel>
                 </Grid>
             </ui:CardControl.Header>
-        </ui:CardControl>        
+        </ui:CardControl>
     </StackPanel>
 </ui:UiPage>

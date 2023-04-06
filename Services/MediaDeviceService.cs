@@ -23,10 +23,10 @@ namespace SupernoteDesktopClient.Services
 
         public MediaDeviceService()
         {
-            UpdateMediaDeviceInfo();
+            RefreshMediaDeviceInfo();
         }
 
-        public void UpdateMediaDeviceInfo()
+        public void RefreshMediaDeviceInfo()
         {
             List<MediaDevice> tmpDevices = MediaDevice.GetDevices().ToList();
             MediaDevice tmpDevice = tmpDevices.Where(p => p.DeviceId.Contains(_supernoteDeviceId, System.StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();

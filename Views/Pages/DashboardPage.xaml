@@ -74,6 +74,7 @@
                 <ui:Button Icon="CopyAdd24"
                            Content="Copy"
                            ToolTip="Copies the serial number to clipboard"
+                           IsEnabled="{Binding ViewModel.IsSerialNumberCopyEnabled, Mode=OneWay}"
                            Command="{Binding ViewModel.CopySerialNumberToClipboardCommand, Mode=OneWay}"
                            CommandParameter="{Binding ViewModel.SerialNumber, Mode=OneWay}" />
             </ui:CardControl>

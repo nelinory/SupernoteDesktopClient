@@ -20,6 +20,9 @@ namespace SupernoteDesktopClient.ViewModels
         private const string _connectedStatusText_off = "Disconnected";
 
         [ObservableProperty]
+        private bool _isSerialNumberCopyEnabled;
+
+        [ObservableProperty]
         private string _connectedStatusIcon;
 
         [ObservableProperty]
@@ -67,9 +70,9 @@ namespace SupernoteDesktopClient.ViewModels
             System.Windows.Clipboard.SetText(serialNumber);
         }
 
-        public void UpdateDashboard()
+        private void UpdateDashboard()
         {
-            _mediaDeviceService.UpdateMediaDeviceInfo();
+            _mediaDeviceService.RefreshMediaDeviceInfo();
 
             ConnectedStatusIcon = (_mediaDeviceService.Device?.IsConnected == true) ? _connectedStatusIcon_on : _connectedStatusIcon_off;
             ConnectedStatusText = (_mediaDeviceService.Device?.IsConnected == true) ? _connectedStatusText_on : _connectedStatusText_off;
@@ -89,6 +92,8 @@ namespace SupernoteDesktopClient.ViewModels
             long totalSpace = (_mediaDeviceService.DriveInfo != null) ? (long)_mediaDeviceService.DriveInfo?.TotalSize : 0;
             decimal freeSpacePercent = (_mediaDeviceService.DriveInfo != null) ? (freeSpace / (decimal)totalSpace) * 100 : 0;
             DeviceSpaceAvailable = (_mediaDeviceService.DriveInfo != null) ? $"{freeSpace.GetDataSizeAsString()} free of {totalSpace.GetDataSizeAsString()} ({freeSpacePercent.ToString("F2")}% free space)" : "N/A";
+
+            IsSerialNumberCopyEnabled = (_mediaDeviceService.Device != null);
         }
     }
 }

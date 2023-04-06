@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace SupernoteDesktopClient.Extensions
 {
@@ -16,6 +19,18 @@ namespace SupernoteDesktopClient.Extensions
             }
             else
                 return value;
+        }
+
+        public static string GetShortSHA1Hash(this string value)
+        {
+            string returnResult;
+
+            using (SHA1 sha1 = SHA1.Create())
+            {
+                returnResult = Convert.ToHexString(sha1.ComputeHash(Encoding.UTF8.GetBytes(value)).Take(10).ToArray());
+            }
+
+            return returnResult;
         }
     }
 }

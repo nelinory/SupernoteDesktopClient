@@ -9,7 +9,7 @@ Supernote Desktop Client (SDC) is a desktop client for Supernote paper-like tabl
   - [X] Add/Build MTP support for connected Supernote device
 - [X] Build dashboard to show basic information for connected Supernote device
 - [ ] Build a basic sync functionality - **IN-PROGRESS**
-  - [ ] Sync everything from the Supernote device to a local folder (simple copy)  
+  - [X] Sync everything from the Supernote device to a local folder (simple copy)  
   - [ ] Maintain sync backups
   
   
