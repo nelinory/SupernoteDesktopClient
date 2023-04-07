@@ -1,4 +1,7 @@
-﻿using SupernoteDesktopClient.Services.Contracts;
+﻿using SupernoteDesktopClient.Core;
+using SupernoteDesktopClient.Extensions;
+using SupernoteDesktopClient.Services.Contracts;
+using System;
 using System.IO;
 
 namespace SupernoteDesktopClient.Services
@@ -14,17 +17,24 @@ namespace SupernoteDesktopClient.Services
             _mediaDeviceService = mediaDeviceService;
         }
 
-        public bool Sync(string sourceFolder, string targetFolder)
+        public bool Sync(string sourceFolder, string targetFolder, string deviceId)
         {
             bool returnResult = false;
 
             if (_mediaDeviceService.Device != null)
             {
-                // delete existing sync if exists
                 if (Directory.Exists(targetFolder) == true)
                 {
-                    // TODO: Backup destination folder if exists
-                    ForceDeleteDirectory(targetFolder);
+                    // backup existing storage folder if exists
+                    string backupFolder = FileSystemManager.GetApplicationFolder();
+                    if (String.IsNullOrWhiteSpace(backupFolder) == false)
+                        backupFolder = Path.Combine(backupFolder, $@"Device\{_mediaDeviceService.Device.SerialNumber.GetShortSHA1Hash()}\Backup");
+
+                    // TODO: Load the number of backups to keep from settings
+                    BackupManager.Backup(targetFolder, backupFolder, 7);
+
+                    // delete existing storage folder if exists
+                    FileSystemManager.ForceDeleteDirectory(targetFolder);
                 }
 
                 var supernoteFolder = _mediaDeviceService.Device.GetDirectoryInfo(@"\");
@@ -38,7 +48,6 @@ namespace SupernoteDesktopClient.Services
                     if (Directory.Exists(destinationFolder) == false)
                         Directory.CreateDirectory(destinationFolder);
 
-                    // TODO: WaitCurson progress
                     if (File.Exists(destinationFileName) == false)
                     {
                         using (FileStream fs = new FileStream(destinationFileName, FileMode.Create, FileAccess.Write))
@@ -52,19 +61,6 @@ namespace SupernoteDesktopClient.Services
             }
 
             return returnResult;
-        }
-
-        // TODO: Refactor this one into FileSystemManager
-        public static void ForceDeleteDirectory(string path)
-        {
-            var directory = new DirectoryInfo(path) { Attributes = FileAttributes.Normal };
-
-            foreach (var info in directory.GetFileSystemInfos("*", SearchOption.AllDirectories))
-            {
-                info.Attributes = FileAttributes.Normal;
-            }
-
-            directory.Delete(true);
         }
     }
 }

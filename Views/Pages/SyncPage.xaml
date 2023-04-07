@@ -19,9 +19,9 @@
     </ui:UiPage.Resources>
 
     <StackPanel Margin="56,0">
-        <ui:CardControl Grid.Row="0"
-                        Margin="0,12,0,0"
-                        VerticalAlignment="Stretch">
+        <ui:CardControl Margin="0,12,0,0"
+                        VerticalAlignment="Stretch"
+                        Icon="DocumentSync24">
             <ui:CardControl.Header>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -33,7 +33,7 @@
                         <TextBlock Grid.Column="0"
                                    FontSize="14"
                                    FontWeight="Medium"
-                                   Text="Source folder:" />
+                                   Text="Source folder" />
                         <TextBlock Grid.Column="0"
                                    FontSize="12"
                                    Foreground="{DynamicResource TextFillColorTertiaryBrush}"
@@ -42,7 +42,7 @@
                                    Margin="0, 12, 0, 0"
                                    FontSize="14"
                                    FontWeight="Medium"
-                                   Text="Target folder:" />
+                                   Text="Target folder" />
                         <TextBlock Grid.Column="0"
                                    FontSize="12"
                                    Foreground="{DynamicResource TextFillColorTertiaryBrush}"
@@ -75,9 +75,36 @@
             </Grid>
         </ui:CardControl>
 
-        <ui:CardControl Grid.Row="0"
-                        Margin="0,12,0,0"
-                        VerticalAlignment="Stretch">
+        <ui:CardControl Margin="0,12,0,0"
+                        VerticalAlignment="Stretch"
+                        Icon="Archive24">
+            <ui:CardControl.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel VerticalAlignment="Center"
+                                Grid.Column="0">
+                        <TextBlock FontSize="14"
+                                   FontWeight="Medium"
+                                   Text="Last backup" />
+                        <TextBlock FontSize="12"
+                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                   Text="Last device backup" />
+                    </StackPanel>
+                    <ui:TextBox Grid.Column="1"
+                                Margin="38, 0, 0, 0"
+                                IsReadOnly="True"
+                                ClearButtonEnabled="False"
+                                Text="XXXXXXXXXXXXXXXXXXXXXXXXXXXX" />
+                </Grid>
+            </ui:CardControl.Header>
+        </ui:CardControl>
+
+        <ui:CardControl Margin="0,12,0,0"
+                        VerticalAlignment="Stretch"
+                        Icon="ArchiveMultiple24">
             <ui:CardControl.Header>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -89,7 +116,10 @@
                         <TextBlock Grid.Column="0"
                                    FontSize="14"
                                    FontWeight="Medium"
-                                   Text="Previous backups:" />
+                                   Text="Previous backups" />
+                        <TextBlock FontSize="12"
+                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                   Text="Previous device backups" />
                     </StackPanel>
                     <StackPanel VerticalAlignment="Top"
                                 Grid.Column="1">

@@ -2,6 +2,6 @@
 {
     public interface ISyncService
     {
-        bool Sync(string sourceFolder, string targetFolder);
+        bool Sync(string sourceFolder, string targetFolder, string deviceId);
     }
 }

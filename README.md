@@ -8,9 +8,11 @@ Supernote Desktop Client (SDC) is a desktop client for Supernote paper-like tabl
   - [X] Build USB device insert/remove detection
   - [X] Add/Build MTP support for connected Supernote device
 - [X] Build dashboard to show basic information for connected Supernote device
-- [ ] Build a basic sync functionality - **IN-PROGRESS**
+- [X] Build a basic sync functionality - **IN-PROGRESS**
   - [X] Sync everything from the Supernote device to a local folder (simple copy)  
-  - [ ] Maintain sync backups
+  - [X] Maintain sync backups
+  - [ ] Finish the Sync UI
+- [ ] Post a prototype release with how to use instructions
   
   
 ### Release Stage Goals

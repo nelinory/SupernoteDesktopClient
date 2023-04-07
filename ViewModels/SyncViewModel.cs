@@ -55,7 +55,7 @@ namespace SupernoteDesktopClient.ViewModels
             IsSyncEnabled = false;
             IsSyncRunning = true;
 
-            await Task.Run(() => _syncService.Sync(SourceFolder, TargetFolder)); 
+            await Task.Run(() => _syncService.Sync(SourceFolder, TargetFolder, _mediaDeviceService.Device.SerialNumber.GetShortSHA1Hash())); 
 
             IsSyncEnabled = true;
             IsSyncRunning = false;
@@ -69,7 +69,7 @@ namespace SupernoteDesktopClient.ViewModels
 
             string targetFolder = Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location);
             if (String.IsNullOrWhiteSpace(targetFolder) == false && _mediaDeviceService.Device != null)
-                targetFolder = Path.Combine(targetFolder, $@"Sync\{_mediaDeviceService.Device.SerialNumber.GetShortSHA1Hash()}");
+                targetFolder = Path.Combine(targetFolder, $@"Device\{_mediaDeviceService.Device.SerialNumber.GetShortSHA1Hash()}\Storage");
             else
                 targetFolder = null;
             TargetFolder = targetFolder ?? "N/A";
