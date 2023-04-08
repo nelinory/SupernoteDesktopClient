@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.IO.Compression;
 
@@ -13,6 +14,22 @@ namespace SupernoteDesktopClient.Core
 
             if (ExecuteBackup(sourceFolder, Path.Combine(backupFolder, backupFileName)) == true)
                 PurgeOldBackups(backupFolder, Path.GetFileName(sourceFolder), maxBackupsToKeep);
+        }
+
+        public static ObservableCollection<Models.File> GetPreviousBackupsList(string backupFolder)
+        {
+            ObservableCollection<Models.File> backupFiles = new ObservableCollection<Models.File>();
+
+            if (String.IsNullOrWhiteSpace(backupFolder) == false)
+            {
+                foreach (string fileName in Directory.GetFiles(backupFolder))
+                {
+                    var fileInfo = new FileInfo(fileName);
+                    backupFiles.Add(new Models.File(fileInfo.Name, fileInfo.DirectoryName, fileInfo.CreationTime, fileInfo.Length));
+                }
+            }
+
+            return backupFiles;
         }
 
         private static bool ExecuteBackup(string sourceFolder, string backupFileName)

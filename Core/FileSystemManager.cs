@@ -32,9 +32,20 @@ namespace SupernoteDesktopClient.Core
             if (Directory.Exists(folderName) == false)
                 Directory.CreateDirectory(folderName);
         }
+
         public static string GetApplicationFolder()
         {
             return Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location);
+        }
+
+        public static DateTime? GetFolderCreateDateTime(string folder)
+        {
+            DateTime? returnResult = null;
+
+            if (String.IsNullOrWhiteSpace(folder) == false && Directory.Exists(folder) == true)
+                returnResult = Directory.GetCreationTime(folder);
+
+            return returnResult;
         }
     }
 }

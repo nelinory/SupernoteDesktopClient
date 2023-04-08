@@ -27,7 +27,6 @@
         <ui:CardControl Grid.Row="0"
                         Margin="0,12,0,0"
                         HorizontalAlignment="Right"
-                        VerticalAlignment="Stretch"
                         Icon="{Binding ViewModel.ConnectedStatusIcon, Mode=OneWay}">
             <ui:CardControl.Header>
                 <StackPanel VerticalAlignment="Center">

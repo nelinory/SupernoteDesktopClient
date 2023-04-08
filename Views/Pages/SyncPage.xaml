@@ -4,6 +4,7 @@
            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
            xmlns:converters="clr-namespace:SupernoteDesktopClient.Converters"
            xmlns:local="clr-namespace:SupernoteDesktopClient.Views.Pages"
+           xmlns:models="clr-namespace:SupernoteDesktopClient.Models"
            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
            xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
            d:DataContext="{d:DesignInstance local:SyncPage,
@@ -79,32 +80,19 @@
                         VerticalAlignment="Stretch"
                         Icon="Archive24">
             <ui:CardControl.Header>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <StackPanel VerticalAlignment="Center"
-                                Grid.Column="0">
-                        <TextBlock FontSize="14"
-                                   FontWeight="Medium"
-                                   Text="Last backup" />
-                        <TextBlock FontSize="12"
-                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                                   Text="Last device backup" />
-                    </StackPanel>
-                    <ui:TextBox Grid.Column="1"
-                                Margin="38, 0, 0, 0"
-                                IsReadOnly="True"
-                                ClearButtonEnabled="False"
-                                Text="XXXXXXXXXXXXXXXXXXXXXXXXXXXX" />
-                </Grid>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock FontSize="14"
+                               FontWeight="Medium"
+                               Text="{Binding ViewModel.LastBackupDateTime, Mode=OneWay}" />
+                    <TextBlock FontSize="12"
+                               Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                               Text="Last device backup" />
+                </StackPanel>
             </ui:CardControl.Header>
         </ui:CardControl>
 
         <ui:CardControl Margin="0,12,0,0"
-                        VerticalAlignment="Stretch"
-                        Icon="ArchiveMultiple24">
+                        Visibility="{Binding ViewModel.PreviousBackupsVisible, Converter={StaticResource BoolToVisibilityConverter}}">
             <ui:CardControl.Header>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -114,15 +102,57 @@
                     <StackPanel VerticalAlignment="Top"
                                 Grid.Column="0">
                         <TextBlock Grid.Column="0"
+                                   Margin="38, 0, 0, 0"
                                    FontSize="14"
                                    FontWeight="Medium"
                                    Text="Previous backups" />
-                        <TextBlock FontSize="12"
-                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                                   Text="Previous device backups" />
                     </StackPanel>
-                    <StackPanel VerticalAlignment="Top"
-                                Grid.Column="1">
+                    <StackPanel Grid.Column="1">
+                        <ScrollViewer CanContentScroll="True"
+                                      VerticalScrollBarVisibility="Auto">
+                            <ListView ItemsSource="{Binding ViewModel.Files, Mode=OneWay}"
+                                      Margin="22, -5, 0, 0">
+                                <ListView.Template>
+                                    <ControlTemplate TargetType="ListBox">
+                                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderBrush}">
+                                            <ItemsPresenter />
+                                        </Border>
+                                    </ControlTemplate>
+                                </ListView.Template>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate DataType="models:File">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="20" />
+                                                <RowDefinition Height="20" />
+                                            </Grid.RowDefinitions>
+                                            <TextBlock Grid.Row="0"
+                                                       Grid.Column="0"
+                                                       HorizontalAlignment="Left"
+                                                       FontSize="14"
+                                                       FontWeight="Medium"
+                                                       TextWrapping="WrapWithOverflow"
+                                                       Text="{Binding Name}" />
+                                            <TextBlock Grid.Row="1"
+                                                       Grid.Column="0"
+                                                       HorizontalAlignment="Left"
+                                                       FontSize="12"
+                                                       Text="{Binding CreateDateTime}" />
+                                            <TextBlock Grid.Row="0"
+                                                       Grid.Column="1"
+                                                       HorizontalAlignment="Right"
+                                                       FontSize="14"
+                                                       Text="{Binding SizeAsString}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </ScrollViewer>
                     </StackPanel>
                 </Grid>
             </ui:CardControl.Header>

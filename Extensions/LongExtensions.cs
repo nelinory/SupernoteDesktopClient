@@ -15,7 +15,7 @@
                 bytes /= 1024;
             }
 
-            return string.Format("{0:0.##}{1}", bytes, DataSizes[order]);
+            return string.Format("{0:0.## }{1}", bytes, DataSizes[order]);
         }
     }
 }

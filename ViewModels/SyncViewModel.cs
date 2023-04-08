@@ -1,12 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using SupernoteDesktopClient.Core;
 using SupernoteDesktopClient.Extensions;
 using SupernoteDesktopClient.Models;
 using SupernoteDesktopClient.Services.Contracts;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 using Wpf.Ui.Common.Interfaces;
 
@@ -29,6 +31,15 @@ namespace SupernoteDesktopClient.ViewModels
 
         [ObservableProperty]
         private string _targetFolder;
+
+        [ObservableProperty]
+        private string _lastBackupDateTime;
+
+        [ObservableProperty]
+        private ObservableCollection<Models.File> _files;
+
+        [ObservableProperty]
+        private bool _previousBackupsVisible;
 
         public void OnNavigatedTo()
         {
@@ -59,6 +70,8 @@ namespace SupernoteDesktopClient.ViewModels
 
             IsSyncEnabled = true;
             IsSyncRunning = false;
+
+            UpdateSync();
         }
 
         private void UpdateSync()
@@ -67,12 +80,26 @@ namespace SupernoteDesktopClient.ViewModels
 
             SourceFolder = (_mediaDeviceService.DriveInfo != null) ? _mediaDeviceService.DriveInfo.RootDirectory.FullName : "N/A";
 
-            string targetFolder = Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location);
+            string targetFolder = FileSystemManager.GetApplicationFolder();
             if (String.IsNullOrWhiteSpace(targetFolder) == false && _mediaDeviceService.Device != null)
                 targetFolder = Path.Combine(targetFolder, $@"Device\{_mediaDeviceService.Device.SerialNumber.GetShortSHA1Hash()}\Storage");
             else
                 targetFolder = null;
             TargetFolder = targetFolder ?? "N/A";
+
+            // Last backup DateTime
+            DateTime? lastBackupDateTime = FileSystemManager.GetFolderCreateDateTime(TargetFolder);
+            LastBackupDateTime = (lastBackupDateTime != null) ? lastBackupDateTime.GetValueOrDefault().ToString("F") : "N/A";
+
+            // Previous backups
+            string backupFolder = FileSystemManager.GetApplicationFolder();
+            if (String.IsNullOrWhiteSpace(backupFolder) == false && _mediaDeviceService.Device != null)
+                backupFolder = Path.Combine(backupFolder, $@"Device\{_mediaDeviceService.Device.SerialNumber.GetShortSHA1Hash()}\Backup");
+            else
+                backupFolder = null;
+
+            Files = BackupManager.GetPreviousBackupsList(backupFolder);
+            PreviousBackupsVisible = Files.Count > 0;
 
             IsSyncEnabled = (_mediaDeviceService.Device != null);
             IsSyncRunning = false;

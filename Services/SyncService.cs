@@ -31,7 +31,7 @@ namespace SupernoteDesktopClient.Services
                         backupFolder = Path.Combine(backupFolder, $@"Device\{_mediaDeviceService.Device.SerialNumber.GetShortSHA1Hash()}\Backup");
 
                     // TODO: Load the number of backups to keep from settings
-                    BackupManager.Backup(targetFolder, backupFolder, 7);
+                    BackupManager.Backup(targetFolder, backupFolder, 5);
 
                     // delete existing storage folder if exists
                     FileSystemManager.ForceDeleteDirectory(targetFolder);
