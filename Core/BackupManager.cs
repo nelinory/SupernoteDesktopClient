@@ -25,7 +25,7 @@ namespace SupernoteDesktopClient.Core
                 foreach (string fileName in Directory.GetFiles(backupFolder))
                 {
                     var fileInfo = new FileInfo(fileName);
-                    backupFiles.Add(new Models.File(fileInfo.Name, fileInfo.DirectoryName, fileInfo.CreationTime, fileInfo.Length));
+                    backupFiles.Add(new Models.File(fileInfo.Name, fileInfo.DirectoryName, fileInfo.LastWriteTime, fileInfo.Length));
                 }
             }
 
