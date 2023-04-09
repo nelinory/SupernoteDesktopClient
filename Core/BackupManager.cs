@@ -20,7 +20,7 @@ namespace SupernoteDesktopClient.Core
         {
             ObservableCollection<Models.File> backupFiles = new ObservableCollection<Models.File>();
 
-            if (String.IsNullOrWhiteSpace(backupFolder) == false)
+            if (String.IsNullOrWhiteSpace(backupFolder) == false && Directory.Exists(backupFolder) == true)
             {
                 foreach (string fileName in Directory.GetFiles(backupFolder))
                 {
