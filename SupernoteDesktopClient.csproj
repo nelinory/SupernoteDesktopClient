@@ -19,22 +19,21 @@
 
 	<ItemGroup>
 		<PackageReference Include="MediaDevices" Version="1.10.0" />
-		<PackageReference Include="System.Management" Version="7.0.0" />
+		<PackageReference Include="Serilog" Version="2.12.0" />
+		<PackageReference Include="Serilog.Extensions.Hosting" Version="5.0.1" />
+		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+		<PackageReference Include="System.Management" Version="7.0.1" />
 		<PackageReference Include="WPF-UI" Version="2.0.3" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Remove="Assets\applicationIcon-1024.png" />
-		<None Remove="Assets\applicationIcon-256.png" />
 		<None Remove="Spash.png" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Resource Include="Assets\applicationIcon-1024.png" />
-		<Resource Include="Assets\applicationIcon-256.png" />
-		<Resource Include="Spash.png" />
+		<Resource Include="Assets\spash.png" />
 	</ItemGroup>
 
 	<ItemGroup>
