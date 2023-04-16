@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.IO;
 using System.Reflection;
 
@@ -19,9 +20,9 @@ namespace SupernoteDesktopClient.Core
 
                 directory.Delete(true);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // TODO: Error logging
+                Log.Error("Error while deleting directory: {EX}", ex);
             }
         }
 

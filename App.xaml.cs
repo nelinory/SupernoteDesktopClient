@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 using SupernoteDesktopClient.Core.Win32Api;
 using SupernoteDesktopClient.Models;
 using SupernoteDesktopClient.Services;
@@ -10,6 +11,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using Wpf.Ui.Mvvm.Contracts;
@@ -23,6 +25,7 @@ namespace SupernoteDesktopClient
     public partial class App
     {
         private static readonly Mutex _appMutex = new Mutex(true, "C5FDA39A-40DA-4C77-842B-0C878F0D73C2");
+        private static readonly string _logsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location), "Logs");
 
         // The.NET Generic Host provides dependency injection, configuration, logging, and other services.
         // https://docs.microsoft.com/dotnet/core/extensions/generic-host
@@ -67,7 +70,9 @@ namespace SupernoteDesktopClient
 
                 // Configuration
                 services.Configure<AppConfig>(context.Configuration.GetSection(nameof(AppConfig)));
-            }).Build();
+            })
+            .UseSerilog()
+            .Build();
 
         /// <summary>
         /// Gets registered service.
@@ -87,6 +92,10 @@ namespace SupernoteDesktopClient
         {
             ForceSingleInstance();
 
+            ConfigureLogging();
+
+            SetupUnhandledExceptionHandling();
+
             await _host.StartAsync();
         }
 
@@ -95,19 +104,14 @@ namespace SupernoteDesktopClient
         /// </summary>
         private async void OnExit(object sender, ExitEventArgs e)
         {
+            // flush all log items before exit
+            Log.CloseAndFlush();
+
             await _host.StopAsync();
 
             _host.Dispose();
         }
 
-
-        /// <summary>
-        /// Occurs when an exception is thrown by an application but not handled.
-        /// </summary>
-        private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
-        {
-            // For more info see https://docs.microsoft.com/en-us/dotnet/api/system.windows.application.dispatcherunhandledexception?view=windowsdesktop-6.0
-        }
 
         private static void ForceSingleInstance()
         {
@@ -116,7 +120,7 @@ namespace SupernoteDesktopClient
                 _appMutex.ReleaseMutex();
 
                 // show splash window
-                SplashScreen splash = new SplashScreen("Spash.png");
+                SplashScreen splash = new SplashScreen(@"assets\spash.png");
                 splash.Show(true, true);
             }
             else
@@ -132,6 +136,63 @@ namespace SupernoteDesktopClient
 
                 Application.Current.Shutdown();
             }
+        }
+
+        private static void ConfigureLogging()
+        {
+            // configure logging
+            Log.Logger = new LoggerConfiguration()
+               .WriteTo.File(Path.Combine(_logsPath, "Sdc-.log"),
+                                restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information,
+                                outputTemplate: "{Timestamp:MM/dd/yyyy HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}",
+                                rollingInterval: RollingInterval.Day,
+                                retainedFileCountLimit: 7)
+               .CreateLogger();
+        }
+
+        private void SetupUnhandledExceptionHandling()
+        {
+            // handler for all exceptions from all threads - can recover
+            AppDomain.CurrentDomain.UnhandledException += delegate (object sender, UnhandledExceptionEventArgs e)
+            {
+                ShowExceptionAndExit(e.ExceptionObject as Exception, "AppDomain.CurrentDomain.UnhandledException");
+            };
+
+            // handler for exceptions from each AppDomain that uses a task scheduler for async operations - can recover
+            TaskScheduler.UnobservedTaskException += delegate (object sender, UnobservedTaskExceptionEventArgs e)
+            {
+                ShowExceptionAndExit(e.Exception, "TaskScheduler.UnobservedTaskException");
+            };
+
+            // handler for all exceptions from a single dispatcher thread - cannot recover
+            Current.DispatcherUnhandledException += delegate (object sender, DispatcherUnhandledExceptionEventArgs e)
+            {
+                // If we are debugging, let Visual Studio handle the exception and take us to the code that threw it
+                if (Debugger.IsAttached == false)
+                {
+                    e.Handled = true;
+                    ShowExceptionAndExit(e.Exception, "Current.DispatcherUnhandledException");
+                }
+            };
+        }
+
+        private void ShowExceptionAndExit(Exception ex, string exceptionType)
+        {
+            Log.Error("Fatal application exception: {EX}", ex);
+
+            string errorMessage = $"A fatal application error occurred: {ex.Message}\n\nPlease, check error logs at:\n{_logsPath} for more details.\n\nApplication will close now.";
+            MessageBox.Show(errorMessage, $"Sdc - Fatal Error: {exceptionType}", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            try
+            {
+                // TODO: Save settings on exit
+            }
+            catch (Exception)
+            {
+                // ignore we are exiting anyway
+            }
+
+            Application.Current.Shutdown();
         }
     }
 }

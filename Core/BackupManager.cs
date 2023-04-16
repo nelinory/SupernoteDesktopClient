@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.IO.Compression;
@@ -20,13 +21,20 @@ namespace SupernoteDesktopClient.Core
         {
             ObservableCollection<Models.File> backupFiles = new ObservableCollection<Models.File>();
 
-            if (String.IsNullOrWhiteSpace(backupFolder) == false && Directory.Exists(backupFolder) == true)
+            try
             {
-                foreach (string fileName in Directory.GetFiles(backupFolder))
+                if (String.IsNullOrWhiteSpace(backupFolder) == false && Directory.Exists(backupFolder) == true)
                 {
-                    var fileInfo = new FileInfo(fileName);
-                    backupFiles.Add(new Models.File(fileInfo.Name, fileInfo.DirectoryName, fileInfo.LastWriteTime, fileInfo.Length));
+                    foreach (string fileName in Directory.GetFiles(backupFolder))
+                    {
+                        var fileInfo = new FileInfo(fileName);
+                        backupFiles.Add(new Models.File(fileInfo.Name, fileInfo.DirectoryName, fileInfo.LastWriteTime, fileInfo.Length));
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error while getting list of all backups: {EX}", ex);
             }
 
             return backupFiles;
@@ -47,9 +55,9 @@ namespace SupernoteDesktopClient.Core
                     success = true;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // TODO: Error logging
+                Log.Error("Error while executing backup: {EX}", ex);
             }
 
             return success;
@@ -75,9 +83,9 @@ namespace SupernoteDesktopClient.Core
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // TODO: Error logging
+                Log.Error("Error while purging old backups: {EX}", ex);
             }
         }
     }
