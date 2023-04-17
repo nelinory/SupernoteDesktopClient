@@ -10,23 +10,11 @@ Supernote Desktop Client (SDC) is a desktop client for Supernote paper-like tabl
 - [X] Build in backup support for up to 5 automatic backups
 - [X] Supports multiple Supernote devices, each device will have unique local sync folder
 
-### Release Stage Goals
-- [ ] Add app configuration file
-- [ ] Add app logging
-- [ ] Tray icon/menu support
-- [ ] Research Supernote .note file format and build a note to image converter (use https://github.com/jya-dev/supernote-tool as guide)
-- [ ] Integrate the .note converter into the client either as manual process or run in parallel with the main sync
-- [ ] Provide a file explorer for the following Supernote folders:
-  - [ ] Document
-  - [ ] Export 
-  - [ ] MyStyle
-  - [ ] Note
-  - [ ] Screenshot
-- [ ] Extend the sync functionality
-  - [ ] Migrate Sync to `mirror mode` instead of `copy mode`
-  - [ ] Ability to automatic sync when Supernote device is connected
+### Download
+Get the latest portable version from [Releases page](https://github.com/BartoszCichecki/LenovoLegionToolkit/releases/latest).
+Extract the zip file to a desired location. Execute `SupernoteDesktopClient.exe` from inside sdc folder. 
 
-### Problems with Microsoft .NET
+### Problems with Microsoft .NET when running the application
 
 If you do not have .NET 6 installed:
 1. Go to https://dotnet.microsoft.com/en-us/download/dotnet/6.0
@@ -43,6 +31,9 @@ and
 `Microsoft.WindowsDesktop.App 6.x.x [C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App]`  
 
 as long as both versions say 6.x.x you are good to go.
+
+### Roadmap
+For release milestones, please check the Supernote Desktop Client project board: https://github.com/users/nelinory/projects/1
   
 ### Screenshots
 ##### Dashboard
