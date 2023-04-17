@@ -11,7 +11,7 @@ Supernote Desktop Client (SDC) is a desktop client for Supernote paper-like tabl
 - [X] Supports multiple Supernote devices, each device will have unique local sync folder
 
 ### Download
-Get the latest portable version from [Releases page](https://github.com/BartoszCichecki/LenovoLegionToolkit/releases/latest).
+Get the latest portable version from [Releases page](https://github.com/nelinory/SupernoteDesktopClient/releases/latest).
 Extract the zip file to a desired location. Execute `SupernoteDesktopClient.exe` from inside sdc folder. 
 
 ### Problems with Microsoft .NET when running the application
@@ -33,7 +33,7 @@ and
 as long as both versions say 6.x.x you are good to go.
 
 ### Roadmap
-For release milestones, please check the Supernote Desktop Client project board: https://github.com/users/nelinory/projects/1
+For release milestones, please check the project board: https://github.com/users/nelinory/projects/1
   
 ### Screenshots
 ##### Dashboard
