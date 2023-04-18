@@ -36,7 +36,7 @@ namespace SupernoteDesktopClient.ViewModels
         private string _lastBackupDateTime;
 
         [ObservableProperty]
-        private ObservableCollection<Models.File> _files;
+        private ObservableCollection<Models.FileAttributes> _files;
 
         [ObservableProperty]
         private bool _previousBackupsVisible;

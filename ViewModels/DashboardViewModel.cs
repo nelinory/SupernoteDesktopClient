@@ -23,7 +23,7 @@ namespace SupernoteDesktopClient.ViewModels
         private bool _isSerialNumberCopyEnabled;
 
         [ObservableProperty]
-        private string _connectedStatusIcon;
+        private string _connectedStatusIcon = _connectedStatusIcon_off;
 
         [ObservableProperty]
         private string _connectedStatusText;
@@ -38,7 +38,7 @@ namespace SupernoteDesktopClient.ViewModels
         private string _serialNumberMasked;
 
         [ObservableProperty]
-        private string _batteryPowerIcon;
+        private string _batteryPowerIcon = "Battery124";
 
         [ObservableProperty]
         private string _batteryPowerText;

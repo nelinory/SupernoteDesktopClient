@@ -30,8 +30,7 @@ namespace SupernoteDesktopClient.Services
                     if (String.IsNullOrWhiteSpace(backupFolder) == false)
                         backupFolder = Path.Combine(backupFolder, $@"Device\{_mediaDeviceService.Device.SerialNumber.GetShortSHA1Hash()}\Backup");
 
-                    // TODO: Load the number of backups to keep from settings
-                    BackupManager.Backup(targetFolder, backupFolder, 5);
+                    BackupManager.Backup(targetFolder, backupFolder, SettingsManager.Instance.Settings.Sync.MaxDeviceBackups);
 
                     // delete existing storage folder if exists
                     FileSystemManager.ForceDeleteDirectory(targetFolder);

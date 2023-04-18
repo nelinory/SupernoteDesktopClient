@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using SupernoteDesktopClient.Core;
 using SupernoteDesktopClient.Models;
 using SupernoteDesktopClient.Services.Contracts;
 using System.Collections.ObjectModel;
@@ -132,6 +133,8 @@ namespace SupernoteDesktopClient.ViewModels
         private void ToggleTheme()
         {
             Theme.Apply(Theme.GetAppTheme() == ThemeType.Light ? ThemeType.Dark : ThemeType.Light);
+
+            SettingsManager.Instance.Settings.General.CurrentTheme = Theme.GetAppTheme().ToString();
         }
 
         private void UsbHubDetector_UsbHubStateChanged(string deviceId, bool isConnected)
@@ -140,11 +143,13 @@ namespace SupernoteDesktopClient.ViewModels
             Application.Current.Dispatcher.Invoke(() =>
             {
                 // notification on usb connect/disconnect
-                // TODO: Add option in settings
-                if (isConnected == true)
-                    _snackbarService.Show("Information", $"Device: {deviceId} connected.", SymbolRegular.Notebook24, ControlAppearance.Success);
-                else
-                    _snackbarService.Show("Information", $"Device disconnected.", SymbolRegular.Notebook24, ControlAppearance.Caution);
+                if (SettingsManager.Instance.Settings.Sync.ShowNotificationOnDeviceStateChange == true)
+                {
+                    if (isConnected == true)
+                        _snackbarService.Show("Information", $"Device: {deviceId} connected.", SymbolRegular.Notebook24, ControlAppearance.Success);
+                    else
+                        _snackbarService.Show("Information", $"Device disconnected.", SymbolRegular.Notebook24, ControlAppearance.Caution);
+                }
 
                 // Notify all subscribers
                 WeakReferenceMessenger.Default.Send(new MediaDeviceChangedMessage(deviceId));

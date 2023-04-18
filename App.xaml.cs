@@ -1,9 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using SupernoteDesktopClient.Core;
 using SupernoteDesktopClient.Core.Win32Api;
-using SupernoteDesktopClient.Models;
 using SupernoteDesktopClient.Services;
 using SupernoteDesktopClient.Services.Contracts;
 using System;
@@ -25,7 +24,7 @@ namespace SupernoteDesktopClient
     public partial class App
     {
         private static readonly Mutex _appMutex = new Mutex(true, "C5FDA39A-40DA-4C77-842B-0C878F0D73C2");
-        private static readonly string _logsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location), "Logs");
+        private static readonly string _logsPath = Path.Combine(FileSystemManager.GetApplicationFolder(), "Logs");
 
         // The.NET Generic Host provides dependency injection, configuration, logging, and other services.
         // https://docs.microsoft.com/dotnet/core/extensions/generic-host
@@ -34,7 +33,6 @@ namespace SupernoteDesktopClient
         // https://docs.microsoft.com/dotnet/core/extensions/logging
         private static readonly IHost _host = Host
             .CreateDefaultBuilder()
-            .ConfigureAppConfiguration(c => { c.SetBasePath(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)); })
             .ConfigureServices((context, services) =>
             {
                 // App Host
@@ -67,9 +65,6 @@ namespace SupernoteDesktopClient
                 services.AddScoped<ViewModels.SettingsViewModel>();
                 services.AddScoped<Views.Pages.SyncPage>();
                 services.AddScoped<ViewModels.SyncViewModel>();
-
-                // Configuration
-                services.Configure<AppConfig>(context.Configuration.GetSection(nameof(AppConfig)));
             })
             .UseSerilog()
             .Build();
@@ -111,7 +106,6 @@ namespace SupernoteDesktopClient
 
             _host.Dispose();
         }
-
 
         private static void ForceSingleInstance()
         {
@@ -185,7 +179,7 @@ namespace SupernoteDesktopClient
 
             try
             {
-                // TODO: Save settings on exit
+                SettingsManager.Instance.Save();
             }
             catch (Exception)
             {

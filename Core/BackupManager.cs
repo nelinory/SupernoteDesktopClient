@@ -17,9 +17,9 @@ namespace SupernoteDesktopClient.Core
                 PurgeOldBackups(backupFolder, Path.GetFileName(sourceFolder), maxBackupsToKeep);
         }
 
-        public static ObservableCollection<Models.File> GetPreviousBackupsList(string backupFolder)
+        public static ObservableCollection<Models.FileAttributes> GetPreviousBackupsList(string backupFolder)
         {
-            ObservableCollection<Models.File> backupFiles = new ObservableCollection<Models.File>();
+            ObservableCollection<Models.FileAttributes> backupFiles = new ObservableCollection<Models.FileAttributes>();
 
             try
             {
@@ -28,7 +28,7 @@ namespace SupernoteDesktopClient.Core
                     foreach (string fileName in Directory.GetFiles(backupFolder))
                     {
                         var fileInfo = new FileInfo(fileName);
-                        backupFiles.Add(new Models.File(fileInfo.Name, fileInfo.DirectoryName, fileInfo.LastWriteTime, fileInfo.Length));
+                        backupFiles.Add(new Models.FileAttributes(fileInfo.Name, fileInfo.DirectoryName, fileInfo.LastWriteTime, fileInfo.Length));
                     }
                 }
             }
