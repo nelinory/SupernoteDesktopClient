@@ -57,5 +57,13 @@
                       Content="MediaDevices"
                       Icon="Link24"
                       NavigateUri="https://github.com/Bassman2/MediaDevices" />
+        <ui:Hyperlink Cursor="Hand"
+                      Content="Serilog"
+                      Icon="Link24"
+                      NavigateUri="https://serilog.net" />
+        <ui:Hyperlink Cursor="Hand"
+                      Content="fluentui-system-icons"
+                      Icon="Link24"
+                      NavigateUri="https://github.com/microsoft/fluentui-system-icons" />        
     </StackPanel>
 </ui:UiPage>

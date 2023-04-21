@@ -107,5 +107,47 @@ namespace SupernoteDesktopClient.Views.Windows
             // hide breadcrumb header for target DashboardPage
             Breadcrumb.Visibility = (e.CurrentPage.PageType == typeof(DashboardPage)) ? Visibility.Collapsed : Visibility.Visible;
         }
+
+        #region NotifyIcon Context Menu
+
+        // This is not following MVVM, due to the inability of the RelayCommand to get data bind context for NotifyIcon context menu
+
+        private void NotifyIcon_LeftDoubleClick(NotifyIcon sender, RoutedEventArgs e)
+        {
+            ShowApplicationWindow();
+        }
+
+        private void NotifyIcon_MenuItemClick(object sender, RoutedEventArgs e)
+        {
+            switch (((FrameworkElement)sender).Tag.ToString())
+            {
+                case "home":
+                    Navigate(typeof(DashboardPage));
+                    break;
+                case "sync":
+                    Navigate(typeof(SyncPage));
+                    break;
+                case "settings":
+                    Navigate(typeof(SettingsPage));
+                    break;
+                default: // exit
+                    this.CloseWindow();
+                    break;
+            }
+        }
+
+        private void ShowApplicationWindow()
+        {
+            // show the minimized to tray main window
+            if (this.IsVisible == false)
+            {
+                this.ShowWindow();
+
+                if (this.WindowState == WindowState.Minimized)
+                    this.WindowState = WindowState.Normal;
+            }
+        }
+
+        #endregion
     }
 }

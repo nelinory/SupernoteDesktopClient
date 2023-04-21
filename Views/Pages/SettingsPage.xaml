@@ -13,6 +13,7 @@
            d:Background="{DynamicResource ApplicationBackgroundBrush}"
            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
            mc:Ignorable="d">
+    
     <ui:UiPage.Resources>
         <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
     </ui:UiPage.Resources>

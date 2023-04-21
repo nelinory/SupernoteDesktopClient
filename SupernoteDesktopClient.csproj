@@ -29,10 +29,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Remove="Assets\application_icon_256.png" />
 		<None Remove="Spash.png" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<Resource Include="Assets\application_icon_256.png" />
 		<Resource Include="Assets\spash.png" />
 	</ItemGroup>
 

@@ -14,6 +14,7 @@
            d:Background="{DynamicResource ApplicationBackgroundBrush}"
            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
            mc:Ignorable="d">
+    
     <ui:UiPage.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter" />
