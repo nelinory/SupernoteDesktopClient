@@ -26,6 +26,9 @@ namespace SupernoteDesktopClient.ViewModels
         [ObservableProperty]
         private ObservableCollection<INavigationControl> _navigationFooter = new();
 
+        [ObservableProperty]
+        private bool _minimizeToTrayEnabled;
+
         public MainWindowViewModel(ISnackbarService snackbarService, IUsbHubDetector usbHubDetector)
         {
             // services
@@ -36,6 +39,9 @@ namespace SupernoteDesktopClient.ViewModels
             _usbHubDetector.UsbHubStateChanged += UsbHubDetector_UsbHubStateChanged;
 
             BuildNavigationMenu();
+
+            // TODO: Refresh settings on change
+            MinimizeToTrayEnabled = SettingsManager.Instance.Settings.General.MinimizeToTrayEnabled;
         }
 
         private void BuildNavigationMenu()

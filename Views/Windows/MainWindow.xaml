@@ -32,7 +32,7 @@
 
         <ui:TitleBar Title="Supernote Desktop Client"
                      UseSnapLayout="True"
-                     MinimizeToTray="True"
+                     MinimizeToTray="{Binding ViewModel.MinimizeToTrayEnabled, Mode=OneWay}"
                      Grid.Row="0"
                      Grid.Column="0"
                      Grid.ColumnSpan="2"
@@ -58,7 +58,7 @@
                             <ui:MenuItem Header="Settings"
                                          Tag="settings"
                                          SymbolIcon="Settings24"
-                                         Click="NotifyIcon_MenuItemClick" />                            
+                                         Click="NotifyIcon_MenuItemClick" />
                             <Separator />
                             <ui:MenuItem Header="Exit"
                                          Tag="exit"

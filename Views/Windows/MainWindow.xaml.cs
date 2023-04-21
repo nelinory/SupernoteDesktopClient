@@ -140,12 +140,12 @@ namespace SupernoteDesktopClient.Views.Windows
         {
             // show the minimized to tray main window
             if (this.IsVisible == false)
-            {
                 this.ShowWindow();
+            else
+                this.Activate();
 
-                if (this.WindowState == WindowState.Minimized)
-                    this.WindowState = WindowState.Normal;
-            }
+            if (this.WindowState == WindowState.Minimized)
+                this.WindowState = WindowState.Normal;
         }
 
         #endregion
