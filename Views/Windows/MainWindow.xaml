@@ -40,7 +40,7 @@
                      Grid.ColumnSpan="2"
                      Margin="42,-3,0,0">
             <ui:TitleBar.Tray>
-                <!-- Font: Franklin Gothic Demibold / 120px #464646 -->
+                <!-- Font: Franklin Gothic Demibold / 130px #464646 -->
                 <ui:NotifyIcon Icon="pack://application:,,,/Assets/application_icon_256.png"
                                MenuOnRightClick="True"
                                FocusOnLeftClick="False"
