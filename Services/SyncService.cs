@@ -11,15 +11,25 @@ namespace SupernoteDesktopClient.Services
         // services
         private readonly IMediaDeviceService _mediaDeviceService;
 
+        public bool IsBusy { get; private set; }
+
         public SyncService(IMediaDeviceService mediaDeviceService)
         {
             // services
             _mediaDeviceService = mediaDeviceService;
+
+            IsBusy = false;
         }
 
         public bool Sync(string sourceFolder, string targetFolder, string deviceId)
         {
+            // sync in progress
+            if (IsBusy == true)
+                return false;
+
             bool returnResult = false;
+
+            IsBusy = true;
 
             if (_mediaDeviceService.Device != null)
             {
@@ -30,7 +40,7 @@ namespace SupernoteDesktopClient.Services
                     if (String.IsNullOrWhiteSpace(backupFolder) == false)
                         backupFolder = Path.Combine(backupFolder, $@"Device\{_mediaDeviceService.Device.SerialNumber.GetShortSHA1Hash()}\Backup");
 
-                    BackupManager.Backup(targetFolder, backupFolder, SettingsManager.Instance.Settings.Sync.MaxDeviceBackups);
+                    ArchiveManager.Archive(targetFolder, backupFolder, SettingsManager.Instance.Settings.Sync.MaxDeviceBackups);
 
                     // delete existing storage folder if exists
                     FileSystemManager.ForceDeleteDirectory(targetFolder);
@@ -58,6 +68,8 @@ namespace SupernoteDesktopClient.Services
 
                 returnResult = true;
             }
+
+            IsBusy = false;
 
             return returnResult;
         }

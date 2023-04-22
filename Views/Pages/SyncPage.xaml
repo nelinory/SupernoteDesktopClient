@@ -44,11 +44,11 @@
                                    Margin="0, 12, 0, 0"
                                    FontSize="14"
                                    FontWeight="Medium"
-                                   Text="Target folder" />
+                                   Text="Backup folder" />
                         <TextBlock Grid.Column="0"
                                    FontSize="12"
                                    Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                                   Text="Local target folder" />
+                                   Text="Local backup folder" />
                     </StackPanel>
                     <StackPanel VerticalAlignment="Top"
                                 Grid.Column="1">
@@ -61,7 +61,7 @@
                                     Margin="10, 12, 0, 0"
                                     IsReadOnly="True"
                                     ClearButtonEnabled="False"
-                                    Text="{Binding ViewModel.TargetFolder, Mode=OneWay}" />
+                                    Text="{Binding ViewModel.BackupFolder, Mode=OneWay}" />
                     </StackPanel>
                 </Grid>
             </ui:CardControl.Header>
@@ -93,7 +93,7 @@
         </ui:CardControl>
 
         <ui:CardControl Margin="0,12,0,0"
-                        Visibility="{Binding ViewModel.PreviousBackupsVisible, Converter={StaticResource BoolToVisibilityConverter}}">
+                        Visibility="{Binding ViewModel.ArchivesVisible, Converter={StaticResource BoolToVisibilityConverter}}">
             <ui:CardControl.Header>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -106,13 +106,13 @@
                                    Margin="38, 0, 0, 0"
                                    FontSize="14"
                                    FontWeight="Medium"
-                                   Text="Previous backups" />
+                                   Text="Archives" />
                     </StackPanel>
                     <StackPanel Grid.Column="1">
                         <ScrollViewer CanContentScroll="True"
                                       VerticalScrollBarVisibility="Auto">
-                            <ListView ItemsSource="{Binding ViewModel.Files, Mode=OneWay}"
-                                      Margin="22, -5, 0, 0">
+                            <ListView ItemsSource="{Binding ViewModel.ArchiveFiles, Mode=OneWay}"
+                                      Margin="80, -5, 0, 0">
                                 <ListView.Template>
                                     <ControlTemplate TargetType="ListBox">
                                         <Border BorderBrush="{TemplateBinding BorderBrush}"

@@ -134,6 +134,8 @@ namespace SupernoteDesktopClient.Views.Windows
                     this.CloseWindow();
                     break;
             }
+
+            ShowApplicationWindow();
         }
 
         private void ShowApplicationWindow()
