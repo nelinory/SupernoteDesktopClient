@@ -35,12 +35,12 @@ namespace SupernoteDesktopClient.Services
             {
                 if (Directory.Exists(targetFolder) == true)
                 {
-                    // backup existing storage folder if exists
-                    string backupFolder = FileSystemManager.GetApplicationFolder();
-                    if (String.IsNullOrWhiteSpace(backupFolder) == false)
-                        backupFolder = Path.Combine(backupFolder, $@"Device\{_mediaDeviceService.Device.SerialNumber.GetShortSHA1Hash()}\Backup");
+                    // archive existing storage folder if exists
+                    string archiveFolder = FileSystemManager.GetApplicationFolder();
+                    if (String.IsNullOrWhiteSpace(archiveFolder) == false)
+                        archiveFolder = Path.Combine(archiveFolder, $@"Device\{_mediaDeviceService.Device.SerialNumber.GetShortSHA1Hash()}\Backup");
 
-                    ArchiveManager.Archive(targetFolder, backupFolder, SettingsManager.Instance.Settings.Sync.MaxDeviceBackups);
+                    ArchiveManager.Archive(targetFolder, archiveFolder, SettingsManager.Instance.Settings.Sync.MaxDeviceArchives);
 
                     // delete existing storage folder if exists
                     FileSystemManager.ForceDeleteDirectory(targetFolder);

@@ -13,101 +13,102 @@
            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
            mc:Ignorable="d">
 
-    <Grid Margin="56,10"
-          VerticalAlignment="Top">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0"
-                   VerticalAlignment="Center"
-                   FontSize="28"
-                   FontWeight="Medium"
-                   Text="{Binding Source={x:Static sys:DateTime.Today}, StringFormat='{}{0:dddd, MMMM dd, yyyy}'}" />
-        <ui:CardControl Grid.Row="0"
-                        Margin="0,12,0,0"
-                        HorizontalAlignment="Right"
-                        Icon="{Binding ViewModel.ConnectedStatusIcon, Mode=OneWay}">
-            <ui:CardControl.Header>
-                <StackPanel VerticalAlignment="Center">
-                    <TextBlock FontSize="14"
-                               FontWeight="Medium"
-                               Text="{Binding ViewModel.ConnectedStatusText, Mode=OneWay}" />
-                    <TextBlock FontSize="12"
-                               Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                               Text="Connected status" />
-                </StackPanel>
-            </ui:CardControl.Header>
-        </ui:CardControl>
+    <ui:DynamicScrollViewer>
+        <Grid Margin="56,10"
+              VerticalAlignment="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0"
+                       VerticalAlignment="Center"
+                       FontSize="28"
+                       FontWeight="Medium"
+                       Text="{Binding Source={x:Static sys:DateTime.Today}, StringFormat='{}{0:dddd, MMMM dd, yyyy}'}" />
+            <ui:CardControl Grid.Row="0"
+                            Margin="0,12,0,0"
+                            HorizontalAlignment="Right"
+                            Icon="{Binding ViewModel.ConnectedStatusIcon, Mode=OneWay}">
+                <ui:CardControl.Header>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock FontSize="14"
+                                   FontWeight="Medium"
+                                   Text="{Binding ViewModel.ConnectedStatusText, Mode=OneWay}" />
+                        <TextBlock FontSize="12"
+                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                   Text="Connected status" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+            </ui:CardControl>
 
-        <StackPanel Grid.Row="1">
-            <ui:CardControl Margin="0,12,0,0"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            Icon="Notebook24">
-                <ui:CardControl.Header>
-                    <StackPanel VerticalAlignment="Center">
-                        <TextBlock FontSize="14"
-                                   FontWeight="Medium"
-                                   Text="{Binding ViewModel.ModelNumber, Mode=OneWay}" />
-                        <TextBlock FontSize="12"
-                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                                   Text="Model number" />
-                    </StackPanel>
-                </ui:CardControl.Header>
-            </ui:CardControl>
-            <ui:CardControl Margin="0,12,0,0"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            Icon="Info24">
-                <ui:CardControl.Header>
-                    <StackPanel VerticalAlignment="Center">
-                        <TextBlock FontSize="14"
-                                   FontWeight="Medium"
-                                   Text="{Binding ViewModel.SerialNumberMasked, Mode=OneWay}" />
-                        <TextBlock FontSize="12"
-                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                                   Text="Device serial number" />
-                    </StackPanel>
-                </ui:CardControl.Header>
-                <ui:Button Icon="CopyAdd24"
-                           Content="Copy"
-                           ToolTip="Copies the serial number to clipboard"
-                           IsEnabled="{Binding ViewModel.IsSerialNumberCopyEnabled, Mode=OneWay}"
-                           Command="{Binding ViewModel.CopySerialNumberToClipboardCommand, Mode=OneWay}"
-                           CommandParameter="{Binding ViewModel.SerialNumber, Mode=OneWay}" />
-            </ui:CardControl>
-            <ui:CardControl Margin="0,12,0,0"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            Icon="{Binding ViewModel.BatteryPowerIcon, Mode=OneWay}">
-                <ui:CardControl.Header>
-                    <StackPanel VerticalAlignment="Center">
-                        <TextBlock FontSize="14"
-                                   FontWeight="Medium"
-                                   Text="{Binding ViewModel.BatteryPowerText, Mode=OneWay}" />
-                        <TextBlock FontSize="12"
-                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                                   Text="Battery power level" />
-                    </StackPanel>
-                </ui:CardControl.Header>
-            </ui:CardControl>
-            <ui:CardControl Margin="0,12,0,0"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            Icon="DataPie24">
-                <ui:CardControl.Header>
-                    <StackPanel VerticalAlignment="Center">
-                        <TextBlock FontSize="14"
-                                   FontWeight="Medium"
-                                   Text="{Binding ViewModel.DeviceSpaceAvailable, Mode=OneWay}" />
-                        <TextBlock FontSize="12"
-                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                                   Text="Device available space" />
-                    </StackPanel>
-                </ui:CardControl.Header>
-            </ui:CardControl>
-            <!--<ui:CardExpander Margin="0,12,0,0"
+            <StackPanel Grid.Row="1">
+                <ui:CardControl Margin="0,12,0,0"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Icon="Notebook24">
+                    <ui:CardControl.Header>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock FontSize="14"
+                                       FontWeight="Medium"
+                                       Text="{Binding ViewModel.ModelNumber, Mode=OneWay}" />
+                            <TextBlock FontSize="12"
+                                       Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                       Text="Model number" />
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                </ui:CardControl>
+                <ui:CardControl Margin="0,12,0,0"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Icon="Info24">
+                    <ui:CardControl.Header>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock FontSize="14"
+                                       FontWeight="Medium"
+                                       Text="{Binding ViewModel.SerialNumberMasked, Mode=OneWay}" />
+                            <TextBlock FontSize="12"
+                                       Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                       Text="Device serial number" />
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                    <ui:Button Icon="CopyAdd24"
+                               Content="Copy"
+                               ToolTip="Copies the serial number to clipboard"
+                               IsEnabled="{Binding ViewModel.IsSerialNumberCopyEnabled, Mode=OneWay}"
+                               Command="{Binding ViewModel.CopySerialNumberToClipboardCommand, Mode=OneWay}"
+                               CommandParameter="{Binding ViewModel.SerialNumber, Mode=OneWay}" />
+                </ui:CardControl>
+                <ui:CardControl Margin="0,12,0,0"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Icon="{Binding ViewModel.BatteryPowerIcon, Mode=OneWay}">
+                    <ui:CardControl.Header>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock FontSize="14"
+                                       FontWeight="Medium"
+                                       Text="{Binding ViewModel.BatteryPowerText, Mode=OneWay}" />
+                            <TextBlock FontSize="12"
+                                       Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                       Text="Battery power level" />
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                </ui:CardControl>
+                <ui:CardControl Margin="0,12,0,0"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Icon="DataPie24">
+                    <ui:CardControl.Header>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock FontSize="14"
+                                       FontWeight="Medium"
+                                       Text="{Binding ViewModel.DeviceSpaceAvailable, Mode=OneWay}" />
+                            <TextBlock FontSize="12"
+                                       Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                       Text="Device available space" />
+                        </StackPanel>
+                    </ui:CardControl.Header>
+                </ui:CardControl>
+                <!--<ui:CardExpander Margin="0,12,0,0"
                              HorizontalContentAlignment="Center"
                              Icon="FolderOpen24"
                              IsEnabled="True"
@@ -135,6 +136,7 @@
                            TextAlignment="Justify"
                            TextWrapping="Wrap" />
             </ui:CardExpander>-->
-        </StackPanel>
-    </Grid>
+            </StackPanel>
+        </Grid>
+    </ui:DynamicScrollViewer>
 </ui:UiPage>

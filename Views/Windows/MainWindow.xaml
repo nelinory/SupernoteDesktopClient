@@ -7,6 +7,8 @@
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              Width="1200"
              Height="700"
+             MinWidth="1100"
+             MinHeight="600"
              Title="Supernote Desktop Client"
              d:DataContext="{d:DesignInstance local:MainWindow,
                                      IsDesignTimeCreatable=False}"
@@ -38,7 +40,7 @@
                      Grid.ColumnSpan="2"
                      Margin="42,-3,0,0">
             <ui:TitleBar.Tray>
-                <!-- Font: Franklin Gothic Demibold -->
+                <!-- Font: Franklin Gothic Demibold / 120px #464646 -->
                 <ui:NotifyIcon Icon="pack://application:,,,/Assets/application_icon_256.png"
                                MenuOnRightClick="True"
                                FocusOnLeftClick="False"

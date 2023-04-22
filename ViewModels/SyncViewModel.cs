@@ -91,7 +91,7 @@ namespace SupernoteDesktopClient.ViewModels
             DateTime? lastBackupDateTime = FileSystemManager.GetFolderCreateDateTime(BackupFolder);
             LastBackupDateTime = (lastBackupDateTime != null) ? lastBackupDateTime.GetValueOrDefault().ToString("F") : "N/A";
 
-            // Backup Archives
+            // Archive
             string archiveFolder = FileSystemManager.GetApplicationFolder();
             if (String.IsNullOrWhiteSpace(archiveFolder) == false && _mediaDeviceService.Device != null)
                 archiveFolder = Path.Combine(archiveFolder, $@"Device\{_mediaDeviceService.Device.SerialNumber.GetShortSHA1Hash()}\Backup");
