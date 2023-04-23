@@ -123,25 +123,26 @@ namespace SupernoteDesktopClient.Views.Windows
             {
                 case "home":
                     Navigate(typeof(DashboardPage));
+                    ShowApplicationWindow();
                     break;
                 case "sync":
                     Navigate(typeof(SyncPage));
+                    ShowApplicationWindow();
                     break;
                 case "settings":
                     Navigate(typeof(SettingsPage));
+                    ShowApplicationWindow();
                     break;
                 default: // exit
                     this.CloseWindow();
                     break;
             }
-
-            ShowApplicationWindow();
         }
 
         private void ShowApplicationWindow()
         {
             // show the minimized to tray main window
-            if (this.IsVisible == false)
+            if (this.Visibility == Visibility.Hidden)
                 this.ShowWindow();
             else
                 this.Activate();

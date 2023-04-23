@@ -160,12 +160,12 @@ namespace SupernoteDesktopClient.ViewModels
                         _snackbarService.Show("Information", $"Device disconnected.", SymbolRegular.Notebook24, ControlAppearance.Caution);
                 }
 
+                // Notify all subscribers
+                WeakReferenceMessenger.Default.Send(new MediaDeviceChangedMessage(new DeviceInfo(deviceId, isConnected)));
+
                 // auto sync on connect
                 if (SettingsManager.Instance.Settings.Sync.AutomaticSyncOnConnect == true)
                     _navigationService.Navigate(typeof(SyncPage));
-
-                // Notify all subscribers
-                WeakReferenceMessenger.Default.Send(new MediaDeviceChangedMessage(new DeviceInfo(deviceId, isConnected)));
             });
         }
     }

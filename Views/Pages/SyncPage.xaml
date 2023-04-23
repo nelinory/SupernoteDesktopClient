@@ -75,7 +75,7 @@
             <Grid Width="120px">
                 <ui:Button Icon="ArrowSync24"
                            Content="Synchronize"
-                           IsEnabled="{Binding ViewModel.IsSyncEnabled}"
+                           IsEnabled="{Binding ViewModel.IsSyncButtonEnabled}"
                            Command="{Binding ViewModel.ExecuteSyncCommand, Mode=OneWay}"
                            Visibility="{Binding ViewModel.IsSyncRunning, Converter={StaticResource BoolToVisibilityInversionConverter}}" />
                 <ui:ProgressRing Visibility="{Binding ViewModel.IsSyncRunning, Converter={StaticResource BoolToVisibilityConverter}}"
@@ -109,16 +109,23 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0"
-                           Margin="38, 0, 0, 0"
-                           FontSize="14"
-                           FontWeight="Medium"
-                           Text="Archives" />
+                <StackPanel HorizontalAlignment="Left">
+                    <TextBlock Grid.Column="0"
+                               Margin="38, 0, 0, 0"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Text="Archives" />
+                    <TextBlock Grid.Column="0"
+                               Margin="38, 0, 0, 0"
+                               FontSize="12"
+                               Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                               Text="Previous backups" />
+                </StackPanel>
                 <ScrollViewer Grid.Column="1"
                               CanContentScroll="True"
                               VerticalScrollBarVisibility="Auto">
                     <ListView ItemsSource="{Binding ViewModel.ArchiveFiles, Mode=OneWay}"
-                              Margin="80, -5, 0, 0"
+                              Margin="40, -5, 0, 0"
                               IsEnabled="False">
                         <ListView.Template>
                             <ControlTemplate TargetType="ListBox">

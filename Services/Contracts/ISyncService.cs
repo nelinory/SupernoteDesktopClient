@@ -4,6 +4,12 @@
     {
         bool IsBusy { get; }
 
-        bool Sync(string sourceFolder, string targetFolder, string deviceId);
+        public string SourceFolder { get; }
+
+        public string BackupFolder { get; }
+
+        public string ArchiveFolder { get; }
+
+        bool Sync();
     }
 }

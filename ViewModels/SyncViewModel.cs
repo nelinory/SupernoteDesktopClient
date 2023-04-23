@@ -2,12 +2,9 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using SupernoteDesktopClient.Core;
-using SupernoteDesktopClient.Extensions;
-using SupernoteDesktopClient.Models;
 using SupernoteDesktopClient.Services.Contracts;
 using System;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Threading.Tasks;
 using Wpf.Ui.Common.Interfaces;
 
@@ -20,7 +17,7 @@ namespace SupernoteDesktopClient.ViewModels
         private readonly ISyncService _syncService;
 
         [ObservableProperty]
-        private bool _isSyncEnabled;
+        private bool _isSyncButtonEnabled;
 
         [ObservableProperty]
         private bool _isSyncRunning;
@@ -56,57 +53,46 @@ namespace SupernoteDesktopClient.ViewModels
             _syncService = syncService;
 
             // Register a message subscriber
-            WeakReferenceMessenger.Default.Register<MediaDeviceChangedMessage>(this, (r, m) => { UpdateSync(m.Value); });
+            WeakReferenceMessenger.Default.Register<Models.MediaDeviceChangedMessage>(this, (r, m) => { UpdateSync(m.Value); });
         }
 
         [RelayCommand]
         private async Task ExecuteSync()
         {
-            IsSyncEnabled = false;
+            IsSyncButtonEnabled = false;
             IsSyncRunning = true;
 
-            await Task.Run(() => _syncService.Sync(SourceFolder, BackupFolder, _mediaDeviceService.Device.SerialNumber.GetShortSHA1Hash()));
+            await Task.Run(() => _syncService.Sync());
 
-            IsSyncEnabled = true;
+            IsSyncButtonEnabled = true;
             IsSyncRunning = false;
 
             UpdateSync();
         }
 
-        private void UpdateSync(DeviceInfo deviceInfo = null)
+        private void UpdateSync(Models.DeviceInfo deviceInfo = null)
         {
             _mediaDeviceService.RefreshMediaDeviceInfo();
 
             SourceFolder = (_mediaDeviceService.DriveInfo != null) ? _mediaDeviceService.DriveInfo.RootDirectory.FullName : "N/A";
 
             // Backup
-            string backupFolder = FileSystemManager.GetApplicationFolder();
-            if (String.IsNullOrWhiteSpace(backupFolder) == false && _mediaDeviceService.Device != null)
-                backupFolder = Path.Combine(backupFolder, $@"Device\{_mediaDeviceService.Device.SerialNumber.GetShortSHA1Hash()}\Storage");
-            else
-                backupFolder = null;
-            BackupFolder = backupFolder ?? "N/A";
+            BackupFolder = _syncService.BackupFolder ?? "N/A";
 
             // Last backup DateTime
             DateTime? lastBackupDateTime = FileSystemManager.GetFolderCreateDateTime(BackupFolder);
             LastBackupDateTime = (lastBackupDateTime != null) ? lastBackupDateTime.GetValueOrDefault().ToString("F") : "N/A";
 
             // Archive
-            string archiveFolder = FileSystemManager.GetApplicationFolder();
-            if (String.IsNullOrWhiteSpace(archiveFolder) == false && _mediaDeviceService.Device != null)
-                archiveFolder = Path.Combine(archiveFolder, $@"Device\{_mediaDeviceService.Device.SerialNumber.GetShortSHA1Hash()}\Backup");
-            else
-                archiveFolder = null;
-
-            ArchiveFiles = ArchiveManager.GetArchivesList(archiveFolder);
+            ArchiveFiles = ArchiveManager.GetArchivesList(_syncService.ArchiveFolder);
             ArchivesVisible = ArchiveFiles.Count > 0;
 
-            IsSyncEnabled = (_mediaDeviceService.Device != null);
+            IsSyncButtonEnabled = (_mediaDeviceService.Device != null);
             IsSyncRunning = _syncService.IsBusy;
 
             // auto sync on connect
             if (SettingsManager.Instance.Settings.Sync.AutomaticSyncOnConnect == true && deviceInfo?.IsConnected == true)
-                ExecuteSync();
+                ExecuteSync().Await();
         }
     }
 }

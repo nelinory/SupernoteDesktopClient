@@ -34,6 +34,6 @@ namespace SupernoteDesktopClient.Models
     {
         public bool ShowNotificationOnDeviceStateChange { get; set; } = true;
         public bool AutomaticSyncOnConnect { get; set; } = true;
-        public int MaxDeviceArchives { get; set; } = 10;
+        public int MaxDeviceArchives { get; set; } = 7;
     }
 }

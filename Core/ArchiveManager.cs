@@ -9,13 +9,13 @@ namespace SupernoteDesktopClient.Core
 {
     public static class ArchiveManager
     {
-        public static void Archive(string sourceFolder, string archiveFolder, int maxArchivesToKeep)
+        public static void Archive(string backupFolder, string archiveFolder, int maxArchivesToKeep)
         {
             string currentDateTime = String.Format("{0:yyyyMMdd_HHmmss}", DateTime.Now);
-            string archiveFileName = $"{currentDateTime}_{Path.GetFileName(sourceFolder)}.zip";
+            string archiveFileName = $"{currentDateTime}_{Path.GetFileName(backupFolder)}.zip";
 
-            if (ExecuteArchive(sourceFolder, Path.Combine(archiveFolder, archiveFileName)) == true)
-                PurgeOldArchives(archiveFolder, Path.GetFileName(sourceFolder), maxArchivesToKeep);
+            if (ExecuteArchive(backupFolder, Path.Combine(archiveFolder, archiveFileName)) == true)
+                PurgeOldArchives(archiveFolder, Path.GetFileName(backupFolder), maxArchivesToKeep);
         }
 
         public static ObservableCollection<Models.FileAttributes> GetArchivesList(string archiveFolder)
@@ -41,17 +41,17 @@ namespace SupernoteDesktopClient.Core
             return archiveFiles;
         }
 
-        private static bool ExecuteArchive(string sourceFolder, string archiveFileName)
+        private static bool ExecuteArchive(string backupFolder, string archiveFileName)
         {
             bool success = false;
 
             try
             {
-                if (Directory.Exists(sourceFolder) == true && Directory.GetFiles(sourceFolder, "*", SearchOption.AllDirectories).Length > 0)
+                if (Directory.Exists(backupFolder) == true && Directory.GetFiles(backupFolder, "*", SearchOption.AllDirectories).Length > 0)
                 {
                     FileSystemManager.EnsureFolderExists(archiveFileName);
 
-                    ZipFile.CreateFromDirectory(sourceFolder, archiveFileName, CompressionLevel.Fastest, false);
+                    ZipFile.CreateFromDirectory(backupFolder, archiveFileName, CompressionLevel.Fastest, false);
 
                     success = true;
                 }

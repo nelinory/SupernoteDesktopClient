@@ -17,7 +17,7 @@
         <TextBlock Margin="0,0,0,8"
                    FontSize="14"
                    FontWeight="Medium"
-                   Text="Supernote Desktop Client - Prototype" />
+                   Text="Supernote Desktop Client" />
         <TextBlock Text="{Binding ViewModel.AppVersion, Mode=OneWay}" />
 
         <TextBlock Padding="0,24,0,8"
