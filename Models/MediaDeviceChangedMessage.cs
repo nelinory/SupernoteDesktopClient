@@ -2,8 +2,20 @@
 
 namespace SupernoteDesktopClient.Models
 {
-    public class MediaDeviceChangedMessage : ValueChangedMessage<string>
+    public class MediaDeviceChangedMessage : ValueChangedMessage<DeviceInfo>
     {
-        public MediaDeviceChangedMessage(string deviceId) : base(deviceId) { }
+        public MediaDeviceChangedMessage(DeviceInfo deviceInfo) : base(deviceInfo) { }
+    }
+
+    public class DeviceInfo
+    {
+        public string Deviceid { get; private set; }
+        public bool IsConnected { get; private set; }
+
+        public DeviceInfo(string deviceId, bool isConnected)
+        {
+            Deviceid = deviceId;
+            IsConnected = isConnected;
+        }
     }
 }

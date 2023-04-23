@@ -17,7 +17,7 @@
         <TextBlock Margin="0,0,0,8"
                    FontSize="14"
                    FontWeight="Medium"
-                   Text="Supernote Desktop Client - Prototype" />
+                   Text="Supernote Desktop Client" />
         <TextBlock Text="{Binding ViewModel.AppVersion, Mode=OneWay}" />
 
         <TextBlock Padding="0,24,0,8"
@@ -57,5 +57,13 @@
                       Content="MediaDevices"
                       Icon="Link24"
                       NavigateUri="https://github.com/Bassman2/MediaDevices" />
+        <ui:Hyperlink Cursor="Hand"
+                      Content="Serilog"
+                      Icon="Link24"
+                      NavigateUri="https://serilog.net" />
+        <ui:Hyperlink Cursor="Hand"
+                      Content="fluentui-system-icons"
+                      Icon="Link24"
+                      NavigateUri="https://github.com/microsoft/fluentui-system-icons" />        
     </StackPanel>
 </ui:UiPage>

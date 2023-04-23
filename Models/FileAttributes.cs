@@ -3,7 +3,7 @@ using System;
 
 namespace SupernoteDesktopClient.Models
 {
-    public class File
+    public class FileAttributes
     {
         public string Name { get; private set; }
 
@@ -15,7 +15,7 @@ namespace SupernoteDesktopClient.Models
 
         public string SizeAsString { get; private set; }
 
-        public File(string name, string path, DateTime createDateTime, long sizeBytes)
+        public FileAttributes(string name, string path, DateTime createDateTime, long sizeBytes)
         {
             Name = name;
             Path = path;

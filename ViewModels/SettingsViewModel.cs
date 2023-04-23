@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using SupernoteDesktopClient.Core;
 using System.Windows.Media;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Common.Interfaces;
@@ -56,6 +57,8 @@ namespace SupernoteDesktopClient.ViewModels
 
                     break;
             }
+
+            SettingsManager.Instance.Settings.General.CurrentTheme = CurrentTheme.ToString();
         }
     }
 }

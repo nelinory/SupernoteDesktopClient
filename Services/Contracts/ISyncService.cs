@@ -2,6 +2,14 @@
 {
     public interface ISyncService
     {
-        bool Sync(string sourceFolder, string targetFolder, string deviceId);
+        bool IsBusy { get; }
+
+        public string SourceFolder { get; }
+
+        public string BackupFolder { get; }
+
+        public string ArchiveFolder { get; }
+
+        bool Sync();
     }
 }

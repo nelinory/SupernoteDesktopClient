@@ -1,14 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Toolkit.Uwp.Notifications;
 using SupernoteDesktopClient.Core;
-using SupernoteDesktopClient.Extensions;
-using SupernoteDesktopClient.Models;
 using SupernoteDesktopClient.Services.Contracts;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Threading.Tasks;
 using Wpf.Ui.Common.Interfaces;
 
@@ -21,7 +18,7 @@ namespace SupernoteDesktopClient.ViewModels
         private readonly ISyncService _syncService;
 
         [ObservableProperty]
-        private bool _isSyncEnabled;
+        private bool _isSyncButtonEnabled;
 
         [ObservableProperty]
         private bool _isSyncRunning;
@@ -30,16 +27,16 @@ namespace SupernoteDesktopClient.ViewModels
         private string _sourceFolder;
 
         [ObservableProperty]
-        private string _targetFolder;
+        private string _backupFolder;
 
         [ObservableProperty]
         private string _lastBackupDateTime;
 
         [ObservableProperty]
-        private ObservableCollection<Models.File> _files;
+        private ObservableCollection<Models.FileAttributes> _archiveFiles;
 
         [ObservableProperty]
-        private bool _previousBackupsVisible;
+        private bool _archivesVisible;
 
         public void OnNavigatedTo()
         {
@@ -57,52 +54,52 @@ namespace SupernoteDesktopClient.ViewModels
             _syncService = syncService;
 
             // Register a message subscriber
-            WeakReferenceMessenger.Default.Register<MediaDeviceChangedMessage>(this, (r, m) => { UpdateSync(); });
+            WeakReferenceMessenger.Default.Register<Models.MediaDeviceChangedMessage>(this, (r, m) => { UpdateSync(m.Value); });
         }
 
         [RelayCommand]
         private async Task ExecuteSync()
         {
-            IsSyncEnabled = false;
+            IsSyncButtonEnabled = false;
             IsSyncRunning = true;
 
-            await Task.Run(() => _syncService.Sync(SourceFolder, TargetFolder, _mediaDeviceService.Device.SerialNumber.GetShortSHA1Hash())); 
+            await Task.Run(() => _syncService.Sync());
 
-            IsSyncEnabled = true;
+            IsSyncButtonEnabled = true;
             IsSyncRunning = false;
 
             UpdateSync();
         }
 
-        private void UpdateSync()
+        private void UpdateSync(Models.DeviceInfo deviceInfo = null)
         {
             _mediaDeviceService.RefreshMediaDeviceInfo();
 
             SourceFolder = (_mediaDeviceService.DriveInfo != null) ? _mediaDeviceService.DriveInfo.RootDirectory.FullName : "N/A";
 
-            string targetFolder = FileSystemManager.GetApplicationFolder();
-            if (String.IsNullOrWhiteSpace(targetFolder) == false && _mediaDeviceService.Device != null)
-                targetFolder = Path.Combine(targetFolder, $@"Device\{_mediaDeviceService.Device.SerialNumber.GetShortSHA1Hash()}\Storage");
-            else
-                targetFolder = null;
-            TargetFolder = targetFolder ?? "N/A";
+            // Backup
+            BackupFolder = _syncService.BackupFolder ?? "N/A";
 
             // Last backup DateTime
-            DateTime? lastBackupDateTime = FileSystemManager.GetFolderCreateDateTime(TargetFolder);
+            DateTime? lastBackupDateTime = FileSystemManager.GetFolderCreateDateTime(BackupFolder);
             LastBackupDateTime = (lastBackupDateTime != null) ? lastBackupDateTime.GetValueOrDefault().ToString("F") : "N/A";
 
-            // Previous backups
-            string backupFolder = FileSystemManager.GetApplicationFolder();
-            if (String.IsNullOrWhiteSpace(backupFolder) == false && _mediaDeviceService.Device != null)
-                backupFolder = Path.Combine(backupFolder, $@"Device\{_mediaDeviceService.Device.SerialNumber.GetShortSHA1Hash()}\Backup");
-            else
-                backupFolder = null;
+            // Archive
+            ArchiveFiles = ArchiveManager.GetArchivesList(_syncService.ArchiveFolder);
+            ArchivesVisible = ArchiveFiles.Count > 0;
 
-            Files = BackupManager.GetPreviousBackupsList(backupFolder);
-            PreviousBackupsVisible = Files.Count > 0;
+            IsSyncButtonEnabled = (_mediaDeviceService.Device != null);
+            IsSyncRunning = _syncService.IsBusy;
 
-            IsSyncEnabled = (_mediaDeviceService.Device != null);
-            IsSyncRunning = false;
+            // auto sync on connect
+            if (SettingsManager.Instance.Settings.Sync.AutomaticSyncOnConnect == true && deviceInfo?.IsConnected == true)
+            {
+                ExecuteSync().Await();
+
+                new ToastContentBuilder()
+                .AddText("Automatic sync completed")
+                .Show();
+            }
         }
     }
 }

@@ -11,30 +11,43 @@ namespace SupernoteDesktopClient.Services
         // services
         private readonly IMediaDeviceService _mediaDeviceService;
 
+        private const string BACKUP_FOLDER = "Backup";
+        private const string ARCHIVE_FOLDER = "Archive";
+
+        public bool IsBusy { get; private set; }
+
+        public string SourceFolder { get { return _mediaDeviceService.DriveInfo?.RootDirectory.FullName; } }
+
+        public string BackupFolder { get { return GetFolderByType(BACKUP_FOLDER); } }
+
+        public string ArchiveFolder { get { return GetFolderByType(ARCHIVE_FOLDER); } }
+
         public SyncService(IMediaDeviceService mediaDeviceService)
         {
             // services
             _mediaDeviceService = mediaDeviceService;
+
+            IsBusy = false;
         }
 
-        public bool Sync(string sourceFolder, string targetFolder, string deviceId)
+        public bool Sync()
         {
+            // sync in progress
+            if (IsBusy == true)
+                return false;
+
             bool returnResult = false;
+
+            IsBusy = true;
 
             if (_mediaDeviceService.Device != null)
             {
-                if (Directory.Exists(targetFolder) == true)
+                if (Directory.Exists(BackupFolder) == true)
                 {
-                    // backup existing storage folder if exists
-                    string backupFolder = FileSystemManager.GetApplicationFolder();
-                    if (String.IsNullOrWhiteSpace(backupFolder) == false)
-                        backupFolder = Path.Combine(backupFolder, $@"Device\{_mediaDeviceService.Device.SerialNumber.GetShortSHA1Hash()}\Backup");
-
-                    // TODO: Load the number of backups to keep from settings
-                    BackupManager.Backup(targetFolder, backupFolder, 5);
+                    ArchiveManager.Archive(BackupFolder, ArchiveFolder, SettingsManager.Instance.Settings.Sync.MaxDeviceArchives);
 
                     // delete existing storage folder if exists
-                    FileSystemManager.ForceDeleteDirectory(targetFolder);
+                    FileSystemManager.ForceDeleteDirectory(BackupFolder);
                 }
 
                 var supernoteFolder = _mediaDeviceService.Device.GetDirectoryInfo(@"\");
@@ -42,7 +55,7 @@ namespace SupernoteDesktopClient.Services
 
                 foreach (var file in files)
                 {
-                    string destinationFileName = file.FullName.Replace(sourceFolder, targetFolder);
+                    string destinationFileName = file.FullName.Replace(SourceFolder, BackupFolder);
                     string destinationFolder = Path.GetDirectoryName(destinationFileName);
 
                     if (Directory.Exists(destinationFolder) == false)
@@ -60,7 +73,18 @@ namespace SupernoteDesktopClient.Services
                 returnResult = true;
             }
 
+            IsBusy = false;
+
             return returnResult;
+        }
+
+        private string GetFolderByType(string folderType)
+        {
+            string folder = FileSystemManager.GetApplicationFolder();
+            if (String.IsNullOrWhiteSpace(folder) == false && _mediaDeviceService.Device != null)
+                return Path.Combine(folder, $@"Device\{_mediaDeviceService.Device.SerialNumber.GetShortSHA1Hash()}\{folderType}");
+            else
+                return null;
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using SupernoteDesktopClient.Core;
 using SupernoteDesktopClient.Models;
 using SupernoteDesktopClient.Services.Contracts;
+using SupernoteDesktopClient.Views.Pages;
 using System.Collections.ObjectModel;
 using System.Windows;
 using Wpf.Ui.Appearance;
@@ -18,6 +20,7 @@ namespace SupernoteDesktopClient.ViewModels
         // services
         private readonly ISnackbarService _snackbarService;
         private readonly IUsbHubDetector _usbHubDetector;
+        private readonly INavigationService _navigationService;
 
         [ObservableProperty]
         private ObservableCollection<INavigationControl> _navigationItems = new();
@@ -25,16 +28,23 @@ namespace SupernoteDesktopClient.ViewModels
         [ObservableProperty]
         private ObservableCollection<INavigationControl> _navigationFooter = new();
 
-        public MainWindowViewModel(ISnackbarService snackbarService, IUsbHubDetector usbHubDetector)
+        [ObservableProperty]
+        private bool _minimizeToTrayEnabled;
+
+        public MainWindowViewModel(ISnackbarService snackbarService, IUsbHubDetector usbHubDetector, INavigationService navigationService)
         {
             // services
             _snackbarService = snackbarService;
             _usbHubDetector = usbHubDetector;
+            _navigationService = navigationService;
 
             // event handler
             _usbHubDetector.UsbHubStateChanged += UsbHubDetector_UsbHubStateChanged;
 
             BuildNavigationMenu();
+
+            // TODO: Refresh settings on change
+            MinimizeToTrayEnabled = SettingsManager.Instance.Settings.General.MinimizeToTrayEnabled;
         }
 
         private void BuildNavigationMenu()
@@ -132,6 +142,8 @@ namespace SupernoteDesktopClient.ViewModels
         private void ToggleTheme()
         {
             Theme.Apply(Theme.GetAppTheme() == ThemeType.Light ? ThemeType.Dark : ThemeType.Light);
+
+            SettingsManager.Instance.Settings.General.CurrentTheme = Theme.GetAppTheme().ToString();
         }
 
         private void UsbHubDetector_UsbHubStateChanged(string deviceId, bool isConnected)
@@ -140,14 +152,20 @@ namespace SupernoteDesktopClient.ViewModels
             Application.Current.Dispatcher.Invoke(() =>
             {
                 // notification on usb connect/disconnect
-                // TODO: Add option in settings
-                if (isConnected == true)
-                    _snackbarService.Show("Information", $"Device: {deviceId} connected.", SymbolRegular.Notebook24, ControlAppearance.Success);
-                else
-                    _snackbarService.Show("Information", $"Device disconnected.", SymbolRegular.Notebook24, ControlAppearance.Caution);
+                if (SettingsManager.Instance.Settings.Sync.ShowNotificationOnDeviceStateChange == true)
+                {
+                    if (isConnected == true)
+                        _snackbarService.Show("Information", $"Device: {deviceId} connected.", SymbolRegular.Notebook24, ControlAppearance.Success);
+                    else
+                        _snackbarService.Show("Information", $"Device disconnected.", SymbolRegular.Notebook24, ControlAppearance.Caution);
+                }
+
+                // auto sync on connect
+                if (SettingsManager.Instance.Settings.Sync.AutomaticSyncOnConnect == true)
+                    _navigationService.Navigate(typeof(SyncPage));
 
                 // Notify all subscribers
-                WeakReferenceMessenger.Default.Send(new MediaDeviceChangedMessage(deviceId));
+                WeakReferenceMessenger.Default.Send(new MediaDeviceChangedMessage(new DeviceInfo(deviceId, isConnected)));
             });
         }
     }
