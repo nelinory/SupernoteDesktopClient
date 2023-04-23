@@ -56,7 +56,7 @@ namespace SupernoteDesktopClient.ViewModels
             _syncService = syncService;
 
             // Register a message subscriber
-            WeakReferenceMessenger.Default.Register<MediaDeviceChangedMessage>(this, (r, m) => { UpdateSync(); });
+            WeakReferenceMessenger.Default.Register<MediaDeviceChangedMessage>(this, (r, m) => { UpdateSync(m.Value); });
         }
 
         [RelayCommand]
@@ -65,7 +65,7 @@ namespace SupernoteDesktopClient.ViewModels
             IsSyncEnabled = false;
             IsSyncRunning = true;
 
-            await Task.Run(() => _syncService.Sync(SourceFolder, BackupFolder, _mediaDeviceService.Device.SerialNumber.GetShortSHA1Hash())); 
+            await Task.Run(() => _syncService.Sync(SourceFolder, BackupFolder, _mediaDeviceService.Device.SerialNumber.GetShortSHA1Hash()));
 
             IsSyncEnabled = true;
             IsSyncRunning = false;
@@ -73,7 +73,7 @@ namespace SupernoteDesktopClient.ViewModels
             UpdateSync();
         }
 
-        private void UpdateSync()
+        private void UpdateSync(DeviceInfo deviceInfo = null)
         {
             _mediaDeviceService.RefreshMediaDeviceInfo();
 
@@ -103,6 +103,10 @@ namespace SupernoteDesktopClient.ViewModels
 
             IsSyncEnabled = (_mediaDeviceService.Device != null);
             IsSyncRunning = _syncService.IsBusy;
+
+            // auto sync on connect
+            if (SettingsManager.Instance.Settings.Sync.AutomaticSyncOnConnect == true && deviceInfo?.IsConnected == true)
+                ExecuteSync();
         }
     }
 }

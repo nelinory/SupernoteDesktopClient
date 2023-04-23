@@ -3,6 +3,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 
 namespace SupernoteDesktopClient.Core
 {
@@ -25,9 +26,9 @@ namespace SupernoteDesktopClient.Core
             {
                 if (String.IsNullOrWhiteSpace(archiveFolder) == false && Directory.Exists(archiveFolder) == true)
                 {
-                    foreach (string fileName in Directory.GetFiles(archiveFolder))
+                    var directory = new DirectoryInfo(archiveFolder);
+                    foreach (FileInfo fileInfo in directory.GetFiles().OrderByDescending(p => p.CreationTime))
                     {
-                        var fileInfo = new FileInfo(fileName);
                         archiveFiles.Add(new Models.FileAttributes(fileInfo.Name, fileInfo.DirectoryName, fileInfo.LastWriteTime, fileInfo.Length));
                     }
                 }

@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.Management;
+using System.Threading;
 
 namespace SupernoteDesktopClient.Services
 {
@@ -60,6 +61,10 @@ namespace SupernoteDesktopClient.Services
         {
             string deviceId = ((ManagementBaseObject)e.NewEvent["TargetInstance"])["PNPDeviceID"].ToString();
             bool isConnected = (e.NewEvent.ClassPath.RelativePath == _creationEvent);
+
+            // WMI device event seems to be triggering immediately when device is attached/detached.
+            // Adding 1s wait time before notifying all subscribers to ensure the device is available for them.
+            Thread.Sleep(1000);
 
             UsbHubStateChanged?.Invoke(deviceId, isConnected);
         }
