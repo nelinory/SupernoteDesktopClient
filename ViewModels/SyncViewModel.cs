@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Toolkit.Uwp.Notifications;
 using SupernoteDesktopClient.Core;
 using SupernoteDesktopClient.Services.Contracts;
 using System;
@@ -92,7 +93,13 @@ namespace SupernoteDesktopClient.ViewModels
 
             // auto sync on connect
             if (SettingsManager.Instance.Settings.Sync.AutomaticSyncOnConnect == true && deviceInfo?.IsConnected == true)
+            {
                 ExecuteSync().Await();
+
+                new ToastContentBuilder()
+                .AddText("Automatic sync completed")
+                .Show();
+            }
         }
     }
 }
