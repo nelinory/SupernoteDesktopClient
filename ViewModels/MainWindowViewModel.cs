@@ -161,7 +161,7 @@ namespace SupernoteDesktopClient.ViewModels
                 }
 
                 // auto sync on connect
-                if (SettingsManager.Instance.Settings.Sync.AutomaticSyncOnConnect == true)
+                if (SettingsManager.Instance.Settings.Sync.AutomaticSyncOnConnect == true && isConnected == true)
                     _navigationService.Navigate(typeof(SyncPage));
 
                 // Notify all subscribers

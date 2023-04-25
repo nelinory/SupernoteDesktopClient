@@ -32,5 +32,14 @@ namespace SupernoteDesktopClient.Extensions
 
             return returnResult;
         }
+
+        public static string ReplaceFirstOccurrence(this string source, string search, string replace)
+        {
+            int position = source.IndexOf(search);
+            if (position < 0)
+                return source;
+
+            return source.Remove(position, search.Length).Insert(position, replace);
+        }
     }
 }
