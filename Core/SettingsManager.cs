@@ -9,7 +9,7 @@ namespace SupernoteDesktopClient.Core
     public class SettingsManager
     {
         private static readonly Lazy<SettingsManager> _instance = new Lazy<SettingsManager>(() => new SettingsManager());
-        private static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions { WriteIndented = true, DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull };
+        private static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions { WriteIndented = true };
         private static readonly string _settingsFileLocation = Path.Combine(FileSystemManager.GetApplicationFolder(), "SupernoteDesktopClient.config");
 
         public static SettingsManager Instance { get { return _instance.Value; } }
@@ -33,7 +33,7 @@ namespace SupernoteDesktopClient.Core
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("Error while loading settings: {EX}", ex);
+                    Log.Warning("Error while loading settings - will use default: {EX}", ex);
                 }
             }
         }
