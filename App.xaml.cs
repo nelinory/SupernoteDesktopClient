@@ -136,11 +136,20 @@ namespace SupernoteDesktopClient
         {
             // configure logging
             Log.Logger = new LoggerConfiguration()
-               .WriteTo.File(Path.Combine(_logsPath, "Sdc-.log"),
-                                restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information,
+               .MinimumLevel.Information()
+               .Enrich.FromLogContext()
+               .WriteTo.Logger(p => p
+                                .Filter.ByExcluding(p => p.Properties.ContainsKey("IsDiag"))
+                                .WriteTo.File(Path.Combine(_logsPath, "Sdc-.log"),
                                 outputTemplate: "{Timestamp:MM/dd/yyyy HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}",
                                 rollingInterval: RollingInterval.Day,
-                                retainedFileCountLimit: 7)
+                                retainedFileCountLimit: 7))
+               .WriteTo.Logger(p => p
+                                .Filter.ByIncludingOnly(p => p.Properties.ContainsKey("IsDiag"))
+                                .WriteTo.File(Path.Combine(_logsPath, "Sdc-Diag-.log"),
+                                outputTemplate: "{Timestamp:MM/dd/yyyy HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}",
+                                rollingInterval: RollingInterval.Day,
+                                retainedFileCountLimit: 7))
                .CreateLogger();
         }
 

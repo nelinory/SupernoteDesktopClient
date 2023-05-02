@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
 
 namespace SupernoteDesktopClient.Core
 {
@@ -28,7 +27,7 @@ namespace SupernoteDesktopClient.Core
 
         public static string GetApplicationFolder()
         {
-            return Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location);
+            return AppDomain.CurrentDomain.BaseDirectory;
         }
 
         public static DateTime? GetFolderCreateDateTime(string folder)

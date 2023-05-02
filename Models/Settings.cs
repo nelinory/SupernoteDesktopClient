@@ -27,6 +27,7 @@ namespace SupernoteDesktopClient.Models
         public WindowPlacement AppWindowPlacement { get; set; }
         public bool MinimizeToTrayEnabled { get; set; } = false;
         public string CurrentTheme { get; set; } = "Light"; // Light or Dark
+        public bool DiagnosticLogEnabled { get; set; } = false;
     }
 
     // TODO: Add to Settings View
