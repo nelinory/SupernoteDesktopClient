@@ -28,7 +28,6 @@
         </Grid.RowDefinitions>
 
         <ui:CardControl Grid.Row="0"
-                        Margin="0,12,0,0"
                         VerticalAlignment="Stretch"
                         Icon="DocumentSync24">
             <ui:CardControl.Header>

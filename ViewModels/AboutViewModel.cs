@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using SupernoteDesktopClient.Core;
 using System;
 using Wpf.Ui.Common.Interfaces;
 
@@ -19,14 +20,7 @@ namespace SupernoteDesktopClient.ViewModels
 
         public AboutViewModel()
         {
-            AppVersion = $"Version - {GetAssemblyVersion()}";
-        }
-
-        private static string GetAssemblyVersion()
-        {
-            Version versionObject = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
-
-            return $"v{versionObject.Major}.{versionObject.Minor}.{versionObject.Build}";
+            AppVersion = $"Version - {ApplicationManager.GetAssemblyVersion()}";
         }
     }
 }

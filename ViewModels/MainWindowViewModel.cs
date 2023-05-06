@@ -29,7 +29,7 @@ namespace SupernoteDesktopClient.ViewModels
         private ObservableCollection<INavigationControl> _navigationFooter = new();
 
         [ObservableProperty]
-        private bool _minimizeToTrayEnabled;
+        private bool _minimizeToTrayEnabled = SettingsManager.Instance.Settings.General.MinimizeToTrayEnabled;
 
         public MainWindowViewModel(ISnackbarService snackbarService, IUsbHubDetector usbHubDetector, INavigationService navigationService)
         {
@@ -43,8 +43,11 @@ namespace SupernoteDesktopClient.ViewModels
 
             BuildNavigationMenu();
 
-            // TODO: Refresh settings on change
-            MinimizeToTrayEnabled = SettingsManager.Instance.Settings.General.MinimizeToTrayEnabled;
+            // Register a message subscriber
+            WeakReferenceMessenger.Default.Register<SettingsChangedMessage>(this, (r, m) =>
+            {
+                MinimizeToTrayEnabled = SettingsManager.Instance.Settings.General.MinimizeToTrayEnabled;
+            });
         }
 
         private void BuildNavigationMenu()

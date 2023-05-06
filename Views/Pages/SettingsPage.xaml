@@ -13,28 +13,138 @@
            d:Background="{DynamicResource ApplicationBackgroundBrush}"
            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
            mc:Ignorable="d">
-    
+
     <ui:UiPage.Resources>
         <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
     </ui:UiPage.Resources>
 
-    <StackPanel Margin="56,0">
-        <TextBlock FontSize="14"
-                   FontWeight="Medium"
-                   Text="Personalization" />
-        <TextBlock Margin="0,12,0,0"
-                   Text="Theme" />
-        <RadioButton Margin="0,12,0,0"
-                     Command="{Binding ViewModel.ChangeThemeCommand, Mode=OneWay}"
-                     CommandParameter="theme_light"
-                     Content="Light"
-                     GroupName="themeSelect"
-                     IsChecked="{Binding ViewModel.CurrentTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}" />
-        <RadioButton Margin="0,8,0,0"
-                     Command="{Binding ViewModel.ChangeThemeCommand, Mode=OneWay}"
-                     CommandParameter="theme_dark"
-                     Content="Dark"
-                     GroupName="themeSelect"
-                     IsChecked="{Binding ViewModel.CurrentTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}" />
-    </StackPanel>
+    <ui:DynamicScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="56,0">
+            <TextBlock FontSize="18"
+                       FontWeight="Medium"
+                       Text="General" />
+            <ui:CardControl Margin="0,12,0,0"
+                            Icon="WindowArrowUp24">
+                <ui:CardControl.Header>
+                    <StackPanel Grid.Column="0"
+                                VerticalAlignment="Center">
+                        <TextBlock FontSize="14"
+                                   FontWeight="Medium"
+                                   Text="Application window location" />
+                        <TextBlock FontSize="12"
+                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                   Text="Stores the application windows location on exit and restores it on application start." />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch IsChecked="{Binding ViewModel.RememberAppWindowPlacement, Mode=TwoWay}" />
+            </ui:CardControl>
+            <ui:CardControl Margin="0,12,0,0"
+                            Icon="ArrowMinimize24">
+                <ui:CardControl.Header>
+                    <StackPanel Grid.Column="0"
+                                VerticalAlignment="Center">
+                        <TextBlock FontSize="14"
+                                   FontWeight="Medium"
+                                   Text="Minimize to tray" />
+                        <TextBlock FontSize="12"
+                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                   Text="Minimizes the application to the tray instead of the taskbar." />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch IsChecked="{Binding ViewModel.MinimizeToTrayEnabled, Mode=TwoWay}" />
+            </ui:CardControl>
+            <ui:CardControl Margin="0,12,0,0"
+                            Icon="DarkTheme24">
+                <ui:CardControl.Header>
+                    <StackPanel Grid.Column="0"
+                                VerticalAlignment="Center">
+                        <TextBlock FontSize="14"
+                                   FontWeight="Medium"
+                                   Text="Theme" />
+                        <TextBlock FontSize="12"
+                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                   Text="Sets light or dark theme." />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <Grid>
+                    <TextBlock Margin="-34,1,0,0"
+                               FontSize="12"
+                               FontWeight="Medium"
+                               Text="{Binding ViewModel.AppThemeName, Mode=TwoWay}" />
+                    <ui:ToggleSwitch Command="{Binding ViewModel.ToggleThemeCommand, Mode=OneWay}"
+                                     IsChecked="{Binding ViewModel.IsThemeSwitchChecked, Mode=OneWay}" />
+                </Grid>
+            </ui:CardControl>
+            <ui:CardControl Margin="0,12,0,0"
+                            Icon="BriefcaseMedical24">
+                <ui:CardControl.Header>
+                    <StackPanel Grid.Column="0"
+                                VerticalAlignment="Center">
+                        <TextBlock FontSize="14"
+                                   FontWeight="Medium"
+                                   Text="Diagnostic logs" />
+                        <TextBlock FontSize="12"
+                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                   Text="Enable generation of a diagnostic logs to help resolve an issue." />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch IsChecked="{Binding ViewModel.DiagnosticLogEnabled, Mode=TwoWay}" />
+            </ui:CardControl>
+
+            <TextBlock Margin="0,22,0,0"
+                       FontSize="18"
+                       FontWeight="Medium"
+                       Text="Synchronization" />
+
+            <ui:CardControl Margin="0,12,0,0"
+                            Icon="Chat24">
+                <ui:CardControl.Header>
+                    <StackPanel Grid.Column="0"
+                                VerticalAlignment="Center">
+                        <TextBlock FontSize="14"
+                                   FontWeight="Medium"
+                                   Text="Show notification on device state change" />
+                        <TextBlock FontSize="12"
+                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                   Text="Shows notification when Supernote device is connected/disconnected." />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch IsChecked="{Binding ViewModel.ShowNotificationOnDeviceStateChange, Mode=TwoWay}" />
+            </ui:CardControl>
+            <ui:CardControl Margin="0,12,0,0"
+                            Icon="ArrowSyncCheckmark24">
+                <ui:CardControl.Header>
+                    <StackPanel Grid.Column="0"
+                                VerticalAlignment="Center">
+                        <TextBlock FontSize="14"
+                                   FontWeight="Medium"
+                                   Text="Automatic sync" />
+                        <TextBlock FontSize="12"
+                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                   Text="Syncs automatically when Supernote device is connected." />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch IsChecked="{Binding ViewModel.AutomaticSyncOnConnect, Mode=TwoWay}" />
+            </ui:CardControl>
+            <ui:CardControl Margin="0,12,0,12"
+                            Icon="ArchiveSettings24">
+                <ui:CardControl.Header>
+                    <StackPanel Grid.Column="0"
+                                VerticalAlignment="Center">
+                        <TextBlock FontSize="14"
+                                   FontWeight="Medium"
+                                   Text="Maximum device archives" />
+                        <TextBlock FontSize="12"
+                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                   Text="Maximum device archives to keep locally." />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ComboBox MinWidth="20"
+                          HorizontalAlignment="Left"
+                          ItemsSource="{Binding ViewModel.MaxDeviceArchivesItemSource}"
+                          SelectedIndex="{Binding ViewModel.MaxDeviceArchivesSelectedItem}">
+                </ComboBox>
+            </ui:CardControl>
+        </StackPanel>
+    </ui:DynamicScrollViewer>
 </ui:UiPage>

@@ -91,6 +91,8 @@ namespace SupernoteDesktopClient
 
             SetupUnhandledExceptionHandling();
 
+            DiagnosticLogger.Log($"Sdc {ApplicationManager.GetAssemblyVersion()} started...");
+
             await _host.StartAsync();
         }
 
@@ -99,6 +101,8 @@ namespace SupernoteDesktopClient
         /// </summary>
         private async void OnExit(object sender, ExitEventArgs e)
         {
+            DiagnosticLogger.Log($"Sdc {ApplicationManager.GetAssemblyVersion()} exited...");
+
             // flush all log items before exit
             Log.CloseAndFlush();
 
