@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 
 namespace SupernoteDesktopClient.Core.Win32Api
@@ -17,6 +18,13 @@ namespace SupernoteDesktopClient.Core.Win32Api
 
         [DllImport("user32.dll")]
         internal static extern bool GetWindowPlacement(IntPtr hWnd, out WindowPlacement lpwndpl);
+
+        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SHGetFileInfo(string path, uint attributes, out ShellFileInfo fileInfo, uint size, uint flags);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool DestroyIcon(IntPtr pointer);
 
         // constants
         public const int SW_SHOW_NORMAL_WINDOW = 1;
@@ -54,6 +62,40 @@ namespace SupernoteDesktopClient.Core.Win32Api
             GetWindowPlacement(hWnd, out lpwndpl);
 
             return lpwndpl;
+        }
+
+        public static Icon GetIcon(string path, ItemType type, IconSize iconSize, ItemState state)
+        {
+            uint attributes = (uint)(type == ItemType.Folder ? FileAttribute.Directory : FileAttribute.File);
+            uint flags = (uint)(ShellAttribute.Icon | ShellAttribute.UseFileAttributes);
+
+            if (type == ItemType.Folder && state == ItemState.Open)
+                flags = flags | (uint)ShellAttribute.OpenIcon;
+
+            if (iconSize == IconSize.Small)
+                flags = flags | (uint)ShellAttribute.SmallIcon;
+            else
+                flags = flags | (uint)ShellAttribute.LargeIcon;
+
+            ShellFileInfo fileInfo = new ShellFileInfo();
+            uint size = (uint)Marshal.SizeOf(fileInfo);
+            IntPtr result = SHGetFileInfo(path, attributes, out fileInfo, size, flags);
+
+            if (result == IntPtr.Zero)
+                throw Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error());
+
+            try
+            {
+                return (Icon)Icon.FromHandle(fileInfo.hIcon).Clone();
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                DestroyIcon(fileInfo.hIcon);
+            }
         }
     }
 }

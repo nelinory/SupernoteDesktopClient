@@ -17,16 +17,16 @@ namespace SupernoteDesktopClient.Core
                 PurgeOldArchives(archiveFolder, Path.GetFileName(backupFolder), maxArchivesToKeep);
         }
 
-        public static ObservableCollection<Models.FileAttributes> GetArchivesList(string archiveFolder)
+        public static ObservableCollection<Models.ArchiveFileAttributes> GetArchivesList(string archiveFolder)
         {
-            ObservableCollection<Models.FileAttributes> archiveFiles = new ObservableCollection<Models.FileAttributes>();
+            ObservableCollection<Models.ArchiveFileAttributes> archiveFiles = new ObservableCollection<Models.ArchiveFileAttributes>();
 
             if (String.IsNullOrWhiteSpace(archiveFolder) == false && Directory.Exists(archiveFolder) == true)
             {
                 var directory = new DirectoryInfo(archiveFolder);
                 foreach (FileInfo fileInfo in directory.GetFiles().OrderByDescending(p => p.CreationTime))
                 {
-                    archiveFiles.Add(new Models.FileAttributes(fileInfo.Name, fileInfo.DirectoryName, fileInfo.LastWriteTime, fileInfo.Length));
+                    archiveFiles.Add(new Models.ArchiveFileAttributes(fileInfo.Name, fileInfo.DirectoryName, fileInfo.LastWriteTime, fileInfo.Length));
                 }
             }
 

@@ -61,6 +61,8 @@ namespace SupernoteDesktopClient
                 services.AddScoped<ViewModels.AboutViewModel>();
                 services.AddScoped<Views.Pages.DashboardPage>();
                 services.AddScoped<ViewModels.DashboardViewModel>();
+                services.AddScoped<Views.Pages.ExplorerPage>();
+                services.AddScoped<ViewModels.ExplorerViewModel>();
                 services.AddScoped<Views.Pages.SettingsPage>();
                 services.AddScoped<ViewModels.SettingsViewModel>();
                 services.AddScoped<Views.Pages.SyncPage>();

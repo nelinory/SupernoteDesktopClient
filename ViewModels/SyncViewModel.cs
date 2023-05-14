@@ -33,7 +33,7 @@ namespace SupernoteDesktopClient.ViewModels
         private string _lastBackupDateTime;
 
         [ObservableProperty]
-        private ObservableCollection<Models.FileAttributes> _archiveFiles;
+        private ObservableCollection<Models.ArchiveFileAttributes> _archiveFiles;
 
         [ObservableProperty]
         private bool _archivesVisible;
