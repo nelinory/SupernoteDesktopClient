@@ -14,6 +14,7 @@ Supernote Desktop Client (SDC) is a desktop client for Supernote paper-like tabl
 - Automatic/Manual Supernote storage synchronization to local folder
 - Automatically archives last synchronization
 - Supports multiple Supernote devices, each device will have an unique local sync folder
+- Build-in explorer allows to view and open all Supernote file in the local backup folder
 - Light/Dark Theme support 
 
 ### Tested on Windows version
@@ -42,5 +43,19 @@ For release milestones, please check the project board: https://github.com/users
 ##### Dashboard
 <img src="_Screenshots\sdc_dashboard.png" alt="dashboard" width="900"/>
 
-##### Manual Sync
-<img src="_Screenshots\sdc_sync.png" alt="dashboard" width="900"/>
+<table>
+<tr>
+	<td align="center"><b>Sync</b></td><td align="center"><b>Explorer</b></td>
+</tr>
+<tr>
+	<td><img src="_Screenshots\sdc_sync.png" alt="sync"/></td>
+	<td><img src="_Screenshots\sdc_explorer.png" alt="sync"/></td>
+</tr>
+<tr>
+	<td align="center"><b>Settings</b></td><td align="center"><b>Themes<b></td>
+</tr>
+<tr>
+	<td><img src="_Screenshots\sdc_settings.png" alt="sync"/></td>
+	<td><img src="_Screenshots\sdc_themes.png" alt="sync"/></td>
+</tr>
+</table>
