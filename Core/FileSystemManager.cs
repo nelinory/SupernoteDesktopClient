@@ -1,7 +1,5 @@
-﻿using Serilog;
-using System;
+﻿using System;
 using System.IO;
-using System.Reflection;
 
 namespace SupernoteDesktopClient.Core
 {
@@ -9,21 +7,14 @@ namespace SupernoteDesktopClient.Core
     {
         public static void ForceDeleteDirectory(string path)
         {
-            try
-            {
-                var directory = new DirectoryInfo(path) { Attributes = FileAttributes.Normal };
+            var directory = new DirectoryInfo(path) { Attributes = FileAttributes.Normal };
 
-                foreach (var info in directory.GetFileSystemInfos("*", SearchOption.AllDirectories))
-                {
-                    info.Attributes = FileAttributes.Normal;
-                }
-
-                directory.Delete(true);
-            }
-            catch (Exception ex)
+            foreach (var info in directory.GetFileSystemInfos("*", SearchOption.AllDirectories))
             {
-                Log.Error("Error while deleting directory: {EX}", ex);
+                info.Attributes = FileAttributes.Normal;
             }
+
+            directory.Delete(true);
         }
 
         public static void EnsureFolderExists(string fileName)
@@ -36,7 +27,12 @@ namespace SupernoteDesktopClient.Core
 
         public static string GetApplicationFolder()
         {
-            return Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location);
+            return AppDomain.CurrentDomain.BaseDirectory;
+        }
+
+        public static string GetApplicationDeviceFolder()
+        {
+            return Path.Combine(GetApplicationFolder(), @"Device");
         }
 
         public static DateTime? GetFolderCreateDateTime(string folder)

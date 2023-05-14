@@ -61,6 +61,8 @@ namespace SupernoteDesktopClient
                 services.AddScoped<ViewModels.AboutViewModel>();
                 services.AddScoped<Views.Pages.DashboardPage>();
                 services.AddScoped<ViewModels.DashboardViewModel>();
+                services.AddScoped<Views.Pages.ExplorerPage>();
+                services.AddScoped<ViewModels.ExplorerViewModel>();
                 services.AddScoped<Views.Pages.SettingsPage>();
                 services.AddScoped<ViewModels.SettingsViewModel>();
                 services.AddScoped<Views.Pages.SyncPage>();
@@ -91,6 +93,8 @@ namespace SupernoteDesktopClient
 
             SetupUnhandledExceptionHandling();
 
+            DiagnosticLogger.Log($"Sdc {ApplicationManager.GetAssemblyVersion()} started...");
+
             await _host.StartAsync();
         }
 
@@ -99,6 +103,8 @@ namespace SupernoteDesktopClient
         /// </summary>
         private async void OnExit(object sender, ExitEventArgs e)
         {
+            DiagnosticLogger.Log($"Sdc {ApplicationManager.GetAssemblyVersion()} exited...");
+
             // flush all log items before exit
             Log.CloseAndFlush();
 
@@ -136,11 +142,20 @@ namespace SupernoteDesktopClient
         {
             // configure logging
             Log.Logger = new LoggerConfiguration()
-               .WriteTo.File(Path.Combine(_logsPath, "Sdc-.log"),
-                                restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information,
+               .MinimumLevel.Information()
+               .Enrich.FromLogContext()
+               .WriteTo.Logger(p => p
+                                .Filter.ByExcluding(p => p.Properties.ContainsKey("IsDiag"))
+                                .WriteTo.File(Path.Combine(_logsPath, "Sdc-.log"),
                                 outputTemplate: "{Timestamp:MM/dd/yyyy HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}",
                                 rollingInterval: RollingInterval.Day,
-                                retainedFileCountLimit: 7)
+                                retainedFileCountLimit: 7))
+               .WriteTo.Logger(p => p
+                                .Filter.ByIncludingOnly(p => p.Properties.ContainsKey("IsDiag"))
+                                .WriteTo.File(Path.Combine(_logsPath, "Sdc-Diag-.log"),
+                                outputTemplate: "{Timestamp:MM/dd/yyyy HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}",
+                                rollingInterval: RollingInterval.Day,
+                                retainedFileCountLimit: 7))
                .CreateLogger();
         }
 

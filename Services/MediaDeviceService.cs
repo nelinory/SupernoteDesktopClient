@@ -1,4 +1,5 @@
 ﻿using MediaDevices;
+using SupernoteDesktopClient.Core;
 using SupernoteDesktopClient.Services.Contracts;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,6 +48,8 @@ namespace SupernoteDesktopClient.Services
             _driveInfo = null;
             if (_device != null && _device.IsConnected == true)
                 _driveInfo = _device.GetDrives().FirstOrDefault();
+
+            DiagnosticLogger.Log($"Device: {(_device == null ? "N/A":_device)}, DriveInfo: {(_driveInfo == null ? "N/A" : _driveInfo)}");
         }
     }
 }

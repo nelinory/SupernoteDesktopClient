@@ -1,5 +1,4 @@
-﻿using Serilog;
-using SupernoteDesktopClient.Core;
+﻿using SupernoteDesktopClient.Core;
 using SupernoteDesktopClient.Extensions;
 using SupernoteDesktopClient.Services.Contracts;
 using System;
@@ -44,43 +43,36 @@ namespace SupernoteDesktopClient.Services
 
             if (_mediaDeviceService.Device != null)
             {
-                try
+                if (Directory.Exists(BackupFolder) == true)
                 {
-                    if (Directory.Exists(BackupFolder) == true)
+                    ArchiveManager.Archive(BackupFolder, ArchiveFolder, SettingsManager.Instance.Settings.Sync.MaxDeviceArchives);
+
+                    // delete existing storage folder if exists
+                    FileSystemManager.ForceDeleteDirectory(BackupFolder);
+                }
+
+                var supernoteFolder = _mediaDeviceService.Device.GetDirectoryInfo(@"\");
+                var files = supernoteFolder.EnumerateFiles("*.*", SearchOption.AllDirectories);
+
+                foreach (var file in files)
+                {
+                    Debug.WriteLine(file.FullName);
+                    string destinationFileName = file.FullName.ReplaceFirstOccurrence(SourceFolder, BackupFolder);
+                    string destinationFolder = Path.GetDirectoryName(destinationFileName);
+
+                    if (Directory.Exists(destinationFolder) == false)
+                        Directory.CreateDirectory(destinationFolder);
+
+                    if (File.Exists(destinationFileName) == false)
                     {
-                        ArchiveManager.Archive(BackupFolder, ArchiveFolder, SettingsManager.Instance.Settings.Sync.MaxDeviceArchives);
-
-                        // delete existing storage folder if exists
-                        FileSystemManager.ForceDeleteDirectory(BackupFolder);
-                    }
-
-                    var supernoteFolder = _mediaDeviceService.Device.GetDirectoryInfo(@"\");
-                    var files = supernoteFolder.EnumerateFiles("*.*", SearchOption.AllDirectories);
-
-                    foreach (var file in files)
-                    {
-                        Debug.WriteLine(file.FullName);
-                        string destinationFileName = file.FullName.ReplaceFirstOccurrence(SourceFolder, BackupFolder);
-                        string destinationFolder = Path.GetDirectoryName(destinationFileName);
-
-                        if (Directory.Exists(destinationFolder) == false)
-                            Directory.CreateDirectory(destinationFolder);
-
-                        if (File.Exists(destinationFileName) == false)
+                        using (FileStream fs = new FileStream(destinationFileName, FileMode.Create, FileAccess.Write))
                         {
-                            using (FileStream fs = new FileStream(destinationFileName, FileMode.Create, FileAccess.Write))
-                            {
-                                _mediaDeviceService.Device.DownloadFile(file.FullName, fs);
-                            }
+                            _mediaDeviceService.Device.DownloadFile(file.FullName, fs);
                         }
                     }
+                }
 
-                    returnResult = true;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error("Error while executing sync: {EX}", ex);
-                }
+                returnResult = true;
             }
 
             IsBusy = false;

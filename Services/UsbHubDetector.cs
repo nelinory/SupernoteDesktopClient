@@ -1,4 +1,5 @@
-﻿using SupernoteDesktopClient.Services.Contracts;
+﻿using SupernoteDesktopClient.Core;
+using SupernoteDesktopClient.Services.Contracts;
 using System;
 using System.ComponentModel;
 using System.Management;
@@ -61,6 +62,8 @@ namespace SupernoteDesktopClient.Services
         {
             string deviceId = ((ManagementBaseObject)e.NewEvent["TargetInstance"])["PNPDeviceID"].ToString();
             bool isConnected = (e.NewEvent.ClassPath.RelativePath == _creationEvent);
+
+            DiagnosticLogger.Log($"Usb Device: {deviceId}, IsConnected: {isConnected}");
 
             // WMI device event seems to be triggering immediately when device is attached/detached.
             // Adding 1s wait time before notifying all subscribers to ensure the device is available for them.

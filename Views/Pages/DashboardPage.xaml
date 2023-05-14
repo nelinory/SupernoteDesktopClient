@@ -99,12 +99,19 @@
                                 Icon="DataPie24">
                     <ui:CardControl.Header>
                         <StackPanel VerticalAlignment="Center">
-                            <TextBlock FontSize="14"
-                                       FontWeight="Medium"
-                                       Text="{Binding ViewModel.DeviceSpaceAvailable, Mode=OneWay}" />
-                            <TextBlock FontSize="12"
-                                       Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                                       Text="Device available space" />
+                            <Grid>
+                                <TextBlock FontSize="14"
+                                           FontWeight="Medium"
+                                           HorizontalAlignment="Left"
+                                           Text="Device used space" />
+                                <TextBlock FontSize="14"
+                                           FontWeight="Medium"
+                                           HorizontalAlignment="Right"
+                                           Text="{Binding ViewModel.DeviceUsedSpace, Mode=OneWay}" />
+                            </Grid>
+                            <ProgressBar Value="{Binding ViewModel.DeviceUsedSpacePercentage}"
+                                         ToolTip=""
+                                         Margin="0,6,0,0" />
                         </StackPanel>
                     </ui:CardControl.Header>
                 </ui:CardControl>

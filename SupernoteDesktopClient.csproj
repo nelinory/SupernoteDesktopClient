@@ -39,8 +39,4 @@
 		<Resource Include="Assets\spash.png" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="_Screenshots\" />
-	</ItemGroup>
-
 </Project>

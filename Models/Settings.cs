@@ -9,7 +9,7 @@ namespace SupernoteDesktopClient.Models
 
         public General General { get; set; }
         public Sync Sync { get; set; }
-        
+
         public Settings()
         {
             CurrentVersion = LatestVersion;
@@ -20,20 +20,19 @@ namespace SupernoteDesktopClient.Models
         }
     }
 
-    // TODO: Add to Settings View
     public class General
     {
         public bool RememberAppWindowPlacement { get; set; } = true;
         public WindowPlacement AppWindowPlacement { get; set; }
         public bool MinimizeToTrayEnabled { get; set; } = false;
         public string CurrentTheme { get; set; } = "Light"; // Light or Dark
+        public bool DiagnosticLogEnabled { get; set; } = false;
     }
 
-    // TODO: Add to Settings View
     public class Sync
     {
         public bool ShowNotificationOnDeviceStateChange { get; set; } = true;
-        public bool AutomaticSyncOnConnect { get; set; } = true;
+        public bool AutomaticSyncOnConnect { get; set; } = false;
         public int MaxDeviceArchives { get; set; } = 7;
     }
 }

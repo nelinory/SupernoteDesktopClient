@@ -1,5 +1,4 @@
-﻿using Serilog;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.IO.Compression;
@@ -14,51 +13,37 @@ namespace SupernoteDesktopClient.Core
             string currentDateTime = String.Format("{0:yyyyMMdd_HHmmss}", DateTime.Now);
             string archiveFileName = $"{currentDateTime}_{Path.GetFileName(backupFolder)}.zip";
 
-            if (ExecuteArchive(backupFolder, Path.Combine(archiveFolder, archiveFileName)) == true)
+            if (CreateArchive(backupFolder, Path.Combine(archiveFolder, archiveFileName)) == true)
                 PurgeOldArchives(archiveFolder, Path.GetFileName(backupFolder), maxArchivesToKeep);
         }
 
-        public static ObservableCollection<Models.FileAttributes> GetArchivesList(string archiveFolder)
+        public static ObservableCollection<Models.ArchiveFileAttributes> GetArchivesList(string archiveFolder)
         {
-            ObservableCollection<Models.FileAttributes> archiveFiles = new ObservableCollection<Models.FileAttributes>();
+            ObservableCollection<Models.ArchiveFileAttributes> archiveFiles = new ObservableCollection<Models.ArchiveFileAttributes>();
 
-            try
+            if (String.IsNullOrWhiteSpace(archiveFolder) == false && Directory.Exists(archiveFolder) == true)
             {
-                if (String.IsNullOrWhiteSpace(archiveFolder) == false && Directory.Exists(archiveFolder) == true)
+                var directory = new DirectoryInfo(archiveFolder);
+                foreach (FileInfo fileInfo in directory.GetFiles().OrderByDescending(p => p.CreationTime))
                 {
-                    var directory = new DirectoryInfo(archiveFolder);
-                    foreach (FileInfo fileInfo in directory.GetFiles().OrderByDescending(p => p.CreationTime))
-                    {
-                        archiveFiles.Add(new Models.FileAttributes(fileInfo.Name, fileInfo.DirectoryName, fileInfo.LastWriteTime, fileInfo.Length));
-                    }
+                    archiveFiles.Add(new Models.ArchiveFileAttributes(fileInfo.Name, fileInfo.DirectoryName, fileInfo.LastWriteTime, fileInfo.Length));
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Error while getting list of all archives: {EX}", ex);
             }
 
             return archiveFiles;
         }
 
-        private static bool ExecuteArchive(string backupFolder, string archiveFileName)
+        private static bool CreateArchive(string backupFolder, string archiveFileName)
         {
             bool success = false;
 
-            try
+            if (Directory.Exists(backupFolder) == true && Directory.GetFiles(backupFolder, "*", SearchOption.AllDirectories).Length > 0)
             {
-                if (Directory.Exists(backupFolder) == true && Directory.GetFiles(backupFolder, "*", SearchOption.AllDirectories).Length > 0)
-                {
-                    FileSystemManager.EnsureFolderExists(archiveFileName);
+                FileSystemManager.EnsureFolderExists(archiveFileName);
 
-                    ZipFile.CreateFromDirectory(backupFolder, archiveFileName, CompressionLevel.Fastest, false);
+                ZipFile.CreateFromDirectory(backupFolder, archiveFileName, CompressionLevel.Fastest, false);
 
-                    success = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Error while executing archive: {EX}", ex);
+                success = true;
             }
 
             return success;
@@ -66,27 +51,20 @@ namespace SupernoteDesktopClient.Core
 
         private static void PurgeOldArchives(string archiveFolder, string archiveFilePattern, int maxArchivesToKeep)
         {
-            try
+            if (Directory.Exists(archiveFolder) == true)
             {
-                if (Directory.Exists(archiveFolder) == true)
+                string[] archiveFileNames = Directory.GetFiles(archiveFolder, $"*{archiveFilePattern}.zip");
+                if (archiveFileNames.Length > maxArchivesToKeep)
                 {
-                    string[] archiveFileNames = Directory.GetFiles(archiveFolder, $"*{archiveFilePattern}.zip");
-                    if (archiveFileNames.Length > maxArchivesToKeep)
-                    {
-                        Array.Sort(archiveFileNames, StringComparer.InvariantCulture);
+                    Array.Sort(archiveFileNames, StringComparer.InvariantCulture);
 
-                        int filesToDelete = archiveFileNames.Length - maxArchivesToKeep;
-                        for (int i = 0; i < filesToDelete; i++)
-                        {
-                            if (File.Exists(archiveFileNames[i]) == true)
-                                File.Delete(archiveFileNames[i]);
-                        }
+                    int filesToDelete = archiveFileNames.Length - maxArchivesToKeep;
+                    for (int i = 0; i < filesToDelete; i++)
+                    {
+                        if (File.Exists(archiveFileNames[i]) == true)
+                            File.Delete(archiveFileNames[i]);
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Error while purging old archives: {EX}", ex);
             }
         }
     }

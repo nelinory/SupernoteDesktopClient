@@ -29,7 +29,7 @@ namespace SupernoteDesktopClient.ViewModels
         private ObservableCollection<INavigationControl> _navigationFooter = new();
 
         [ObservableProperty]
-        private bool _minimizeToTrayEnabled;
+        private bool _minimizeToTrayEnabled = SettingsManager.Instance.Settings.General.MinimizeToTrayEnabled;
 
         public MainWindowViewModel(ISnackbarService snackbarService, IUsbHubDetector usbHubDetector, INavigationService navigationService)
         {
@@ -43,8 +43,11 @@ namespace SupernoteDesktopClient.ViewModels
 
             BuildNavigationMenu();
 
-            // TODO: Refresh settings on change
-            MinimizeToTrayEnabled = SettingsManager.Instance.Settings.General.MinimizeToTrayEnabled;
+            // Register a message subscriber
+            WeakReferenceMessenger.Default.Register<SettingsChangedMessage>(this, (r, m) =>
+            {
+                MinimizeToTrayEnabled = SettingsManager.Instance.Settings.General.MinimizeToTrayEnabled;
+            });
         }
 
         private void BuildNavigationMenu()
@@ -57,7 +60,7 @@ namespace SupernoteDesktopClient.ViewModels
                     PageTag = "dashboard",
                     ToolTip = "Dashboard",
                     Icon = SymbolRegular.Home24,
-                    PageType = typeof(Views.Pages.DashboardPage)
+                    PageType = typeof(DashboardPage)
                 },
                 new NavigationSeparator(),
                 new NavigationItem()
@@ -66,50 +69,19 @@ namespace SupernoteDesktopClient.ViewModels
                     PageTag = "sync",
                     ToolTip = "Sync",
                     Icon = SymbolRegular.ArrowSyncCircle24,
-                    PageType = typeof(Views.Pages.SyncPage)
+                    PageType = typeof(SyncPage)
                 },
-                //new NavigationItem()
-                //{
-                //    Content = "Note",
-                //    PageTag = "note",
-                //    Icon = SymbolRegular.Notebook24,
-                //    IsEnabled = false
-                //    //PageType = typeof(Views.Pages.DataPage)
-                //},
-                //new NavigationItem()
-                //{
-                //    Content = "Document",
-                //    PageTag = "document",
-                //    Icon = SymbolRegular.DocumentText24,
-                //    IsEnabled = false
-                //    //PageType = typeof(Views.Pages.DataPage)
-                //},
-                //new NavigationItem()
-                //{
-                //    Content = "Screenshot",
-                //    PageTag = "screenshot",
-                //    Icon = SymbolRegular.Image24,
-                //    IsEnabled = false
-                //    //PageType = typeof(Views.Pages.DataPage)
-                //},
-                //new NavigationItem()
-                //{
-                //    Content = "Export",
-                //    PageTag = "export",
-                //    Icon = SymbolRegular.FolderArrowLeft24,
-                //    IsEnabled = false
-                //    //PageType = typeof(Views.Pages.DataPage)
-                //},
-                //new NavigationItem()
-                //{
-                //    Content = "MyStyle",
-                //    PageTag = "mystyle",
-                //    IsEnabled = false,
-                //    Icon = SymbolRegular.TextBulletListSquareEdit24,
-                //    //PageType = typeof(Views.Pages.DataPage)
-                //}
+                new NavigationItem()
+                {
+                    Content = "Explorer",
+                    PageTag = "explorer",
+                    ToolTip = "Explorer",
+                    Icon = SymbolRegular.FolderOpen24,
+                    IsEnabled = true,
+                    PageType = typeof(ExplorerPage)
+                }
             };
-
+            
             NavigationFooter = new ObservableCollection<INavigationControl>
             {
                 new NavigationItem()
@@ -125,7 +97,7 @@ namespace SupernoteDesktopClient.ViewModels
                     PageTag = "settings",
                     ToolTip = "Settings",
                     Icon = SymbolRegular.Settings24,
-                    PageType = typeof(Views.Pages.SettingsPage)
+                    PageType = typeof(SettingsPage)
                 },
                 new NavigationSeparator(),
                 new NavigationItem()
@@ -134,7 +106,7 @@ namespace SupernoteDesktopClient.ViewModels
                     PageTag = "about",
                     ToolTip = "About",
                     Icon = SymbolRegular.QuestionCircle24,
-                    PageType = typeof(Views.Pages.AboutPage)
+                    PageType = typeof(AboutPage)
                 }
             };
         }

@@ -6,47 +6,56 @@
 
 Supernote Desktop Client (SDC) is a desktop client for Supernote paper-like tablet by Ratta (https://supernote.com).
 
-> SDC is a windows application build with .NET 6
+> SDC is a windows application build with .NET 6. Tested with Windows 10 
 
 ### Key Features
 - Automatically detects Supernote device connected with an USB cable
 - Shows basic information for connected Supernote device
 - Automatic/Manual Supernote storage synchronization to local folder
 - Automatically archives last synchronization
-- Supports multiple Supernote devices, each device will have unique local sync folder
+- Supports multiple Supernote devices, each device will have an unique local sync folder
+- Build-in explorer allows to view and open all Supernote file in the local backup folder
 - Light/Dark Theme support 
 
-### Download
+### Tested on Windows version
+- Windows 10 version 22H2 (OS Build 19045.2846)
+- Windows 11 version 22H2 (OS Build 22621.1413)
+
+### Download & Run
 Get the latest portable version from [Releases page](https://github.com/nelinory/SupernoteDesktopClient/releases/latest).
 Extract the zip file to a desired location.  
 Run `SupernoteDesktopClient.exe` from inside sdc folder. 
+> If you get a [SmartScreen](https://user-images.githubusercontent.com/25006819/115977864-555d4300-a5ae-11eb-948b-c0139f606a2d.png) popup, click on "More info" and then "Run anyway".
+> The reason this popup appears is because the application is portable and it is not signed for distribution through Microsoft store..
 
-### Problems with Microsoft .NET when running the application
-
-If you do not have .NET 6 installed:
-1. Go to https://dotnet.microsoft.com/en-us/download/dotnet/6.0
-2. Find the section ".NET Desktop Runtime 6.x.x"
-3. Download x64 Windows installer
-4. Run the installer
-
-After following these steps, you can open Terminal and type: `dotnet --info`. In the output look for section `.NET runtimes installed`, in this section you should see something like:  
-`Microsoft.NETCore.App 6.x.x [C:\Program Files\dotnet\shared\Microsoft.NETCore.App]`  
-and  
-`Microsoft.WindowsDesktop.App 6.x.x [C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App]`  
-as long as both versions say 6.x.x you are good to go.
+### Wiki
+- [Frequently asked questions](https://github.com/nelinory/SupernoteDesktopClient/wiki/FAQ)  
+- [Problems with Microsoft .NET when running the application](https://github.com/nelinory/SupernoteDesktopClient/wiki/Problems-with-Microsoft-.NET-when-running-the-application)
 
 ### Roadmap
 For release milestones, please check the project board: https://github.com/users/nelinory/projects/1
 
 ### How to build
-
-- Visual Studio 2022
-- .NET 6.0 Runtime
-- .NET 6.0 SDK
+- Clone SDC repository
+- Open SupernoteDesktopClient solution in Visual Studio 2022 and build it
 
 ### Screenshots
 ##### Dashboard
 <img src="_Screenshots\sdc_dashboard.png" alt="dashboard" width="900"/>
 
-##### Manual Sync
-<img src="_Screenshots\sdc_sync.png" alt="dashboard" width="900"/>
+<table>
+<tr>
+	<td align="center"><b>Sync</b></td><td align="center"><b>Explorer</b></td>
+</tr>
+<tr>
+	<td><img src="_Screenshots\sdc_sync.png" alt="sync"/></td>
+	<td><img src="_Screenshots\sdc_explorer.png" alt="sync"/></td>
+</tr>
+<tr>
+	<td align="center"><b>Settings</b></td><td align="center"><b>Themes<b></td>
+</tr>
+<tr>
+	<td><img src="_Screenshots\sdc_settings.png" alt="sync"/></td>
+	<td><img src="_Screenshots\sdc_themes.png" alt="sync"/></td>
+</tr>
+</table>
