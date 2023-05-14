@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using SupernoteDesktopClient.Core;
 using SupernoteDesktopClient.Extensions;
 using SupernoteDesktopClient.Models;
 using SupernoteDesktopClient.Services.Contracts;
@@ -48,6 +49,8 @@ namespace SupernoteDesktopClient.ViewModels
 
         public void OnNavigatedTo()
         {
+            DiagnosticLogger.Log($"{this}");
+
             UpdateDashboard();
         }
 

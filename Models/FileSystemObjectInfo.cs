@@ -12,6 +12,8 @@ using System.Windows.Media;
 
 namespace SupernoteDesktopClient.Models
 {
+    // Credit: https://medium.com/@mikependon/designing-a-wpf-treeview-file-explorer-565a3f13f6f2
+
     [ObservableObject]
     public partial class FileSystemObjectInfo : BaseObject
     {

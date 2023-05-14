@@ -72,6 +72,7 @@ namespace SupernoteDesktopClient.ViewModels
 
         public void OnNavigatedTo()
         {
+            DiagnosticLogger.Log($"{this}");
         }
 
         public void OnNavigatedFrom()

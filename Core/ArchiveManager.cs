@@ -13,7 +13,7 @@ namespace SupernoteDesktopClient.Core
             string currentDateTime = String.Format("{0:yyyyMMdd_HHmmss}", DateTime.Now);
             string archiveFileName = $"{currentDateTime}_{Path.GetFileName(backupFolder)}.zip";
 
-            if (ExecuteArchive(backupFolder, Path.Combine(archiveFolder, archiveFileName)) == true)
+            if (CreateArchive(backupFolder, Path.Combine(archiveFolder, archiveFileName)) == true)
                 PurgeOldArchives(archiveFolder, Path.GetFileName(backupFolder), maxArchivesToKeep);
         }
 
@@ -33,7 +33,7 @@ namespace SupernoteDesktopClient.Core
             return archiveFiles;
         }
 
-        private static bool ExecuteArchive(string backupFolder, string archiveFileName)
+        private static bool CreateArchive(string backupFolder, string archiveFileName)
         {
             bool success = false;
 
