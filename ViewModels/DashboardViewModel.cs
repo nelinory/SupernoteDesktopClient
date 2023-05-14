@@ -45,7 +45,10 @@ namespace SupernoteDesktopClient.ViewModels
         private string _batteryPowerText;
 
         [ObservableProperty]
-        private string _deviceSpaceAvailable;
+        private string _deviceUsedSpace;
+
+        [ObservableProperty]
+        private decimal _deviceUsedSpacePercentage;
 
         public void OnNavigatedTo()
         {
@@ -93,8 +96,8 @@ namespace SupernoteDesktopClient.ViewModels
 
             long freeSpace = (_mediaDeviceService.DriveInfo != null) ? (long)_mediaDeviceService.DriveInfo?.AvailableFreeSpace : 0;
             long totalSpace = (_mediaDeviceService.DriveInfo != null) ? (long)_mediaDeviceService.DriveInfo?.TotalSize : 0;
-            decimal freeSpacePercent = (_mediaDeviceService.DriveInfo != null) ? (freeSpace / (decimal)totalSpace) * 100 : 0;
-            DeviceSpaceAvailable = (_mediaDeviceService.DriveInfo != null) ? $"{freeSpace.GetDataSizeAsString()} free of {totalSpace.GetDataSizeAsString()} ({freeSpacePercent.ToString("F2")}% free space)" : "N/A";
+            DeviceUsedSpacePercentage = (_mediaDeviceService.DriveInfo != null) ? ((totalSpace - freeSpace) / (decimal)totalSpace) * 100 : 0;
+            DeviceUsedSpace = (_mediaDeviceService.DriveInfo != null) ? $"{(totalSpace - freeSpace).GetDataSizeAsString()} / {totalSpace.GetDataSizeAsString()} ({DeviceUsedSpacePercentage.ToString("F2")}% used space)" : "N/A";
 
             IsSerialNumberCopyEnabled = (_mediaDeviceService.Device != null);
         }
