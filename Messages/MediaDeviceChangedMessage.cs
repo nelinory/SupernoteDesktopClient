@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Messaging.Messages;
 
-namespace SupernoteDesktopClient.Models
+namespace SupernoteDesktopClient.Messages
 {
     public class MediaDeviceChangedMessage : ValueChangedMessage<DeviceInfo>
     {

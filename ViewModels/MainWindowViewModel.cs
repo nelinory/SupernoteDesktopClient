@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using SupernoteDesktopClient.Core;
-using SupernoteDesktopClient.Models;
+using SupernoteDesktopClient.Messages;
 using SupernoteDesktopClient.Services.Contracts;
 using SupernoteDesktopClient.Views.Pages;
 using System.Collections.ObjectModel;

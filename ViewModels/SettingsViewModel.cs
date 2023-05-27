@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using SupernoteDesktopClient.Core;
-using SupernoteDesktopClient.Models;
+using SupernoteDesktopClient.Messages;
 using System.Collections.Generic;
 using System.Windows.Media;
 using Wpf.Ui.Appearance;

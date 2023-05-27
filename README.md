@@ -6,14 +6,14 @@
 
 Supernote Desktop Client (SDC) is a desktop client for Supernote paper-like tablet by Ratta (https://supernote.com).
 
-> SDC is a windows application build with .NET 6. Tested with Windows 10 
+> SDC is a windows application build with .NET 6.
 
 ### Key Features
 - Automatically detects Supernote device connected with an USB cable
 - Shows basic information for connected Supernote device
 - Automatic/Manual Supernote storage synchronization to local folder
 - Automatically archives last synchronization
-- Supports multiple Supernote devices, each device will have an unique local sync folder
+- Supports multiple Supernote devices, each device have an unique local sync folder
 - Build-in explorer allows to view and open all Supernote files in the local backup folder
 - Light/Dark Theme support 
 

@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using SupernoteDesktopClient.Core;
 using SupernoteDesktopClient.Extensions;
-using SupernoteDesktopClient.Models;
+using SupernoteDesktopClient.Messages;
 using SupernoteDesktopClient.Services.Contracts;
 using Wpf.Ui.Common;
 using Wpf.Ui.Common.Interfaces;
