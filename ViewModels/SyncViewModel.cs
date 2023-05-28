@@ -91,7 +91,7 @@ namespace SupernoteDesktopClient.ViewModels
             ArchiveFiles = ArchiveManager.GetArchivesList(_syncService.ArchiveFolder);
             ArchivesVisible = ArchiveFiles.Count > 0;
 
-            IsSyncButtonEnabled = (_mediaDeviceService.Device != null);
+            IsSyncButtonEnabled = _mediaDeviceService.IsDeviceConnected;
             IsSyncRunning = _syncService.IsBusy;
 
             // auto sync on connect

@@ -41,7 +41,7 @@ namespace SupernoteDesktopClient.Services
 
             IsBusy = true;
 
-            if (_mediaDeviceService.Device != null)
+            if (_mediaDeviceService.IsDeviceConnected == true)
             {
                 if (Directory.Exists(BackupFolder) == true)
                 {
@@ -51,7 +51,7 @@ namespace SupernoteDesktopClient.Services
                     FileSystemManager.ForceDeleteDirectory(BackupFolder);
                 }
 
-                var supernoteFolder = _mediaDeviceService.Device.GetDirectoryInfo(@"\");
+                var supernoteFolder = _mediaDeviceService.Device?.GetDirectoryInfo(@"\");
                 var files = supernoteFolder.EnumerateFiles("*.*", SearchOption.AllDirectories);
 
                 foreach (var file in files)
@@ -67,7 +67,7 @@ namespace SupernoteDesktopClient.Services
                     {
                         using (FileStream fs = new FileStream(destinationFileName, FileMode.Create, FileAccess.Write))
                         {
-                            _mediaDeviceService.Device.DownloadFile(file.FullName, fs);
+                            _mediaDeviceService.Device?.DownloadFile(file.FullName, fs);
                         }
                     }
                 }
@@ -83,8 +83,8 @@ namespace SupernoteDesktopClient.Services
         private string GetFolderByType(string folderType)
         {
             string folder = FileSystemManager.GetApplicationFolder();
-            if (String.IsNullOrWhiteSpace(folder) == false && _mediaDeviceService.Device != null)
-                return Path.Combine(folder, $@"Device\{_mediaDeviceService.Device.SerialNumber.GetShortSHA1Hash()}\{folderType}");
+            if (String.IsNullOrWhiteSpace(folder) == false && _mediaDeviceService.IsDeviceConnected == true)
+                return Path.Combine(folder, $@"Device\{_mediaDeviceService.Device?.SerialNumber.GetShortSHA1Hash()}\{folderType}");
             else
                 return null;
         }

@@ -8,7 +8,7 @@ namespace SupernoteDesktopClient.Services
 {
     public class MediaDeviceService : IMediaDeviceService
     {
-        private const string _supernoteDeviceId = "VID_2207&PID_0011";
+        private const string SUPERNOTE_DEVICE_ID = "VID_2207&PID_0011";
 
         private MediaDevice _device;
         public MediaDevice Device
@@ -22,6 +22,12 @@ namespace SupernoteDesktopClient.Services
             get { return _driveInfo; }
         }
 
+        private bool _isDeviceConnected;
+        public bool IsDeviceConnected
+        {
+            get { return _isDeviceConnected; }
+        }
+
         public MediaDeviceService()
         {
             RefreshMediaDeviceInfo();
@@ -30,7 +36,7 @@ namespace SupernoteDesktopClient.Services
         public void RefreshMediaDeviceInfo()
         {
             List<MediaDevice> tmpDevices = MediaDevice.GetDevices().ToList();
-            MediaDevice tmpDevice = tmpDevices.Where(p => p.DeviceId.Contains(_supernoteDeviceId, System.StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            MediaDevice tmpDevice = tmpDevices.Where(p => p.DeviceId.Contains(SUPERNOTE_DEVICE_ID, System.StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
 
             if (_device == null)
                 _device = tmpDevice;
@@ -48,6 +54,8 @@ namespace SupernoteDesktopClient.Services
             _driveInfo = null;
             if (_device != null && _device.IsConnected == true)
                 _driveInfo = _device.GetDrives().FirstOrDefault();
+
+            _isDeviceConnected = (_device != null && _device.IsConnected == true);
 
             DiagnosticLogger.Log($"Device: {(_device == null ? "N/A":_device)}, DriveInfo: {(_driveInfo == null ? "N/A" : _driveInfo)}");
         }

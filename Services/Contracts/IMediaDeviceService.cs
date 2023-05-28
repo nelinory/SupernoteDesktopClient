@@ -8,6 +8,8 @@ namespace SupernoteDesktopClient.Services.Contracts
 
         MediaDriveInfo DriveInfo { get; }
 
+        bool IsDeviceConnected { get; }
+
         void RefreshMediaDeviceInfo();
     }
 }

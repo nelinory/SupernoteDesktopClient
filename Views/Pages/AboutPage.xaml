@@ -37,33 +37,51 @@
                    FontSize="14"
                    FontWeight="Medium"
                    Text="Third-party libraries" />
-        <ui:Hyperlink Cursor="Hand"
-                      Content="CommunityToolkit.Mvvm"
-                      Icon="Link24"
-                      NavigateUri="https://github.com/CommunityToolkit/dotnet" />
-        <ui:Hyperlink Cursor="Hand"
-                      Content="Microsoft.Extensions.Hosting"
-                      Icon="Link24"
-                      NavigateUri="https://www.nuget.org/packages/Microsoft.Extensions.Hosting" />
-        <ui:Hyperlink Cursor="Hand"
-                      Content="System.Management"
-                      Icon="Link24"
-                      NavigateUri="https://www.nuget.org/packages/System.Management" />        
-        <ui:Hyperlink Cursor="Hand"
-                      Content="Wpfui"
-                      Icon="Link24"
-                      NavigateUri="https://github.com/lepoco/wpfui" />
-        <ui:Hyperlink Cursor="Hand"
-                      Content="MediaDevices"
-                      Icon="Link24"
-                      NavigateUri="https://github.com/Bassman2/MediaDevices" />
-        <ui:Hyperlink Cursor="Hand"
-                      Content="Serilog"
-                      Icon="Link24"
-                      NavigateUri="https://serilog.net" />
-        <ui:Hyperlink Cursor="Hand"
-                      Content="fluentui-system-icons"
-                      Icon="Link24"
-                      NavigateUri="https://github.com/microsoft/fluentui-system-icons" />        
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <ui:Hyperlink Cursor="Hand"
+                              Content="CommunityToolkit.Mvvm"
+                              Icon="Link24"
+                              NavigateUri="https://github.com/CommunityToolkit/dotnet" />
+                <ui:Hyperlink Cursor="Hand"
+                              Content="MediaDevices"
+                              Icon="Link24"
+                              NavigateUri="https://github.com/Bassman2/MediaDevices" />
+                <ui:Hyperlink Cursor="Hand"
+                              Content="Microsoft.Extensions.Hosting"
+                              Icon="Link24"
+                              NavigateUri="https://www.nuget.org/packages/Microsoft.Extensions.Hosting" />
+                <ui:Hyperlink Cursor="Hand"
+                              Content="Microsoft.Toolkit.Uwp.Notifications"
+                              Icon="Link24"
+                              NavigateUri="https://github.com/CommunityToolkit/WindowsCommunityToolkit" />
+                <ui:Hyperlink Cursor="Hand"
+                              Content="Serilog"
+                              Icon="Link24"
+                              NavigateUri="https://serilog.net" />
+                <ui:Hyperlink Cursor="Hand"
+                              Content="Serilog.Sinks.File"
+                              Icon="Link24"
+                              NavigateUri="https://serilog.net" />
+                <ui:Hyperlink Cursor="Hand"
+                              Content="System.Management"
+                              Icon="Link24"
+                              NavigateUri="https://www.nuget.org/packages/System.Management" />
+                <ui:Hyperlink Cursor="Hand"
+                              Content="Wpfui"
+                              Icon="Link24"
+                              NavigateUri="https://github.com/lepoco/wpfui" />                
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <ui:Hyperlink Cursor="Hand"
+                              Content="fluentui-system-icons"
+                              Icon="Link24"
+                              NavigateUri="https://github.com/microsoft/fluentui-system-icons" />
+            </StackPanel>
+        </Grid>
     </StackPanel>
 </ui:UiPage>
