@@ -29,7 +29,7 @@ namespace SupernoteDesktopClient.Core
             {
                 return Imaging.CreateBitmapSourceFromHIcon(icon.Handle,
                     System.Windows.Int32Rect.Empty,
-                    BitmapSizeOptions.FromWidthAndHeight(size.Width, size.Height));
+                    BitmapSizeOptions.FromEmptyOptions());
             }
         }
 
@@ -39,7 +39,7 @@ namespace SupernoteDesktopClient.Core
             {
                 return Imaging.CreateBitmapSourceFromHIcon(icon.Handle,
                     System.Windows.Int32Rect.Empty,
-                    BitmapSizeOptions.FromWidthAndHeight(size.Width, size.Height));
+                    BitmapSizeOptions.FromEmptyOptions());
             }
         }
 

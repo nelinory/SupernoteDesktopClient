@@ -29,6 +29,7 @@
                             Message="There are no local backups of a Supernote device. Please, create a backup first before you can start exploring it."
                             IsClosable="False"
                             IsOpen="True"
+                            Severity="Informational"
                             Visibility="{Binding ViewModel.HasItems, Converter={StaticResource BoolToVisibilityInversionConverter}}" />
                 <TreeView Cursor="Hand"
                           Margin="-10"
@@ -51,7 +52,10 @@
                                                   ItemsSource="{Binding Children}">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="{Binding Path=ImageSource, UpdateSourceTrigger=PropertyChanged}"
-                                       Margin="0,1,5,1" />
+                                       Margin="0,1,5,1"
+                                       Width="24"
+                                       Height="24"
+                                       UseLayoutRounding="True" />
                                 <TextBlock Text="{Binding Path=FileSystemInfo.Name}"
                                            VerticalAlignment="Center"
                                            Margin="0,0,5,0">

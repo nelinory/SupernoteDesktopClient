@@ -110,7 +110,6 @@
                                            Text="{Binding ViewModel.DeviceUsedSpace, Mode=OneWay}" />
                             </Grid>
                             <ProgressBar Value="{Binding ViewModel.DeviceUsedSpacePercentage}"
-                                         ToolTip=""
                                          Margin="0,6,0,0" />
                         </StackPanel>
                     </ui:CardControl.Header>
