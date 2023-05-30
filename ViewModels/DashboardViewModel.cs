@@ -21,7 +21,7 @@ namespace SupernoteDesktopClient.ViewModels
         private const string CONNECTED_STATUS_TEXT_OFF = "Disconnected";
 
         [ObservableProperty]
-        private bool _isSerialNumberCopyEnabled;
+        private bool _isDeviceConnected;
 
         [ObservableProperty]
         private string _connectedStatusIcon = CONNECTED_STATUS_ICON_OFF;
@@ -82,24 +82,24 @@ namespace SupernoteDesktopClient.ViewModels
 
             ConnectedStatusIcon = (_mediaDeviceService.IsDeviceConnected == true) ? CONNECTED_STATUS_ICON_ON : CONNECTED_STATUS_ICON_OFF;
             ConnectedStatusText = (_mediaDeviceService.IsDeviceConnected == true) ? CONNECTED_STATUS_TEXT_ON : CONNECTED_STATUS_TEXT_OFF;
-            ModelNumber = (_mediaDeviceService.IsDeviceConnected == true) ? _mediaDeviceService.Device?.Model : "N/A";
-            SerialNumber = (_mediaDeviceService.IsDeviceConnected == true) ? _mediaDeviceService.Device?.SerialNumber : "N/A";
+            ModelNumber = _mediaDeviceService.SupernoteInfo.Model;
+            SerialNumber = _mediaDeviceService.SupernoteInfo.SerialNumber;
             SerialNumberMasked = SerialNumber.MaskSerialNumber();
 
             string batteryPower;
-            if (_mediaDeviceService.Device?.PowerLevel < 100)
-                batteryPower = _mediaDeviceService.Device?.PowerLevel.ToString().Substring(0, 1);
+            if (_mediaDeviceService.SupernoteInfo.PowerLevel < 100)
+                batteryPower = _mediaDeviceService.SupernoteInfo.PowerLevel.ToString().Substring(0, 1);
             else
-                batteryPower = _mediaDeviceService.Device?.PowerLevel.ToString().Substring(0, 2);
+                batteryPower = _mediaDeviceService.SupernoteInfo.PowerLevel.ToString().Substring(0, 2);
             BatteryPowerIcon = (_mediaDeviceService.IsDeviceConnected == true) ? $"Battery{batteryPower}24" : "Battery124";
-            BatteryPowerText = (_mediaDeviceService.IsDeviceConnected == true) ? _mediaDeviceService.Device?.PowerLevel + "%" : "N/A";
+            BatteryPowerText = (_mediaDeviceService.IsDeviceConnected == true) ? _mediaDeviceService.SupernoteInfo.PowerLevel + "%" : "N/A";
 
-            long freeSpace = (_mediaDeviceService.DriveInfo != null) ? (long)_mediaDeviceService.DriveInfo?.AvailableFreeSpace : 0;
-            long totalSpace = (_mediaDeviceService.DriveInfo != null) ? (long)_mediaDeviceService.DriveInfo?.TotalSize : 0;
-            DeviceUsedSpacePercentage = (_mediaDeviceService.DriveInfo != null) ? ((totalSpace - freeSpace) / (decimal)totalSpace) * 100 : 0;
-            DeviceUsedSpace = (_mediaDeviceService.DriveInfo != null) ? $"{(totalSpace - freeSpace).GetDataSizeAsString()} / {totalSpace.GetDataSizeAsString()} ({DeviceUsedSpacePercentage.ToString("F2")}% used space)" : "N/A";
+            long freeSpace = _mediaDeviceService.SupernoteInfo.AvailableFreeSpace;
+            long totalSpace = _mediaDeviceService.SupernoteInfo.TotalSpace;
+            DeviceUsedSpacePercentage = (_mediaDeviceService.IsDeviceConnected == true) ? ((totalSpace - freeSpace) / (decimal)totalSpace) * 100 : 0;
+            DeviceUsedSpace = (_mediaDeviceService.IsDeviceConnected == true) ? $"{(totalSpace - freeSpace).GetDataSizeAsString()} / {totalSpace.GetDataSizeAsString()} ({DeviceUsedSpacePercentage.ToString("F2")}% used space)" : "N/A";
 
-            IsSerialNumberCopyEnabled = _mediaDeviceService.IsDeviceConnected;
+            IsDeviceConnected = _mediaDeviceService.IsDeviceConnected;
         }
     }
 }

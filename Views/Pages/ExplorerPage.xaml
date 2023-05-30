@@ -26,7 +26,7 @@
                  Margin="0,0,0,12">
             <Grid VerticalAlignment="Top">
                 <ui:InfoBar Title="Explorer"
-                            Message="There are no local backups of a Supernote device. Please, create a backup first before you can start exploring it."
+                            Message="There are no local backups of a Supernote device. Please, synchronize the device first before you can start exploring it."
                             IsClosable="False"
                             IsOpen="True"
                             Severity="Informational"

@@ -1,7 +1,8 @@
 ﻿using MediaDevices;
 using SupernoteDesktopClient.Core;
+using SupernoteDesktopClient.Extensions;
+using SupernoteDesktopClient.Models;
 using SupernoteDesktopClient.Services.Contracts;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace SupernoteDesktopClient.Services
@@ -10,22 +11,24 @@ namespace SupernoteDesktopClient.Services
     {
         private const string SUPERNOTE_DEVICE_ID = "VID_2207&PID_0011";
 
-        private MediaDevice _device;
-        public MediaDevice Device
-        {
-            get { return _device; }
-        }
-
         private MediaDriveInfo _driveInfo;
-        public MediaDriveInfo DriveInfo
-        {
-            get { return _driveInfo; }
-        }
 
         private bool _isDeviceConnected;
         public bool IsDeviceConnected
         {
             get { return _isDeviceConnected; }
+        }
+
+        private SupernoteInfo _supernoteInfo;
+        public SupernoteInfo SupernoteInfo
+        {
+            get { return _supernoteInfo; }
+        }
+
+        private MediaDevice _supernoteManager;
+        public MediaDevice SupernoteManager
+        {
+            get { return _supernoteManager; }
         }
 
         public MediaDeviceService()
@@ -35,29 +38,55 @@ namespace SupernoteDesktopClient.Services
 
         public void RefreshMediaDeviceInfo()
         {
-            List<MediaDevice> tmpDevices = MediaDevice.GetDevices().ToList();
-            MediaDevice tmpDevice = tmpDevices.Where(p => p.DeviceId.Contains(SUPERNOTE_DEVICE_ID, System.StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            MediaDevice tmpDevice = MediaDevice.GetDevices().Where(p => p.DeviceId.Contains(SUPERNOTE_DEVICE_ID, System.StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
 
-            if (_device == null)
-                _device = tmpDevice;
+            if (_supernoteManager == null)
+                _supernoteManager = tmpDevice;
             else
             {
-                if (_device != tmpDevice && _device.IsConnected == true)
-                    _device.Disconnect();
+                if (_supernoteManager != tmpDevice && _supernoteManager.IsConnected == true)
+                    _supernoteManager.Disconnect();
 
-                _device = tmpDevice;
+                _supernoteManager = tmpDevice;
             }
 
-            if (_device != null && _device.IsConnected == false)
-                _device.Connect();
+            if (_supernoteManager != null && _supernoteManager.IsConnected == false)
+                _supernoteManager.Connect();
 
             _driveInfo = null;
-            if (_device != null && _device.IsConnected == true)
-                _driveInfo = _device.GetDrives().FirstOrDefault();
+            if (_supernoteManager != null && _supernoteManager.IsConnected == true)
+                _driveInfo = _supernoteManager.GetDrives().FirstOrDefault();
 
-            _isDeviceConnected = (_device != null && _device.IsConnected == true);
+            _isDeviceConnected = (_supernoteManager != null && _supernoteManager.IsConnected == true);
 
-            DiagnosticLogger.Log($"Device: {(_device == null ? "N/A":_device)}, DriveInfo: {(_driveInfo == null ? "N/A" : _driveInfo)}");
+            // load supernoteInfo object
+            if (_isDeviceConnected == true)
+            {
+                _supernoteInfo = new SupernoteInfo
+                {
+                    Model = _supernoteManager?.Model,
+                    SerialNumber = _supernoteManager?.SerialNumber,
+                    SerialNumberHash = _supernoteManager?.SerialNumber.GetShortSHA1Hash(),
+                    PowerLevel = _supernoteManager?.PowerLevel ?? 0,
+                    AvailableFreeSpace = _driveInfo?.AvailableFreeSpace ?? 0,
+                    TotalSpace = _driveInfo?.TotalSize ?? 0,
+                    RootFolder = _driveInfo?.RootDirectory.FullName
+                };
+
+                // store/update device profile
+                if (SettingsManager.Instance.Settings.DeviceProfiles.ContainsKey(_supernoteInfo.SerialNumberHash) == true)
+                    SettingsManager.Instance.Settings.DeviceProfiles[_supernoteInfo.SerialNumberHash] = _supernoteInfo;
+                else
+                    SettingsManager.Instance.Settings.DeviceProfiles.Add(_supernoteInfo.SerialNumberHash, _supernoteInfo);
+            }
+            else
+            {
+                _supernoteInfo = new SupernoteInfo();
+                if (SettingsManager.Instance.Settings.DeviceProfiles.Count > 0)
+                    _supernoteInfo = SettingsManager.Instance.Settings.DeviceProfiles.FirstOrDefault().Value;
+            }
+
+            DiagnosticLogger.Log($"Device: {(_supernoteManager == null ? "N/A" : _supernoteManager)}, DriveInfo: {(_driveInfo == null ? "N/A" : _driveInfo)}");
         }
     }
 }

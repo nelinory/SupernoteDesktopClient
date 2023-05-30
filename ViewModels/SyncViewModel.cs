@@ -19,7 +19,7 @@ namespace SupernoteDesktopClient.ViewModels
         private readonly ISyncService _syncService;
 
         [ObservableProperty]
-        private bool _isSyncButtonEnabled;
+        private bool _isDeviceConnected;
 
         [ObservableProperty]
         private bool _isSyncRunning;
@@ -63,12 +63,10 @@ namespace SupernoteDesktopClient.ViewModels
         [RelayCommand]
         private async Task ExecuteSync()
         {
-            IsSyncButtonEnabled = false;
             IsSyncRunning = true;
 
             await Task.Run(() => _syncService.Sync());
 
-            IsSyncButtonEnabled = true;
             IsSyncRunning = false;
 
             UpdateSync();
@@ -78,7 +76,7 @@ namespace SupernoteDesktopClient.ViewModels
         {
             _mediaDeviceService.RefreshMediaDeviceInfo();
 
-            SourceFolder = (_mediaDeviceService.DriveInfo != null) ? _mediaDeviceService.DriveInfo.RootDirectory.FullName : "N/A";
+            SourceFolder = _mediaDeviceService.SupernoteInfo.RootFolder;
 
             // Backup
             BackupFolder = _syncService.BackupFolder ?? "N/A";
@@ -91,8 +89,8 @@ namespace SupernoteDesktopClient.ViewModels
             ArchiveFiles = ArchiveManager.GetArchivesList(_syncService.ArchiveFolder);
             ArchivesVisible = ArchiveFiles.Count > 0;
 
-            IsSyncButtonEnabled = _mediaDeviceService.IsDeviceConnected;
             IsSyncRunning = _syncService.IsBusy;
+            IsDeviceConnected = _mediaDeviceService.IsDeviceConnected;
 
             // auto sync on connect
             if (SettingsManager.Instance.Settings.Sync.AutomaticSyncOnConnect == true && deviceInfo?.IsConnected == true)

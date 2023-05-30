@@ -74,7 +74,7 @@
             <Grid Width="120px">
                 <ui:Button Icon="ArrowSync24"
                            Content="Synchronize"
-                           IsEnabled="{Binding ViewModel.IsSyncButtonEnabled}"
+                           IsEnabled="{Binding ViewModel.IsDeviceConnected}"
                            Command="{Binding ViewModel.ExecuteSyncCommand, Mode=OneWay}"
                            Visibility="{Binding ViewModel.IsSyncRunning, Converter={StaticResource BoolToVisibilityInversionConverter}}" />
                 <ui:ProgressRing Visibility="{Binding ViewModel.IsSyncRunning, Converter={StaticResource BoolToVisibilityConverter}}"
