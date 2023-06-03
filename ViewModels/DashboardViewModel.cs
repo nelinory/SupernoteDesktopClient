@@ -5,6 +5,8 @@ using SupernoteDesktopClient.Core;
 using SupernoteDesktopClient.Extensions;
 using SupernoteDesktopClient.Messages;
 using SupernoteDesktopClient.Services.Contracts;
+using System;
+using System.Threading.Tasks;
 using Wpf.Ui.Common;
 using Wpf.Ui.Common.Interfaces;
 
@@ -50,11 +52,21 @@ namespace SupernoteDesktopClient.ViewModels
         [ObservableProperty]
         private decimal _deviceUsedSpacePercentage;
 
+        [ObservableProperty]
+        private bool _isUpdateAvailable = false;
+
+        [ObservableProperty]
+        private string _updateMessage = String.Empty;
+
+        [ObservableProperty]
+        private string _updateDetails = String.Empty;
+
         public void OnNavigatedTo()
         {
             DiagnosticLogger.Log($"{this}");
 
             UpdateDashboard();
+            RefreshUpdateStatus(false).Await();
         }
 
         public void OnNavigatedFrom()
@@ -68,6 +80,10 @@ namespace SupernoteDesktopClient.ViewModels
 
             // Register a message subscriber
             WeakReferenceMessenger.Default.Register<MediaDeviceChangedMessage>(this, (r, m) => { UpdateDashboard(); });
+
+            // check for updates on startup
+            if (SettingsManager.Instance.Settings.General.AutomaticUpdateCheckEnabled == true)
+                RefreshUpdateStatus(true).Await();
         }
 
         [RelayCommand]
@@ -100,6 +116,20 @@ namespace SupernoteDesktopClient.ViewModels
             DeviceUsedSpace = (_mediaDeviceService.IsDeviceConnected == true) ? $"{(totalSpace - freeSpace).GetDataSizeAsString()} / {totalSpace.GetDataSizeAsString()} ({DeviceUsedSpacePercentage.ToString("F2")}% used space)" : "N/A";
 
             IsDeviceConnected = _mediaDeviceService.IsDeviceConnected;
+        }
+
+        private async Task RefreshUpdateStatus(bool updateRequested)
+        {
+            (bool updateAvailable, string updateMessage, string updateDetails) result;
+
+            if (updateRequested == true)
+                result = await UpdateManager.CheckForUpdate();
+            else
+                result = await UpdateManager.GetUpdateDetails();
+
+            IsUpdateAvailable = result.updateAvailable;
+            UpdateMessage = result.updateMessage;
+            UpdateDetails = result.updateDetails;
         }
     }
 }

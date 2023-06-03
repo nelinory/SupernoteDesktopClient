@@ -39,6 +39,12 @@ namespace SupernoteDesktopClient.ViewModels
             }
         }
 
+        public bool AutomaticUpdateCheckEnabled
+        {
+            get { return SettingsManager.Instance.Settings.General.AutomaticUpdateCheckEnabled; }
+            set { SettingsManager.Instance.Settings.General.AutomaticUpdateCheckEnabled = value; }
+        }
+
         public bool DiagnosticLogEnabled
         {
             get { return SettingsManager.Instance.Settings.General.DiagnosticLogEnabled; }

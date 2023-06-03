@@ -47,6 +47,24 @@
             </ui:CardControl>
 
             <StackPanel Grid.Row="1">
+                <ui:CardAction Margin="0,12,0,0"
+                               Visibility="{Binding ViewModel.IsUpdateAvailable, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Grid HorizontalAlignment="Left">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                   Margin="0,5,0,0"
+                                   Text="{Binding ViewModel.UpdateMessage}" />
+                        <ui:Hyperlink Grid.Column="1"
+                                      Cursor="Hand"
+                                      Content="{Binding ViewModel.UpdateDetails}"
+                                      NavigateUri="https://github.com/nelinory/SupernoteDesktopClient/releases/latest" />
+                    </Grid>
+                </ui:CardAction>
+
                 <ui:CardControl Margin="0,12,0,0"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
@@ -122,6 +140,7 @@
                         </StackPanel>
                     </ui:CardControl.Header>
                 </ui:CardControl>
+
                 <!--<ui:CardExpander Margin="0,12,0,0"
                              HorizontalContentAlignment="Center"
                              Icon="FolderOpen24"

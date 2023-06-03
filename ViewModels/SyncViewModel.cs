@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.Notifications;
 using SupernoteDesktopClient.Core;
+using SupernoteDesktopClient.Extensions;
 using SupernoteDesktopClient.Messages;
 using SupernoteDesktopClient.Services.Contracts;
 using System;
