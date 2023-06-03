@@ -6,8 +6,7 @@
            xmlns:local="clr-namespace:SupernoteDesktopClient.Views.Pages"
            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
            xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-           d:DataContext="{d:DesignInstance local:SettingsPage,
-                                     IsDesignTimeCreatable=False}"
+           d:DataContext="{d:DesignInstance local:SettingsPage, IsDesignTimeCreatable=False}"
            d:DesignHeight="450"
            d:DesignWidth="800"
            d:Background="{DynamicResource ApplicationBackgroundBrush}"
@@ -75,6 +74,21 @@
                                      IsChecked="{Binding ViewModel.IsThemeSwitchChecked, Mode=OneWay}" />
                 </Grid>
             </ui:CardControl>
+            <ui:CardControl Margin="0,12,0,0"
+                            Icon="PhoneUpdate24">
+                <ui:CardControl.Header>
+                    <StackPanel Grid.Column="0"
+                                VerticalAlignment="Center">
+                        <TextBlock FontSize="14"
+                                   FontWeight="Medium"
+                                   Text="Automatically check for updates when application starts" />
+                        <TextBlock FontSize="12"
+                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                   Text="Checks for application updates on startup. Manual update check is available in the About panel." />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch IsChecked="{Binding ViewModel.AutomaticUpdateCheckEnabled, Mode=TwoWay}" />
+            </ui:CardControl>            
             <ui:CardControl Margin="0,12,0,0"
                             Icon="BriefcaseMedical24">
                 <ui:CardControl.Header>

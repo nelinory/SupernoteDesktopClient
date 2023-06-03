@@ -69,6 +69,7 @@ namespace SupernoteDesktopClient.Models
             }
             catch (Exception)
             {
+                // TODO: Error handling
             }
         }
 

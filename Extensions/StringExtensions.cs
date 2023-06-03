@@ -15,7 +15,7 @@ namespace SupernoteDesktopClient.Extensions
 
             if (value.Length > totaUnmaskedCharacters)
             {
-                return value.Substring(0, unmaskedStartCharacters) + new String('X', value.Length - totaUnmaskedCharacters) + value.Substring(value.Length - unmaskedEdnCharacters);
+                return String.Concat(value.AsSpan(0, unmaskedStartCharacters), new String('X', value.Length - totaUnmaskedCharacters), value.AsSpan(value.Length - unmaskedEdnCharacters));
             }
             else
                 return value;

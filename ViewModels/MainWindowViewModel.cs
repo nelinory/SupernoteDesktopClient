@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using SupernoteDesktopClient.Core;
-using SupernoteDesktopClient.Models;
+using SupernoteDesktopClient.Messages;
 using SupernoteDesktopClient.Services.Contracts;
 using SupernoteDesktopClient.Views.Pages;
 using System.Collections.ObjectModel;
@@ -21,6 +21,10 @@ namespace SupernoteDesktopClient.ViewModels
         private readonly ISnackbarService _snackbarService;
         private readonly IUsbHubDetector _usbHubDetector;
         private readonly INavigationService _navigationService;
+        private readonly IMediaDeviceService _mediaDeviceService;
+
+        [ObservableProperty]
+        private bool _isDeviceConnected;
 
         [ObservableProperty]
         private ObservableCollection<INavigationControl> _navigationItems = new();
@@ -31,12 +35,13 @@ namespace SupernoteDesktopClient.ViewModels
         [ObservableProperty]
         private bool _minimizeToTrayEnabled = SettingsManager.Instance.Settings.General.MinimizeToTrayEnabled;
 
-        public MainWindowViewModel(ISnackbarService snackbarService, IUsbHubDetector usbHubDetector, INavigationService navigationService)
+        public MainWindowViewModel(ISnackbarService snackbarService, IUsbHubDetector usbHubDetector, INavigationService navigationService, IMediaDeviceService mediaDeviceService)
         {
             // services
             _snackbarService = snackbarService;
             _usbHubDetector = usbHubDetector;
             _navigationService = navigationService;
+            _mediaDeviceService = mediaDeviceService;
 
             // event handler
             _usbHubDetector.UsbHubStateChanged += UsbHubDetector_UsbHubStateChanged;
@@ -48,6 +53,9 @@ namespace SupernoteDesktopClient.ViewModels
             {
                 MinimizeToTrayEnabled = SettingsManager.Instance.Settings.General.MinimizeToTrayEnabled;
             });
+
+            // offline mode indicator
+            IsDeviceConnected = _mediaDeviceService.IsDeviceConnected;
         }
 
         private void BuildNavigationMenu()
@@ -138,6 +146,9 @@ namespace SupernoteDesktopClient.ViewModels
 
                 // Notify all subscribers
                 WeakReferenceMessenger.Default.Send(new MediaDeviceChangedMessage(new DeviceInfo(deviceId, isConnected)));
+
+                // offline mode indicator
+                IsDeviceConnected = _mediaDeviceService.IsDeviceConnected;
             });
         }
     }

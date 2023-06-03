@@ -11,12 +11,12 @@ namespace SupernoteDesktopClient.Services
 
     public class UsbHubDetector : IUsbHubDetector, IDisposable
     {
-        private const string _wmiQuery = "SELECT * FROM {0} WITHIN 2 WHERE TargetInstance ISA 'Win32_USBHub'";
-        private const string _creationEvent = "__InstanceCreationEvent";
-        private const string _deletionEvent = "__InstanceDeletionEvent";
+        private const string WMI_QUERY = "SELECT * FROM {0} WITHIN 2 WHERE TargetInstance ISA 'Win32_USBHub'";
+        private const string CREATION_EVENT = "__InstanceCreationEvent";
+        private const string DELETION_EVENT = "__InstanceDeletionEvent";
 
-        private readonly ManagementEventWatcher _insertManagementEventWatcher = new ManagementEventWatcher(new WqlEventQuery(String.Format(_wmiQuery, _creationEvent)));
-        private readonly ManagementEventWatcher _removeManagementEventWatcher = new ManagementEventWatcher(new WqlEventQuery(String.Format(_wmiQuery, _deletionEvent)));
+        private readonly ManagementEventWatcher _insertManagementEventWatcher = new ManagementEventWatcher(new WqlEventQuery(String.Format(WMI_QUERY, CREATION_EVENT)));
+        private readonly ManagementEventWatcher _removeManagementEventWatcher = new ManagementEventWatcher(new WqlEventQuery(String.Format(WMI_QUERY, DELETION_EVENT)));
         private bool disposedValue;
 
         public UsbHubDetector()
@@ -61,7 +61,7 @@ namespace SupernoteDesktopClient.Services
         private void MapEventArgs(object sender, EventArrivedEventArgs e)
         {
             string deviceId = ((ManagementBaseObject)e.NewEvent["TargetInstance"])["PNPDeviceID"].ToString();
-            bool isConnected = (e.NewEvent.ClassPath.RelativePath == _creationEvent);
+            bool isConnected = (e.NewEvent.ClassPath.RelativePath == CREATION_EVENT);
 
             DiagnosticLogger.Log($"Usb Device: {deviceId}, IsConnected: {isConnected}");
 

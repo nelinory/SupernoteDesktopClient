@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace SupernoteDesktopClient.Core
 {
-    static class DiagnosticLogger
+    public static class DiagnosticLogger
     {
         public static void Log(string messageTemplate, [CallerMemberName] string callerName = "", params object[] args)
         {

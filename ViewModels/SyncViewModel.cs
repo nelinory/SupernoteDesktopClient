@@ -3,6 +3,8 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.Notifications;
 using SupernoteDesktopClient.Core;
+using SupernoteDesktopClient.Extensions;
+using SupernoteDesktopClient.Messages;
 using SupernoteDesktopClient.Services.Contracts;
 using System;
 using System.Collections.ObjectModel;
@@ -18,7 +20,7 @@ namespace SupernoteDesktopClient.ViewModels
         private readonly ISyncService _syncService;
 
         [ObservableProperty]
-        private bool _isSyncButtonEnabled;
+        private bool _isDeviceConnected;
 
         [ObservableProperty]
         private bool _isSyncRunning;
@@ -56,28 +58,26 @@ namespace SupernoteDesktopClient.ViewModels
             _syncService = syncService;
 
             // Register a message subscriber
-            WeakReferenceMessenger.Default.Register<Models.MediaDeviceChangedMessage>(this, (r, m) => { UpdateSync(m.Value); });
+            WeakReferenceMessenger.Default.Register<MediaDeviceChangedMessage>(this, (r, m) => { UpdateSync(m.Value); });
         }
 
         [RelayCommand]
         private async Task ExecuteSync()
         {
-            IsSyncButtonEnabled = false;
             IsSyncRunning = true;
 
             await Task.Run(() => _syncService.Sync());
 
-            IsSyncButtonEnabled = true;
             IsSyncRunning = false;
 
             UpdateSync();
         }
 
-        private void UpdateSync(Models.DeviceInfo deviceInfo = null)
+        private void UpdateSync(DeviceInfo deviceInfo = null)
         {
             _mediaDeviceService.RefreshMediaDeviceInfo();
 
-            SourceFolder = (_mediaDeviceService.DriveInfo != null) ? _mediaDeviceService.DriveInfo.RootDirectory.FullName : "N/A";
+            SourceFolder = _mediaDeviceService.SupernoteInfo.RootFolder;
 
             // Backup
             BackupFolder = _syncService.BackupFolder ?? "N/A";
@@ -90,8 +90,8 @@ namespace SupernoteDesktopClient.ViewModels
             ArchiveFiles = ArchiveManager.GetArchivesList(_syncService.ArchiveFolder);
             ArchivesVisible = ArchiveFiles.Count > 0;
 
-            IsSyncButtonEnabled = (_mediaDeviceService.Device != null);
             IsSyncRunning = _syncService.IsBusy;
+            IsDeviceConnected = _mediaDeviceService.IsDeviceConnected;
 
             // auto sync on connect
             if (SettingsManager.Instance.Settings.Sync.AutomaticSyncOnConnect == true && deviceInfo?.IsConnected == true)

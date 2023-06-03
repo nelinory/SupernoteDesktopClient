@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace SupernoteDesktopClient.Core
+namespace SupernoteDesktopClient.Extensions
 {
     public static class TaskExtension
     {

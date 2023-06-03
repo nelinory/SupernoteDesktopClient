@@ -7,8 +7,7 @@
            xmlns:models="clr-namespace:SupernoteDesktopClient.Models"
            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
            xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-           d:DataContext="{d:DesignInstance local:ExplorerPage,
-                                     IsDesignTimeCreatable=False}"
+           d:DataContext="{d:DesignInstance local:ExplorerPage, IsDesignTimeCreatable=False}"
            d:DesignHeight="450"
            d:DesignWidth="800"
            d:Background="{DynamicResource ApplicationBackgroundBrush}"
@@ -26,9 +25,10 @@
                  Margin="0,0,0,12">
             <Grid VerticalAlignment="Top">
                 <ui:InfoBar Title="Explorer"
-                            Message="There are no local backups of a Supernote device. Please, create a backup first before you can start exploring it."
+                            Message="There are no local backups of a Supernote device. Please, synchronize the device first before you can start exploring it."
                             IsClosable="False"
                             IsOpen="True"
+                            Severity="Informational"
                             Visibility="{Binding ViewModel.HasItems, Converter={StaticResource BoolToVisibilityInversionConverter}}" />
                 <TreeView Cursor="Hand"
                           Margin="-10"
@@ -51,7 +51,10 @@
                                                   ItemsSource="{Binding Children}">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="{Binding Path=ImageSource, UpdateSourceTrigger=PropertyChanged}"
-                                       Margin="0,1,5,1" />
+                                       Margin="0,1,5,1"
+                                       Width="24"
+                                       Height="24"
+                                       UseLayoutRounding="True" />
                                 <TextBlock Text="{Binding Path=FileSystemInfo.Name}"
                                            VerticalAlignment="Center"
                                            Margin="0,0,5,0">

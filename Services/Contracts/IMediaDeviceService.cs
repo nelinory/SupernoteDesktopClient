@@ -1,12 +1,15 @@
 ﻿using MediaDevices;
+using SupernoteDesktopClient.Models;
 
 namespace SupernoteDesktopClient.Services.Contracts
 {
     public interface IMediaDeviceService
     {
-        MediaDevice Device { get; }
+        bool IsDeviceConnected { get; }
 
-        MediaDriveInfo DriveInfo { get; }
+        SupernoteInfo SupernoteInfo { get; }
+
+        MediaDevice SupernoteManager { get; }
 
         void RefreshMediaDeviceInfo();
     }
