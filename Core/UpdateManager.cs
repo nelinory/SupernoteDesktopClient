@@ -18,12 +18,12 @@ namespace SupernoteDesktopClient.Core
             {
                 _updateDetails = String.Empty;
 
-                using (HttpClient client = new HttpClient(new HttpClientHandler() { AllowAutoRedirect = false }))
+                try
                 {
-                    // github will always redirect releases/latest to a latest version tag
-                    using (HttpResponseMessage response = await client.GetAsync(@"https://github.com/nelinory/SupernoteDesktopClient/releases/latest"))
+                    using (HttpClient client = new HttpClient(new HttpClientHandler() { AllowAutoRedirect = false }))
                     {
-                        try
+                        // github will always redirect releases/latest to a latest version tag
+                        using (HttpResponseMessage response = await client.GetAsync(@"https://github.com/nelinory/SupernoteDesktopClient/releases/latest"))
                         {
                             string redirect = response.Headers.Location.ToString();
                             if (String.IsNullOrWhiteSpace(redirect) == false)
@@ -38,16 +38,16 @@ namespace SupernoteDesktopClient.Core
                                 }
                             }
                         }
-                        catch (Exception)
-                        {
-                            _updateAvailable = false;
-                        }
                     }
+                }
+                catch (Exception)
+                {
+                    _updateAvailable = false;
                 }
 
                 _updateMessage = (_updateAvailable == true)
-                    ? "There is a new release of Supernote Desktop Client available."
-                    : "You already have the latest version of Supernote Desktop Client installed.";
+                        ? "There is a new release of Supernote Desktop Client available."
+                        : "You already have the latest version of Supernote Desktop Client installed.";
 
                 return (_updateAvailable, _updateMessage, _updateDetails);
             }
