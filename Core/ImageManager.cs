@@ -1,6 +1,5 @@
 ﻿using SupernoteDesktopClient.Core.Win32Api;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -15,15 +14,15 @@ namespace SupernoteDesktopClient.Core
 
         public static ImageSource GetImageSource(string filename)
         {
-            return GetImageSourceFromCache(filename, new Size(24, 24), ItemType.File, ItemState.Undefined);
+            return GetImageSourceFromCache(filename, ItemType.File, ItemState.Undefined);
         }
 
         public static ImageSource GetImageSource(string directory, ItemState folderType)
         {
-            return GetImageSourceFromCache(directory, new Size(24, 24), ItemType.Folder, folderType);
+            return GetImageSourceFromCache(directory, ItemType.Folder, folderType);
         }
 
-        private static ImageSource GetFileImageSource(string filename, Size size)
+        private static ImageSource GetFileImageSource(string filename)
         {
             using (var icon = NativeMethods.GetIcon(Path.GetExtension(filename), ItemType.File, IconSize.Large, ItemState.Undefined))
             {
@@ -33,7 +32,7 @@ namespace SupernoteDesktopClient.Core
             }
         }
 
-        private static ImageSource GetDirectoryImageSource(string directory, Size size, ItemState folderType)
+        private static ImageSource GetDirectoryImageSource(string directory, ItemState folderType)
         {
             using (var icon = NativeMethods.GetIcon(directory, ItemType.Folder, IconSize.Large, folderType))
             {
@@ -43,9 +42,9 @@ namespace SupernoteDesktopClient.Core
             }
         }
 
-        private static ImageSource GetImageSourceFromCache(string itemName, Size itemSize, ItemType itemType, ItemState itemState)
+        private static ImageSource GetImageSourceFromCache(string itemName, ItemType itemType, ItemState itemState)
         {
-            string cacheKey = $"{(itemType is ItemType.Folder ? ItemType.Folder : Path.GetExtension(itemName))}#{itemSize.Width}#{itemSize.Height}";
+            string cacheKey = $"{(itemType is ItemType.Folder ? ItemType.Folder : Path.GetExtension(itemName))}";
 
             ImageSource returnValue;
             _imageSourceCache.TryGetValue(cacheKey, out returnValue);
@@ -59,9 +58,9 @@ namespace SupernoteDesktopClient.Core
                     if (returnValue == null)
                     {
                         if (itemType is ItemType.Folder)
-                            returnValue = GetDirectoryImageSource(itemName, itemSize, itemState);
+                            returnValue = GetDirectoryImageSource(itemName, itemState);
                         else
-                            returnValue = GetFileImageSource(itemName, itemSize);
+                            returnValue = GetFileImageSource(itemName);
 
                         if (returnValue != null)
                             _imageSourceCache.Add(cacheKey, returnValue);

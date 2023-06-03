@@ -56,7 +56,7 @@ namespace SupernoteDesktopClient.ViewModels
             if (updateRequested == true)
                 result = await UpdateManager.CheckForUpdate();
             else
-                result = await UpdateManager.GetUpdateDetails();
+                result = UpdateManager.GetUpdateDetails();
 
             IsUpdateAvailable = result.updateAvailable;
             UpdateMessage = result.updateMessage;

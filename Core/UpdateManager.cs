@@ -53,7 +53,7 @@ namespace SupernoteDesktopClient.Core
             }
         }
 
-        public static async Task<(bool updateAvailable, string updateMessage, string updateDetails)> GetUpdateDetails()
+        public static (bool updateAvailable, string updateMessage, string updateDetails) GetUpdateDetails()
         {
             return (_updateAvailable, _updateMessage, _updateDetails);
         }
