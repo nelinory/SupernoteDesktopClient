@@ -51,7 +51,8 @@ namespace SupernoteDesktopClient.ViewModels
             // Register a message subscriber
             WeakReferenceMessenger.Default.Register<SettingsChangedMessage>(this, (r, m) =>
             {
-                MinimizeToTrayEnabled = SettingsManager.Instance.Settings.General.MinimizeToTrayEnabled;
+                if (m.Value == SettingsChangedMessage.MINIMIZE_TO_TRAY_ENABLED)
+                    MinimizeToTrayEnabled = SettingsManager.Instance.Settings.General.MinimizeToTrayEnabled;
             });
 
             // offline mode indicator
@@ -89,7 +90,7 @@ namespace SupernoteDesktopClient.ViewModels
                     PageType = typeof(ExplorerPage)
                 }
             };
-            
+
             NavigationFooter = new ObservableCollection<INavigationControl>
             {
                 new NavigationItem()
