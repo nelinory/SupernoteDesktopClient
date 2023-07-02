@@ -20,6 +20,21 @@
     </ui:UiPage.Resources>
 
     <Grid Margin="56,0">
+        <Grid x:Name="Overlay"
+              Panel.ZIndex="1000"
+              Visibility="{Binding ViewModel.ConvertionInProgress, Converter={StaticResource BoolToVisibilityConverter}}"
+              Margin="0,0,0,12">
+            <Grid.Background>
+                <SolidColorBrush Color="Black"
+                                 Opacity=".1" />
+            </Grid.Background>
+            <StackPanel VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+                <ui:ProgressRing IsIndeterminate="True" />
+                <TextBlock Text="Converting selected note..." />
+            </StackPanel>
+        </Grid>
+
         <ui:Card VerticalAlignment="Stretch"
                  VerticalContentAlignment="Stretch"
                  Margin="0,0,0,12">
