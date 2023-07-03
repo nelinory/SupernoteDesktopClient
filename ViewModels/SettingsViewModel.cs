@@ -35,7 +35,7 @@ namespace SupernoteDesktopClient.ViewModels
             set
             {
                 SettingsManager.Instance.Settings.General.MinimizeToTrayEnabled = value;
-                NotifySettingsChangedSubscribers("MinimizeToTrayEnabled");
+                NotifySettingsChangedSubscribers(SettingsChangedMessage.MINIMIZE_TO_TRAY_ENABLED);
             }
         }
 
@@ -112,10 +112,10 @@ namespace SupernoteDesktopClient.ViewModels
             SettingsManager.Instance.Settings.General.CurrentTheme = Theme.GetAppTheme().ToString();
         }
 
-        private void NotifySettingsChangedSubscribers(string setting)
+        private void NotifySettingsChangedSubscribers(string settingName)
         {
             // Notify all subscribers
-            WeakReferenceMessenger.Default.Send(new SettingsChangedMessage(setting));
+            WeakReferenceMessenger.Default.Send(new SettingsChangedMessage(settingName));
         }
     }
 }

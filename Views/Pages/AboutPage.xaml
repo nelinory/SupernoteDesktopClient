@@ -114,6 +114,10 @@
                               Content="fluentui-system-icons"
                               Icon="Link24"
                               NavigateUri="https://github.com/microsoft/fluentui-system-icons" />
+                <ui:Hyperlink Cursor="Hand"
+                              Content="SupernoteSharp"
+                              Icon="Link24"
+                              NavigateUri="https://github.com/nelinory/SupernoteSharp" />                
             </StackPanel>
         </Grid>
     </StackPanel>

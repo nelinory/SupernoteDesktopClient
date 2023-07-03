@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using SupernoteDesktopClient.Core;
+using SupernoteDesktopClient.Messages;
 using SupernoteDesktopClient.Models;
 using SupernoteDesktopClient.Services.Contracts;
 using System.Collections.ObjectModel;
@@ -19,6 +21,9 @@ namespace SupernoteDesktopClient.ViewModels
         [ObservableProperty]
         private bool _hasItems;
 
+        [ObservableProperty]
+        private bool _convertionInProgress = false;
+
         public void OnNavigatedTo()
         {
             DiagnosticLogger.Log($"{this}");
@@ -33,6 +38,12 @@ namespace SupernoteDesktopClient.ViewModels
         public ExplorerViewModel(IMediaDeviceService mediaDeviceService)
         {
             _mediaDeviceService = mediaDeviceService;
+
+            // Register a message subscriber
+            WeakReferenceMessenger.Default.Register<ProgressTrackActionMessage>(this, (r, m) =>
+            {
+                ConvertionInProgress = m.Value;
+            });
         }
 
         private void LoadExplorer()

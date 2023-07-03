@@ -97,6 +97,9 @@ namespace SupernoteDesktopClient.Views.Windows
 
             // save settings before exiting
             SettingsManager.Instance.Save();
+
+            // cleanup temp conversion files
+            FileSystemManager.CleanupTempConversionFiles();
         }
 
         private void RootNavigation_Navigated(INavigation sender, RoutedNavigationEventArgs e)
