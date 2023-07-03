@@ -71,14 +71,18 @@ namespace SupernoteDesktopClient.Models
             if ((item.FileSystemInfo.Attributes & FileAttributes.Directory) == FileAttributes.Directory)
                 return;
 
+            // skip *.mark files until the application can support them
+            if (item.FileSystemInfo.Extension == ".mark")
+                return;
+
             try
             {
-                WeakReferenceMessenger.Default.Send(new ProgressTrackActionMessage(true)); // action started
-
                 string selectedItemFullName = item.FileSystemInfo.FullName;
 
                 if (item.FileSystemInfo.Extension == ".note" && item.FileSystemInfo.Exists == true)
                 {
+                    WeakReferenceMessenger.Default.Send(new ProgressTrackActionMessage(true)); // action started
+
                     selectedItemFullName = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(item.FileSystemInfo.Name) + "_sdc.pdf");
 
                     using (FileStream fileStream = new FileStream(item.FileSystemInfo.FullName, FileMode.Open, FileAccess.Read))

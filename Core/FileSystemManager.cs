@@ -44,5 +44,22 @@ namespace SupernoteDesktopClient.Core
 
             return returnResult;
         }
+
+        public static void CleanupTempConversionFiles()
+        {
+            try
+            {
+                string[] tempFileNames = Directory.GetFiles(Path.GetTempPath(), $"*_sdc.pdf");
+                for (int i = 0; i < tempFileNames.Length; i++)
+                {
+                    if (File.Exists(tempFileNames[i]) == true)
+                        File.Delete(tempFileNames[i]);
+                }
+            }
+            catch (Exception)
+            {
+                // errors while deleting temporary files
+            }
+        }
     }
 }
