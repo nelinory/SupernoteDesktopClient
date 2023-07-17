@@ -1,20 +1,20 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using SupernoteDesktopClient.Core;
+using SupernoteDesktopClient.Messages;
+using SupernoteSharp.Business;
+using SupernoteSharp.Common;
+using SupernoteSharp.Entities;
 using System;
 using System.Collections.Generic;
-using SupernoteDesktopClient.Core;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Windows.Media;
-using SupernoteSharp.Business;
-using SupernoteSharp.Common;
-using SupernoteSharp.Entities;
-using CommunityToolkit.Mvvm.Messaging;
-using SupernoteDesktopClient.Messages;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace SupernoteDesktopClient.Models
 {
@@ -71,15 +71,11 @@ namespace SupernoteDesktopClient.Models
             if ((item.FileSystemInfo.Attributes & FileAttributes.Directory) == FileAttributes.Directory)
                 return;
 
-            // skip *.mark files until the application can support them
-            if (item.FileSystemInfo.Extension == ".mark")
-                return;
-
             try
             {
                 string selectedItemFullName = item.FileSystemInfo.FullName;
 
-                if (item.FileSystemInfo.Extension == ".note" && item.FileSystemInfo.Exists == true)
+                if ((item.FileSystemInfo.Extension == ".note" || item.FileSystemInfo.Extension == ".mark") && item.FileSystemInfo.Exists == true)
                 {
                     WeakReferenceMessenger.Default.Send(new ProgressTrackActionMessage(true)); // action started
 
@@ -89,12 +85,21 @@ namespace SupernoteDesktopClient.Models
                     {
                         Parser parser = new Parser();
                         Notebook notebook = parser.LoadNotebook(fileStream, Policy.Strict);
-                        Converter.PdfConverter converter = new Converter.PdfConverter(notebook, DefaultColorPalette.Grayscale);
 
-                        // convert all pages to vector PDF and build all links
-                        byte[] allPages = converter.ConvertAll(vectorize: true, enableLinks: true);
-                        // save the result
-                        File.WriteAllBytes(selectedItemFullName, allPages);
+                        if (notebook.TotalPages > 0)
+                        {
+                            Converter.PdfConverter converter = new Converter.PdfConverter(notebook, DefaultColorPalette.Grayscale);
+
+                            // convert all pages to vector PDF and build all links
+                            byte[] allPages = converter.ConvertAll(vectorize: true, enableLinks: true);
+                            // save the result
+                            File.WriteAllBytes(selectedItemFullName, allPages);
+                        }
+                        else
+                        {
+                            // show message that file have no pages
+                            return;
+                        }
                     }
                 }
 
