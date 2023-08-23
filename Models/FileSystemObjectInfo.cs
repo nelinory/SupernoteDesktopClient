@@ -77,8 +77,6 @@ namespace SupernoteDesktopClient.Models
 
                 if ((item.FileSystemInfo.Extension == ".note" || item.FileSystemInfo.Extension == ".mark") && item.FileSystemInfo.Exists == true)
                 {
-                    WeakReferenceMessenger.Default.Send(new ProgressTrackActionMessage(true)); // action started
-
                     selectedItemFullName = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(item.FileSystemInfo.Name) + "_sdc.pdf");
 
                     using (FileStream fileStream = new FileStream(item.FileSystemInfo.FullName, FileMode.Open, FileAccess.Read))
@@ -88,6 +86,8 @@ namespace SupernoteDesktopClient.Models
 
                         if (notebook.TotalPages > 0)
                         {
+                            WeakReferenceMessenger.Default.Send(new ProgressTrackActionMessage(true)); // action started
+
                             Converter.PdfConverter converter = new Converter.PdfConverter(notebook, DefaultColorPalette.Grayscale);
 
                             // convert all pages to vector PDF and build all links
@@ -98,6 +98,7 @@ namespace SupernoteDesktopClient.Models
                         else
                         {
                             // show message that file have no pages
+                            WeakReferenceMessenger.Default.Send(new ConversionFailedMessage("The selected document is blank. Nothing to convert.")); 
                             return;
                         }
                     }

@@ -6,7 +6,10 @@ using SupernoteDesktopClient.Models;
 using SupernoteDesktopClient.Services.Contracts;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Windows;
+using Wpf.Ui.Common;
 using Wpf.Ui.Common.Interfaces;
+using Wpf.Ui.Mvvm.Contracts;
 
 namespace SupernoteDesktopClient.ViewModels
 {
@@ -14,6 +17,7 @@ namespace SupernoteDesktopClient.ViewModels
     {
         // services
         private readonly IMediaDeviceService _mediaDeviceService;
+        private readonly ISnackbarService _snackbarService;
 
         [ObservableProperty]
         private ObservableCollection<FileSystemObjectInfo> _items;
@@ -22,7 +26,7 @@ namespace SupernoteDesktopClient.ViewModels
         private bool _hasItems;
 
         [ObservableProperty]
-        private bool _convertionInProgress = false;
+        private bool _conversionInProgress = false;
 
         public void OnNavigatedTo()
         {
@@ -35,14 +39,24 @@ namespace SupernoteDesktopClient.ViewModels
         {
         }
 
-        public ExplorerViewModel(IMediaDeviceService mediaDeviceService)
+        public ExplorerViewModel(IMediaDeviceService mediaDeviceService, ISnackbarService snackbarService)
         {
             _mediaDeviceService = mediaDeviceService;
+            _snackbarService = snackbarService;
 
             // Register a message subscriber
             WeakReferenceMessenger.Default.Register<ProgressTrackActionMessage>(this, (r, m) =>
             {
-                ConvertionInProgress = m.Value;
+                ConversionInProgress = m.Value;
+            });
+
+            WeakReferenceMessenger.Default.Register<ConversionFailedMessage>(this, (r, m) =>
+            {
+                // events are invoked on a separate thread
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    _snackbarService.Show("Conversion Error", m.Value, SymbolRegular.DocumentError24, ControlAppearance.Danger);
+                });
             });
         }
 
