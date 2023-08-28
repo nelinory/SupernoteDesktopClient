@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Serilog;
 using SupernoteDesktopClient.Core;
 using SupernoteDesktopClient.Messages;
 using SupernoteSharp.Business;
@@ -98,7 +99,7 @@ namespace SupernoteDesktopClient.Models
                         else
                         {
                             // show message that file have no pages
-                            WeakReferenceMessenger.Default.Send(new ConversionFailedMessage("The selected document is blank. Nothing to convert.")); 
+                            WeakReferenceMessenger.Default.Send(new ConversionFailedMessage("The selected document is blank. Nothing to convert."));
                             return;
                         }
                     }
@@ -112,9 +113,11 @@ namespace SupernoteDesktopClient.Models
 
                 Process process = Process.Start(psi);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // TODO: Error handling
+                WeakReferenceMessenger.Default.Send(new ConversionFailedMessage("Document conversion failed."));
+
+                Log.Error("Error while converting a document: {EX}", ex);
             }
             finally
             {
