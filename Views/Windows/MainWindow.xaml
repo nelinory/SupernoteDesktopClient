@@ -107,7 +107,7 @@
                 </Grid>
             </Border>
             <ui:Snackbar x:Name="RootSnackbar"
-                         Timeout="3000"
+                         Timeout="4000"
                          MaxWidth="700" />
         </Grid>
     </Grid>

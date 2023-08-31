@@ -22,7 +22,7 @@
     <Grid Margin="56,0">
         <Grid x:Name="Overlay"
               Panel.ZIndex="1000"
-              Visibility="{Binding ViewModel.ConvertionInProgress, Converter={StaticResource BoolToVisibilityConverter}}"
+              Visibility="{Binding ViewModel.ConversionInProgress, Converter={StaticResource BoolToVisibilityConverter}}"
               Margin="0,0,0,12">
             <Grid.Background>
                 <SolidColorBrush Color="Black"
