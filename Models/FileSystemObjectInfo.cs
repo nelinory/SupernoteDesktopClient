@@ -115,7 +115,7 @@ namespace SupernoteDesktopClient.Models
             }
             catch (Exception ex)
             {
-                WeakReferenceMessenger.Default.Send(new ConversionFailedMessage("Document conversion failed."));
+                WeakReferenceMessenger.Default.Send(new ConversionFailedMessage($"Document conversion failed. {ex.Message}."));
 
                 Log.Error("Error while converting a document: {EX}", ex);
             }
