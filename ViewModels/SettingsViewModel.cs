@@ -76,6 +76,12 @@ namespace SupernoteDesktopClient.ViewModels
             set { SettingsManager.Instance.Settings.Sync.MaxDeviceArchives = MaxDeviceArchivesItemSource[value]; }
         }
 
+        public bool StrictModeEnabled
+        {
+            get { return SettingsManager.Instance.Settings.Conversion.StrictModeEnabled; }
+            set { SettingsManager.Instance.Settings.Conversion.StrictModeEnabled = value; }
+        }
+
         public void OnNavigatedTo()
         {
             DiagnosticLogger.Log($"{this}");
