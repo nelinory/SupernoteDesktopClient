@@ -13,6 +13,6 @@ using System.Windows;
 [assembly: AssemblyVersion("0.7.*")]
 [assembly: AssemblyTitle("Supernote Desktop Client")]
 [assembly: AssemblyProduct("Supernote Desktop Client")]
-[assembly: AssemblyCopyright("Copyright © nelinory 2023")]
+[assembly: AssemblyCopyright("Copyright © nelinory 2024")]
 [assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
 [assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
