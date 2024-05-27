@@ -7,9 +7,8 @@ using System.IO;
 
 namespace SupernoteDesktopClient.Services
 {
-    public class SyncService : ISyncService
+    public class WifiSyncService : ISyncService
     {
-        // services
         private readonly IMediaDeviceService _mediaDeviceService;
 
         private const string BACKUP_FOLDER = "Backup";
@@ -23,7 +22,7 @@ namespace SupernoteDesktopClient.Services
 
         public string ArchiveFolder { get { return GetFolderByType(ARCHIVE_FOLDER); } }
 
-        public SyncService(IMediaDeviceService mediaDeviceService)
+        public WifiSyncService(IMediaDeviceService mediaDeviceService)
         {
             // services
             _mediaDeviceService = mediaDeviceService;
@@ -51,6 +50,9 @@ namespace SupernoteDesktopClient.Services
                     FileSystemManager.ForceDeleteDirectory(BackupFolder);
                 }
 
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+
                 var supernoteFolder = _mediaDeviceService.SupernoteManager.GetDirectoryInfo(@"\");
                 var files = supernoteFolder.EnumerateFiles("*.*", SearchOption.AllDirectories);
 
@@ -71,6 +73,9 @@ namespace SupernoteDesktopClient.Services
                         }
                     }
                 }
+
+                sw.Stop();
+                Debug.WriteLine($"Total Sync Time: {sw.Elapsed}");
 
                 returnResult = true;
             }

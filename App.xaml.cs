@@ -47,7 +47,8 @@ namespace SupernoteDesktopClient
                 // Custom services
                 services.AddSingleton<IUsbHubDetector, UsbHubDetector>();
                 services.AddSingleton<IMediaDeviceService, MediaDeviceService>();
-                services.AddSingleton<ISyncService, SyncService>();
+                services.AddSingleton<ISyncService, UsbSyncService>();
+                services.AddSingleton<ISyncService, WifiSyncService>();
 
                 // Service containing navigation, same as INavigationWindow... but without window
                 services.AddSingleton<INavigationService, NavigationService>();

@@ -5,6 +5,9 @@ namespace SupernoteDesktopClient.Core
 {
     public static class FileSystemManager
     {
+        public const string BACKUP_FOLDER = "Backup";
+        public const string ARCHIVE_FOLDER = "Archive";
+
         public static void ForceDeleteDirectory(string path)
         {
             var directory = new DirectoryInfo(path) { Attributes = FileAttributes.Normal };

@@ -29,6 +29,9 @@ namespace SupernoteDesktopClient.ViewModels
         private string _sourceFolder;
 
         [ObservableProperty]
+        private string _sourceAddress;
+
+        [ObservableProperty]
         private string _backupFolder;
 
         [ObservableProperty]
@@ -78,6 +81,7 @@ namespace SupernoteDesktopClient.ViewModels
             _mediaDeviceService.RefreshMediaDeviceInfo();
 
             SourceFolder = _mediaDeviceService.SupernoteInfo.RootFolder;
+            SourceAddress = "http://XXX.XXX.XXX.XXX:8089";
 
             // Backup
             BackupFolder = _syncService.BackupFolder ?? "N/A";

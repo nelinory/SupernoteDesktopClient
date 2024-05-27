@@ -15,8 +15,13 @@
            mc:Ignorable="d">
 
     <ui:UiPage.Resources>
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <converters:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Views/Style/TabControl.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <converters:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter" />
+        </ResourceDictionary>
     </ui:UiPage.Resources>
 
     <Grid Margin="56,0">
@@ -26,61 +31,138 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <ui:CardControl Grid.Row="0"
-                        VerticalAlignment="Stretch"
-                        Icon="DocumentSync24">
-            <ui:CardControl.Header>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <StackPanel VerticalAlignment="Center"
-                                Grid.Column="0">
-                        <TextBlock Grid.Column="0"
-                                   FontSize="14"
-                                   FontWeight="Medium"
-                                   Text="Source folder" />
-                        <TextBlock Grid.Column="0"
-                                   FontSize="12"
-                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                                   Text="Supernote source folder" />
-                        <TextBlock Grid.Column="0"
-                                   Margin="0, 12, 0, 0"
-                                   FontSize="14"
-                                   FontWeight="Medium"
-                                   Text="Backup folder" />
-                        <TextBlock Grid.Column="0"
-                                   FontSize="12"
-                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                                   Text="Local backup folder" />
+        <TabControl>
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Margin="0,0,6,0"
+                                       Symbol="UsbStick24" />
+                        <TextBlock Text="Usb sync" />
                     </StackPanel>
-                    <StackPanel VerticalAlignment="Top"
-                                Grid.Column="1">
-                        <ui:TextBox Grid.Column="1"
-                                    Margin="10, 0, 0, 0"
-                                    IsReadOnly="True"
-                                    ClearButtonEnabled="False"
-                                    Text="{Binding ViewModel.SourceFolder, Mode=OneWay}" />
-                        <ui:TextBox Grid.Column="1"
-                                    Margin="10, 12, 0, 0"
-                                    IsReadOnly="True"
-                                    ClearButtonEnabled="False"
-                                    Text="{Binding ViewModel.BackupFolder, Mode=OneWay}" />
+                </TabItem.Header>
+                <ui:CardControl Grid.Row="0"
+                                VerticalAlignment="Stretch"
+                                Icon="DocumentSync24"
+                                BorderThickness="0">
+                    <ui:CardControl.Header>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center"
+                                        Grid.Column="0">
+                                <TextBlock Grid.Column="0"
+                                           FontSize="14"
+                                           FontWeight="Medium"
+                                           Text="Source folder" />
+                                <TextBlock Grid.Column="0"
+                                           FontSize="12"
+                                           Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                           Text="Supernote source folder" />
+                                <TextBlock Grid.Column="0"
+                                           Margin="0, 12, 0, 0"
+                                           FontSize="14"
+                                           FontWeight="Medium"
+                                           Text="Backup folder" />
+                                <TextBlock Grid.Column="0"
+                                           FontSize="12"
+                                           Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                           Text="Local backup folder" />
+                            </StackPanel>
+                            <StackPanel VerticalAlignment="Top"
+                                        Grid.Column="1">
+                                <ui:TextBox Grid.Column="1"
+                                            Margin="10, 0, 0, 0"
+                                            IsReadOnly="True"
+                                            ClearButtonEnabled="False"
+                                            Text="{Binding ViewModel.SourceFolder, Mode=OneWay}" />
+                                <ui:TextBox Grid.Column="1"
+                                            Margin="10, 12, 0, 0"
+                                            IsReadOnly="True"
+                                            ClearButtonEnabled="False"
+                                            Text="{Binding ViewModel.BackupFolder, Mode=OneWay}" />
+                            </StackPanel>
+                        </Grid>
+                    </ui:CardControl.Header>
+                    <Grid Width="120px">
+                        <ui:Button Icon="ArrowSync24"
+                                   Content="Synchronize"
+                                   IsEnabled="{Binding ViewModel.IsDeviceConnected}"
+                                   Command="{Binding ViewModel.ExecuteSyncCommand, Mode=OneWay}"
+                                   Visibility="{Binding ViewModel.IsSyncRunning, Converter={StaticResource BoolToVisibilityInversionConverter}}" />
+                        <ui:ProgressRing Visibility="{Binding ViewModel.IsSyncRunning, Converter={StaticResource BoolToVisibilityConverter}}"
+                                         IsIndeterminate="True"
+                                         HorizontalAlignment="Center" />
+                    </Grid>
+                </ui:CardControl>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Margin="0,0,6,0"
+                                       Symbol="Wifi124" />
+                        <TextBlock Text="Browse &amp; Access sync" />
                     </StackPanel>
-                </Grid>
-            </ui:CardControl.Header>
-            <Grid Width="120px">
-                <ui:Button Icon="ArrowSync24"
-                           Content="Synchronize"
-                           IsEnabled="{Binding ViewModel.IsDeviceConnected}"
-                           Command="{Binding ViewModel.ExecuteSyncCommand, Mode=OneWay}"
-                           Visibility="{Binding ViewModel.IsSyncRunning, Converter={StaticResource BoolToVisibilityInversionConverter}}" />
-                <ui:ProgressRing Visibility="{Binding ViewModel.IsSyncRunning, Converter={StaticResource BoolToVisibilityConverter}}"
-                                 IsIndeterminate="True"
-                                 HorizontalAlignment="Center" />
-            </Grid>
-        </ui:CardControl>
+                </TabItem.Header>
+                <ui:CardControl Grid.Row="0"
+                                VerticalAlignment="Stretch"
+                                Icon="DocumentSync24"
+                                BorderThickness="0">
+                    <ui:CardControl.Header>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel VerticalAlignment="Center"
+                                        Grid.Column="0">
+                                <TextBlock Grid.Column="0"
+                                           FontSize="14"
+                                           FontWeight="Medium"
+                                           Text="Source address" />
+                                <TextBlock Grid.Column="0"
+                                           FontSize="12"
+                                           Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                           Text="Browse &amp; Access address" />
+                                <TextBlock Grid.Column="0"
+                                           Margin="0, 12, 0, 0"
+                                           FontSize="14"
+                                           FontWeight="Medium"
+                                           Text="Backup folder" />
+                                <TextBlock Grid.Column="0"
+                                           FontSize="12"
+                                           Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                           Text="Local backup folder" />
+                            </StackPanel>
+                            <StackPanel VerticalAlignment="Top"
+                                        Grid.Column="1">
+                                <ui:TextBox Grid.Column="1"
+                                            Margin="10, 0, 0, 0"
+                                            IsReadOnly="True"
+                                            ClearButtonEnabled="False"
+                                            Text="{Binding ViewModel.SourceAddress, Mode=OneWay}" />
+                                <ui:TextBox Grid.Column="1"
+                                            Margin="10, 12, 0, 0"
+                                            IsReadOnly="True"
+                                            ClearButtonEnabled="False"
+                                            Text="{Binding ViewModel.BackupFolder, Mode=OneWay}" />
+                            </StackPanel>
+                        </Grid>
+                    </ui:CardControl.Header>
+                    <Grid Width="120px">
+                        <ui:Button Icon="ArrowSync24"
+                                   Content="Synchronize"
+                                   IsEnabled="{Binding ViewModel.IsDeviceConnected}"
+                                   Command="{Binding ViewModel.ExecuteSyncCommand, Mode=OneWay}"
+                                   Visibility="{Binding ViewModel.IsSyncRunning, Converter={StaticResource BoolToVisibilityInversionConverter}}" />
+                        <ui:ProgressRing Visibility="{Binding ViewModel.IsSyncRunning, Converter={StaticResource BoolToVisibilityConverter}}"
+                                         IsIndeterminate="True"
+                                         HorizontalAlignment="Center" />
+                    </Grid>
+                </ui:CardControl>                
+            </TabItem>
+        </TabControl>
 
         <ui:CardControl Grid.Row="1"
                         Margin="0,12,0,0"
