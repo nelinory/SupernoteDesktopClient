@@ -4,11 +4,11 @@
     {
         bool IsBusy { get; }
 
-        public string SourceFolder { get; }
+        public string SourceLocation { get; }
 
-        public string BackupFolder { get; }
+        public string BackupLocation { get; }
 
-        public string ArchiveFolder { get; }
+        public string ArchiveLocation { get; }
 
         bool Sync();
     }

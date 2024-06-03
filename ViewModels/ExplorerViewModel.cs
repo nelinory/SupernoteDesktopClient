@@ -44,7 +44,7 @@ namespace SupernoteDesktopClient.ViewModels
             _mediaDeviceService = mediaDeviceService;
             _snackbarService = snackbarService;
 
-            // Register a message subscriber
+            // register a message subscriber
             WeakReferenceMessenger.Default.Register<ProgressTrackActionMessage>(this, (r, m) =>
             {
                 ConversionInProgress = m.Value;

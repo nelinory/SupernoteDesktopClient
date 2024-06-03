@@ -7,7 +7,6 @@ using SupernoteDesktopClient.Messages;
 using SupernoteDesktopClient.Services.Contracts;
 using System;
 using System.Threading.Tasks;
-using Wpf.Ui.Common;
 using Wpf.Ui.Common.Interfaces;
 
 namespace SupernoteDesktopClient.ViewModels
@@ -78,7 +77,7 @@ namespace SupernoteDesktopClient.ViewModels
             // services
             _mediaDeviceService = mediaDeviceService;
 
-            // Register a message subscriber
+            // register a message subscriber
             WeakReferenceMessenger.Default.Register<MediaDeviceChangedMessage>(this, (r, m) => { UpdateDashboard(); });
 
             // check for updates on startup

@@ -9,18 +9,16 @@ namespace SupernoteDesktopClient.Services
 {
     public class WifiSyncService : ISyncService
     {
+        // services
         private readonly IMediaDeviceService _mediaDeviceService;
-
-        private const string BACKUP_FOLDER = "Backup";
-        private const string ARCHIVE_FOLDER = "Archive";
 
         public bool IsBusy { get; private set; }
 
-        public string SourceFolder { get { return _mediaDeviceService.SupernoteInfo.RootFolder; } }
+        public string SourceLocation { get { return _mediaDeviceService.SupernoteInfo.RootFolder; } }
 
-        public string BackupFolder { get { return GetFolderByType(BACKUP_FOLDER); } }
+        public string BackupLocation { get { return GetFolderByType(FileSystemManager.BACKUP_FOLDER); } }
 
-        public string ArchiveFolder { get { return GetFolderByType(ARCHIVE_FOLDER); } }
+        public string ArchiveLocation { get { return GetFolderByType(FileSystemManager.ARCHIVE_FOLDER); } }
 
         public WifiSyncService(IMediaDeviceService mediaDeviceService)
         {
@@ -42,12 +40,12 @@ namespace SupernoteDesktopClient.Services
 
             if (_mediaDeviceService.IsDeviceConnected == true)
             {
-                if (Directory.Exists(BackupFolder) == true)
+                if (Directory.Exists(BackupLocation) == true)
                 {
-                    ArchiveManager.Archive(BackupFolder, ArchiveFolder, SettingsManager.Instance.Settings.Sync.MaxDeviceArchives);
+                    ArchiveManager.Archive(BackupLocation, ArchiveLocation, SettingsManager.Instance.Settings.Sync.MaxDeviceArchives);
 
                     // delete existing storage folder if exists
-                    FileSystemManager.ForceDeleteDirectory(BackupFolder);
+                    FileSystemManager.ForceDeleteDirectory(BackupLocation);
                 }
 
                 Stopwatch sw = new Stopwatch();
@@ -59,7 +57,7 @@ namespace SupernoteDesktopClient.Services
                 foreach (var file in files)
                 {
                     Debug.WriteLine(file.FullName);
-                    string destinationFileName = file.FullName.ReplaceFirstOccurrence(SourceFolder, BackupFolder);
+                    string destinationFileName = file.FullName.ReplaceFirstOccurrence(SourceLocation, BackupLocation);
                     string destinationFolder = Path.GetDirectoryName(destinationFileName);
 
                     if (Directory.Exists(destinationFolder) == false)

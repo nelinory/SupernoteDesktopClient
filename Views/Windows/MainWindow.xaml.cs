@@ -113,7 +113,7 @@ namespace SupernoteDesktopClient.Views.Windows
 
         #region NotifyIcon Context Menu
 
-        // This is not following MVVM, due to the inability of the RelayCommand to get data bind context for NotifyIcon context menu
+        // this is not following MVVM, due to the inability of the RelayCommand to get data bind context for NotifyIcon context menu
 
         private void NotifyIcon_LeftDoubleClick(NotifyIcon sender, RoutedEventArgs e)
         {

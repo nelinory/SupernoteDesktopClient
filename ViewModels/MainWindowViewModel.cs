@@ -49,7 +49,7 @@ namespace SupernoteDesktopClient.ViewModels
 
             BuildNavigationMenu();
 
-            // Register a message subscriber
+            // register a message subscriber
             WeakReferenceMessenger.Default.Register<SettingsChangedMessage>(this, (r, m) =>
             {
                 if (m.Value == SettingsChangedMessage.MINIMIZE_TO_TRAY_ENABLED)

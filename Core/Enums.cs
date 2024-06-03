@@ -28,6 +28,12 @@ namespace SupernoteDesktopClient.Core
         File
     }
 
+    public enum SyncMode
+    {
+        UsbSync,
+        WifiSync
+    }
+
     [Flags]
     public enum ShellAttribute : uint
     {
