@@ -19,7 +19,7 @@
     </ui:UiPage.Resources>
 
     <ui:DynamicScrollViewer>
-        <Grid Margin="56,10"
+        <Grid Margin="50,10"
               VerticalAlignment="Top">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

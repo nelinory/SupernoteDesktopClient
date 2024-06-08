@@ -13,7 +13,7 @@
            mc:Ignorable="d">
 
     <ui:DynamicScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="56,0">
+        <StackPanel Margin="50,0">
             <TextBlock FontSize="18"
                        FontWeight="Medium"
                        Text="General" />

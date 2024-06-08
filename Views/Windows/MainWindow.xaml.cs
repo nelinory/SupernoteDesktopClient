@@ -24,7 +24,7 @@ namespace SupernoteDesktopClient.Views.Windows
 
         public ViewModels.MainWindowViewModel ViewModel { get; }
 
-        public MainWindow(ViewModels.MainWindowViewModel viewModel, IPageService pageService, INavigationService navigationService, ISnackbarService snackbarService)
+        public MainWindow(ViewModels.MainWindowViewModel viewModel, IPageService pageService, INavigationService navigationService, ISnackbarService snackbarService, IDialogService dialogService)
         {
             ViewModel = viewModel;
             DataContext = this;
@@ -37,6 +37,7 @@ namespace SupernoteDesktopClient.Views.Windows
 
             navigationService.SetNavigationControl(RootNavigation);
             snackbarService.SetSnackbarControl(RootSnackbar);
+            dialogService.SetDialogControl(RootDialog);
 
             Theme.Apply((ThemeType)Enum.Parse(typeof(ThemeType), SettingsManager.Instance.Settings.General.CurrentTheme), BackgroundType.Mica, true);
         }

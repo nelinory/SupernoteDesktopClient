@@ -19,7 +19,7 @@
         <converters:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter" />
     </ui:UiPage.Resources>
 
-    <Grid Margin="56,0">
+    <Grid Margin="50,0">
         <Grid x:Name="Overlay"
               Panel.ZIndex="1000"
               Visibility="{Binding ViewModel.ConversionInProgress, Converter={StaticResource BoolToVisibilityConverter}}"

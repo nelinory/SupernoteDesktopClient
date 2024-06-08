@@ -43,6 +43,7 @@ namespace SupernoteDesktopClient
                 services.AddSingleton<IThemeService, ThemeService>();
                 services.AddSingleton<ITaskBarService, TaskBarService>();
                 services.AddSingleton<ISnackbarService, SnackbarService>();
+                services.AddSingleton<IDialogService, DialogService>();
 
                 // Custom services
                 services.AddSingleton<IUsbHubDetector, UsbHubDetector>();
