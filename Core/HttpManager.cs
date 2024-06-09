@@ -28,7 +28,7 @@ namespace SupernoteDesktopClient.Core
                     return (false, "\nWeb address must be like: http://192.168.77.11:8089\nPlease correct it and try again.");
 
                 // check if connection can be established
-                using HttpClient httpClient = new HttpClient() { BaseAddress = new Uri(sourceLocation) };
+                using HttpClient httpClient = new HttpClient() { BaseAddress = new Uri(sourceLocation), Timeout = TimeSpan.FromSeconds(7) };
                 using HttpResponseMessage response = await httpClient.GetAsync("/");
 
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
