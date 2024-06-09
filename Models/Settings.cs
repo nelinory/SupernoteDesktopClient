@@ -1,4 +1,5 @@
 ﻿using SupernoteDesktopClient.Core.Win32Api;
+using System;
 using System.Collections.Generic;
 
 namespace SupernoteDesktopClient.Models
@@ -39,6 +40,7 @@ namespace SupernoteDesktopClient.Models
         public bool ShowNotificationOnDeviceStateChange { get; set; } = true;
         public bool AutomaticSyncOnConnect { get; set; } = false;
         public int MaxDeviceArchives { get; set; } = 7;
+        public string SourceLocation { get; set; } = String.Empty;
     }
 
     public class Conversion

@@ -64,5 +64,14 @@ namespace SupernoteDesktopClient.Core
                 // errors while deleting temporary files
             }
         }
+
+        public static string GetFolderByType(string folderType, string serialNumberHash)
+        {
+            string folder = GetApplicationFolder();
+            if (String.IsNullOrWhiteSpace(folder) == false && serialNumberHash.Contains("N/A") == false)
+                return Path.Combine(folder, $@"Device\{serialNumberHash}\{folderType}");
+            else
+                return null;
+        }
     }
 }

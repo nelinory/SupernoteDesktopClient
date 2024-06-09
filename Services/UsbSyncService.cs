@@ -1,9 +1,9 @@
 ﻿using SupernoteDesktopClient.Core;
 using SupernoteDesktopClient.Extensions;
 using SupernoteDesktopClient.Services.Contracts;
-using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace SupernoteDesktopClient.Services
 {
@@ -16,9 +16,9 @@ namespace SupernoteDesktopClient.Services
 
         public string SourceLocation { get { return _mediaDeviceService.SupernoteInfo.RootFolder; } }
 
-        public string BackupLocation { get { return GetFolderByType(FileSystemManager.BACKUP_FOLDER); } }
+        public string BackupLocation { get { return FileSystemManager.GetFolderByType(FileSystemManager.BACKUP_FOLDER, _mediaDeviceService.SupernoteInfo.SerialNumberHash); } }
 
-        public string ArchiveLocation { get { return GetFolderByType(FileSystemManager.ARCHIVE_FOLDER); } }
+        public string ArchiveLocation { get { return FileSystemManager.GetFolderByType(FileSystemManager.ARCHIVE_FOLDER, _mediaDeviceService.SupernoteInfo.SerialNumberHash); } }
 
         public UsbSyncService(IMediaDeviceService mediaDeviceService)
         {
@@ -28,7 +28,7 @@ namespace SupernoteDesktopClient.Services
             IsBusy = false;
         }
 
-        public bool Sync()
+        public async Task<bool> Sync()
         {
             // sync in progress
             if (IsBusy == true)
@@ -40,13 +40,7 @@ namespace SupernoteDesktopClient.Services
 
             if (_mediaDeviceService.IsDeviceConnected == true)
             {
-                if (Directory.Exists(BackupLocation) == true)
-                {
-                    ArchiveManager.Archive(BackupLocation, ArchiveLocation, SettingsManager.Instance.Settings.Sync.MaxDeviceArchives);
-
-                    // delete existing storage folder if exists
-                    FileSystemManager.ForceDeleteDirectory(BackupLocation);
-                }
+                await Task.Run(() => ArchiveManager.Archive(BackupLocation, ArchiveLocation, SettingsManager.Instance.Settings.Sync.MaxDeviceArchives));
 
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
@@ -81,15 +75,6 @@ namespace SupernoteDesktopClient.Services
             IsBusy = false;
 
             return returnResult;
-        }
-
-        private string GetFolderByType(string folderType)
-        {
-            string folder = FileSystemManager.GetApplicationFolder();
-            if (String.IsNullOrWhiteSpace(folder) == false && _mediaDeviceService.SupernoteInfo.SerialNumberHash.Contains("N/A") == false)
-                return Path.Combine(folder, $@"Device\{_mediaDeviceService.SupernoteInfo.SerialNumberHash}\{folderType}");
-            else
-                return null;
         }
     }
 }

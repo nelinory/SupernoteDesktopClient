@@ -1,4 +1,6 @@
-﻿namespace SupernoteDesktopClient.Services.Contracts
+﻿using System.Threading.Tasks;
+
+namespace SupernoteDesktopClient.Services.Contracts
 {
     public interface ISyncService
     {
@@ -10,6 +12,6 @@
 
         public string ArchiveLocation { get; }
 
-        bool Sync();
+        Task<bool> Sync();
     }
 }

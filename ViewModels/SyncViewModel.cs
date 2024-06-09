@@ -89,24 +89,25 @@ namespace SupernoteDesktopClient.ViewModels
         [RelayCommand]
         private async Task ExecuteSync(object syncMode)
         {
-            //if (HasErrors)
-            //{
-            //    return;
-            //}
-            _dialogControlService.ButtonRightName = "OK";
-
-            var result = await _dialogControlService.ShowAndWaitAsync(
-                "Validation Error",
-                "\nWeb address must be like: http://192.168.77.11:8089\nPlease correct it and try again.",
-                true
-            );
-
             IsSyncRunning = true;
 
             if ((SyncMode)syncMode == SyncMode.UsbSync)
-                await Task.Run(() => _usbSyncService.Sync());
+                await _usbSyncService.Sync();
             else
-                await Task.Run(() => _wifiSyncService.Sync());
+            {
+                (bool isValid, string message) result = await HttpManager.IsSourceLocationValid(SourceLocation);
+
+                if (result.isValid == true)
+                    await _wifiSyncService.Sync();
+                else
+                {
+                    _dialogControlService.ButtonRightName = "OK";
+
+                    await _dialogControlService.ShowAndWaitAsync("Validation Error", result.message);
+
+                    _dialogControlService.Hide();
+                }
+            }
 
             IsSyncRunning = false;
 
@@ -137,7 +138,7 @@ namespace SupernoteDesktopClient.ViewModels
             }
             else
             {
-                SourceLocation = ""; // TODO: Read from config
+                SourceLocation = SettingsManager.Instance.Settings.Sync.SourceLocation;
                 SourceLocationCaption = "Source web address";
                 SourceLocationDescription = "Browse & Access address";
                 SourceLocationIcon = "Wifi124";
@@ -164,6 +165,13 @@ namespace SupernoteDesktopClient.ViewModels
                 .AddText("Automatic sync completed")
                 .Show();
             }
+        }
+
+        partial void OnSourceLocationChanged(string value)
+        {
+            // update source location for browse & sync only
+            if (_mediaDeviceService.IsDeviceConnected == false)
+                SettingsManager.Instance.Settings.Sync.SourceLocation = value;
         }
     }
 }
