@@ -16,7 +16,7 @@ namespace SupernoteDesktopClient.Core
         private static readonly Regex _sourceLocationRegex = new Regex(@"^http:\/\/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{4}$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex _jsonRegex = new Regex(@"'({.*?})'", RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-        public static async Task<(bool isValid, string message)> IsSourceLocationValid(string sourceLocation)
+        public static async Task<(bool isValid, string message)> IsSourceLocationValidAsync(string sourceLocation)
         {
             bool isValid = false;
             string message = String.Empty;
@@ -45,13 +45,13 @@ namespace SupernoteDesktopClient.Core
             return (isValid, message);
         }
 
-        public static async Task GetAsyncFolder(HttpClient httpClient, List<string> webFileItems, string path)
+        public static async Task GetWebFolderAsync(HttpClient httpClient, List<string> webFileItems, string path)
         {
             using HttpResponseMessage response = await httpClient.GetAsync(path);
 
             var htmlResponse = await response.Content.ReadAsStringAsync();
 
-            FileSystem fsl = await GetJsonPayload(htmlResponse);
+            FileSystem fsl = await GetJsonPayloadAsync(htmlResponse);
 
             // get all files
             var files = fsl.FileList.Where(p => p.IsDirectory == false).ToList();
@@ -64,11 +64,11 @@ namespace SupernoteDesktopClient.Core
             var folders = fsl.FileList.Where(p => p.IsDirectory == true).ToList();
             foreach (FileSystemItem folder in folders)
             {
-                await GetAsyncFolder(httpClient, webFileItems, folder.Path);
+                await GetWebFolderAsync(httpClient, webFileItems, folder.Path);
             }
         }
 
-        public static async Task DownloadFile(HttpClient httpClient, string destination, string filePath)
+        public static async Task DownloadFileAsync(HttpClient httpClient, string destination, string filePath)
         {
             using var fileStream = await httpClient.GetStreamAsync(httpClient.BaseAddress + filePath);
             string destPath = Path.Combine(destination, Path.GetDirectoryName(filePath));
@@ -79,7 +79,7 @@ namespace SupernoteDesktopClient.Core
             await fileStream.CopyToAsync(fs);
         }
 
-        private static async Task<FileSystem> GetJsonPayload(string htmlResponse)
+        private static async Task<FileSystem> GetJsonPayloadAsync(string htmlResponse)
         {
             string input = htmlResponse.Substring(htmlResponse.IndexOf("json = '{"));
             Match match = _jsonRegex.Matches(input)[0];

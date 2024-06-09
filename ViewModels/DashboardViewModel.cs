@@ -65,7 +65,7 @@ namespace SupernoteDesktopClient.ViewModels
             DiagnosticLogger.Log($"{this}");
 
             UpdateDashboard();
-            RefreshUpdateStatus(false).Await();
+            RefreshUpdateStatusAsync(false).Await();
         }
 
         public void OnNavigatedFrom()
@@ -82,7 +82,7 @@ namespace SupernoteDesktopClient.ViewModels
 
             // check for updates on startup
             if (SettingsManager.Instance.Settings.General.AutomaticUpdateCheckEnabled == true)
-                RefreshUpdateStatus(true).Await();
+                RefreshUpdateStatusAsync(true).Await();
         }
 
         [RelayCommand]
@@ -117,14 +117,14 @@ namespace SupernoteDesktopClient.ViewModels
             IsDeviceConnected = _mediaDeviceService.IsDeviceConnected;
         }
 
-        private async Task RefreshUpdateStatus(bool updateRequested)
+        private async Task RefreshUpdateStatusAsync(bool updateRequested)
         {
             (bool updateAvailable, string updateMessage, string updateDetails) result;
 
             if (updateRequested == true)
-                result = await UpdateManager.CheckForUpdate();
+                result = await UpdateManager.CheckForUpdateAsync();
             else
-                result = UpdateManager.GetUpdateDetails();
+                result = await UpdateManager.GetUpdateDetails();
 
             IsUpdateAvailable = result.updateAvailable;
             UpdateMessage = result.updateMessage;

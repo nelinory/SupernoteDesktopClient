@@ -50,13 +50,13 @@ namespace SupernoteDesktopClient.Services
 
                 // build file list
                 using HttpClient httpClient = new HttpClient() { BaseAddress = new Uri(SourceLocation) };
-                await HttpManager.GetAsyncFolder(httpClient, webFileItems, "/");
+                await HttpManager.GetWebFolderAsync(httpClient, webFileItems, "/");
 
                 // download all files
                 ParallelOptions parallelOptions = new ParallelOptions() { MaxDegreeOfParallelism = 3 };
                 await Parallel.ForEachAsync(webFileItems, parallelOptions, async (filePath, ct) =>
                 {
-                    await HttpManager.DownloadFile(httpClient, BackupLocation, filePath);
+                    await HttpManager.DownloadFileAsync(httpClient, BackupLocation, filePath);
                 });
 
                 sw.Stop();

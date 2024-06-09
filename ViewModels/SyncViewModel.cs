@@ -95,7 +95,7 @@ namespace SupernoteDesktopClient.ViewModels
                 await _usbSyncService.Sync();
             else
             {
-                (bool isValid, string message) result = await HttpManager.IsSourceLocationValid(SourceLocation);
+                (bool isValid, string message) result = await HttpManager.IsSourceLocationValidAsync(SourceLocation);
 
                 if (result.isValid == true)
                     await _wifiSyncService.Sync();

@@ -10,7 +10,7 @@ namespace SupernoteDesktopClient.Core
         private static string _updateMessage = String.Empty;
         private static string _updateDetails = String.Empty;
 
-        public static async Task<(bool updateAvailable, string updateMessage, string updateDetails)> CheckForUpdate()
+        public static async Task<(bool updateAvailable, string updateMessage, string updateDetails)> CheckForUpdateAsync()
         {
             if (_updateAvailable == true)
                 return (_updateAvailable, _updateMessage, _updateDetails);
@@ -53,9 +53,9 @@ namespace SupernoteDesktopClient.Core
             }
         }
 
-        public static (bool updateAvailable, string updateMessage, string updateDetails) GetUpdateDetails()
+        public static async Task<(bool updateAvailable, string updateMessage, string updateDetails)> GetUpdateDetails()
         {
-            return (_updateAvailable, _updateMessage, _updateDetails);
+            return await Task.FromResult((_updateAvailable, _updateMessage, _updateDetails));
         }
     }
 }
