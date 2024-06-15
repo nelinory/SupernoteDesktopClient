@@ -10,7 +10,7 @@ using System.Windows;
                                               // app, or any theme specific resource dictionaries)
 )]
 
-[assembly: AssemblyVersion("0.7.*")]
+[assembly: AssemblyVersion("0.8.*")]
 [assembly: AssemblyTitle("Supernote Desktop Client")]
 [assembly: AssemblyProduct("Supernote Desktop Client")]
 [assembly: AssemblyCopyright("Copyright © nelinory 2024")]
