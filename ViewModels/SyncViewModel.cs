@@ -63,6 +63,9 @@ namespace SupernoteDesktopClient.ViewModels
         [ObservableProperty]
         private object _syncButtonParameter;
 
+        [ObservableProperty]
+        private bool _isDeviceProfileAvailable;
+
         public void OnNavigatedTo()
         {
             DiagnosticLogger.Log($"{this}");
@@ -118,6 +121,7 @@ namespace SupernoteDesktopClient.ViewModels
         {
             IsSyncRunning = _usbSyncService.IsBusy || _wifiSyncService.IsBusy;
             IsUsbDeviceConnected = _mediaDeviceService.IsDeviceConnected;
+            IsDeviceProfileAvailable = _mediaDeviceService.SupernoteInfo.SerialNumberHash != "N/A";
 
             // sync in progress, get out
             if (IsSyncRunning == true)

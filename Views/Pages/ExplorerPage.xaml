@@ -35,16 +35,19 @@
             </StackPanel>
         </Grid>
 
+        <ui:InfoBar Title="Explorer:"
+                    Message="There are no local backups of a Supernote device. Please, synchronize a Supernote device by using the USB-C connection."
+                    IsClosable="False"
+                    IsOpen="True"
+                    Severity="Informational"
+                    VerticalAlignment="Top"
+                    Visibility="{Binding ViewModel.HasItems, Converter={StaticResource BoolToVisibilityInversionConverter}}" />
+
         <ui:Card VerticalAlignment="Stretch"
                  VerticalContentAlignment="Stretch"
-                 Margin="0,0,0,12">
+                 Margin="0,0,0,12"
+                 Visibility="{Binding ViewModel.HasItems, Converter={StaticResource BoolToVisibilityConverter}}">
             <Grid VerticalAlignment="Top">
-                <ui:InfoBar Title="Explorer"
-                            Message="There are no local backups of a Supernote device. Please, synchronize the device first before you can start exploring it."
-                            IsClosable="False"
-                            IsOpen="True"
-                            Severity="Informational"
-                            Visibility="{Binding ViewModel.HasItems, Converter={StaticResource BoolToVisibilityInversionConverter}}" />
                 <TreeView Cursor="Hand"
                           Margin="-10"
                           ItemsSource="{Binding ViewModel.Items}"

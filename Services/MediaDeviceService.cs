@@ -3,6 +3,7 @@ using SupernoteDesktopClient.Core;
 using SupernoteDesktopClient.Extensions;
 using SupernoteDesktopClient.Models;
 using SupernoteDesktopClient.Services.Contracts;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SupernoteDesktopClient.Services
@@ -78,12 +79,21 @@ namespace SupernoteDesktopClient.Services
                     SettingsManager.Instance.Settings.DeviceProfiles[_supernoteInfo.SerialNumberHash] = _supernoteInfo;
                 else
                     SettingsManager.Instance.Settings.DeviceProfiles.Add(_supernoteInfo.SerialNumberHash, _supernoteInfo);
+
+                // clear active state
+                foreach (KeyValuePair<string, SupernoteInfo> kvp in SettingsManager.Instance.Settings.DeviceProfiles)
+                {
+                    kvp.Value.Active = false;
+                }
+
+                // mark connected device as active
+                SettingsManager.Instance.Settings.DeviceProfiles[_supernoteInfo.SerialNumberHash].Active = true;
             }
             else
             {
                 _supernoteInfo = new SupernoteInfo();
                 if (SettingsManager.Instance.Settings.DeviceProfiles.Count > 0)
-                    _supernoteInfo = SettingsManager.Instance.Settings.DeviceProfiles.FirstOrDefault().Value;
+                    _supernoteInfo = SettingsManager.Instance.Settings.DeviceProfiles.Where(p => p.Value.Active == true).FirstOrDefault().Value;
             }
 
             DiagnosticLogger.Log($"Device: {(_supernoteManager == null ? "N/A" : _supernoteManager)}, DriveInfo: {(_driveInfo == null ? "N/A" : _driveInfo)}");
