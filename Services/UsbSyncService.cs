@@ -45,26 +45,31 @@ namespace SupernoteDesktopClient.Services
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
 
+                // build the list
                 var supernoteFolder = _mediaDeviceService.SupernoteManager.GetDirectoryInfo(@"\");
                 var files = supernoteFolder.EnumerateFiles("*.*", SearchOption.AllDirectories);
 
-                foreach (var file in files)
+                // download all files
+                await Task.Run(() =>
                 {
-                    Debug.WriteLine(file.FullName);
-                    string destinationFileName = file.FullName.ReplaceFirstOccurrence(SourceLocation, BackupLocation);
-                    string destinationFolder = Path.GetDirectoryName(destinationFileName);
-
-                    if (Directory.Exists(destinationFolder) == false)
-                        Directory.CreateDirectory(destinationFolder);
-
-                    if (File.Exists(destinationFileName) == false)
+                    foreach (var file in files)
                     {
-                        using (FileStream fs = new FileStream(destinationFileName, FileMode.Create, FileAccess.Write))
+                        Debug.WriteLine(file.FullName);
+                        string destinationFileName = file.FullName.ReplaceFirstOccurrence(SourceLocation, BackupLocation);
+                        string destinationFolder = Path.GetDirectoryName(destinationFileName);
+
+                        if (Directory.Exists(destinationFolder) == false)
+                            Directory.CreateDirectory(destinationFolder);
+
+                        if (File.Exists(destinationFileName) == false)
                         {
-                            _mediaDeviceService.SupernoteManager.DownloadFile(file.FullName, fs);
+                            using (FileStream fs = new FileStream(destinationFileName, FileMode.Create, FileAccess.Write))
+                            {
+                                _mediaDeviceService.SupernoteManager.DownloadFile(file.FullName, fs);
+                            }
                         }
                     }
-                }
+                });
 
                 sw.Stop();
                 Debug.WriteLine($"Total Sync Time: {sw.Elapsed}");
