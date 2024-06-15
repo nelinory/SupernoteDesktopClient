@@ -93,7 +93,17 @@ namespace SupernoteDesktopClient.Services
             {
                 _supernoteInfo = new SupernoteInfo();
                 if (SettingsManager.Instance.Settings.DeviceProfiles.Count > 0)
+                {
+                    // select the first active profile
                     _supernoteInfo = SettingsManager.Instance.Settings.DeviceProfiles.Where(p => p.Value.Active == true).FirstOrDefault().Value;
+
+                    // if no active profile found, select the first one and make it active
+                    if (_supernoteInfo == null)
+                    {
+                        _supernoteInfo = SettingsManager.Instance.Settings.DeviceProfiles.FirstOrDefault().Value;
+                        _supernoteInfo.Active = true;
+                    }
+                }
             }
 
             DiagnosticLogger.Log($"Device: {(_supernoteManager == null ? "N/A" : _supernoteManager)}, DriveInfo: {(_driveInfo == null ? "N/A" : _driveInfo)}");
