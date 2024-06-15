@@ -17,18 +17,28 @@
     <ui:UiPage.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter" />
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     </ui:UiPage.Resources>
 
-    <Grid Margin="56,0">
+    <Grid Margin="50,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
+        <ui:InfoBar Title="Sync:"
+                    Message="There are no local profiles of a Supernote device. Please, synchronize a Supernote device by using the USB-C connection."
+                    IsClosable="False"
+                    IsOpen="True"
+                    Severity="Informational"
+                    VerticalAlignment="Top"
+                    Visibility="{Binding ViewModel.IsDeviceProfileAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}" />
+
         <ui:CardControl Grid.Row="0"
                         VerticalAlignment="Stretch"
-                        Icon="DocumentSync24">
+                        Icon="DocumentSync24"
+                        Visibility="{Binding ViewModel.IsDeviceProfileAvailable, Converter={StaticResource BoolToVisibilityConverter}}">
             <ui:CardControl.Header>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -40,41 +50,44 @@
                         <TextBlock Grid.Column="0"
                                    FontSize="14"
                                    FontWeight="Medium"
-                                   Text="Source folder" />
+                                   Text="{Binding ViewModel.SourceLocationCaption, Mode=OneWay}" />
                         <TextBlock Grid.Column="0"
                                    FontSize="12"
                                    Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                                   Text="Supernote source folder" />
+                                   Text="{Binding ViewModel.SourceLocationDescription, Mode=OneWay}" />
                         <TextBlock Grid.Column="0"
                                    Margin="0, 12, 0, 0"
                                    FontSize="14"
                                    FontWeight="Medium"
-                                   Text="Backup folder" />
+                                   Text="Backup location" />
                         <TextBlock Grid.Column="0"
                                    FontSize="12"
                                    Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                                   Text="Local backup folder" />
+                                   Text="Local backup location" />
                     </StackPanel>
                     <StackPanel VerticalAlignment="Top"
                                 Grid.Column="1">
                         <ui:TextBox Grid.Column="1"
+                                    Icon="{Binding ViewModel.SourceLocationIcon, Mode=OneWay}"
                                     Margin="10, 0, 0, 0"
-                                    IsReadOnly="True"
-                                    ClearButtonEnabled="False"
-                                    Text="{Binding ViewModel.SourceFolder, Mode=OneWay}" />
+                                    PlaceholderText="{Binding ViewModel.SourceLocationPlaceholderText, Mode=OneWay}"
+                                    IsReadOnly="{Binding ViewModel.IsUsbDeviceConnected}"
+                                    ClearButtonEnabled="{Binding ViewModel.IsUsbDeviceConnected, Converter={StaticResource InverseBooleanConverter}}"
+                                    Text="{Binding ViewModel.SourceLocation, Mode=TwoWay}" />
                         <ui:TextBox Grid.Column="1"
+                                    Icon="HardDrive20"
                                     Margin="10, 12, 0, 0"
                                     IsReadOnly="True"
                                     ClearButtonEnabled="False"
-                                    Text="{Binding ViewModel.BackupFolder, Mode=OneWay}" />
+                                    Text="{Binding ViewModel.BackupLocation, Mode=OneWay}" />
                     </StackPanel>
                 </Grid>
             </ui:CardControl.Header>
-            <Grid Width="120px">
+            <Grid Width="150px">
                 <ui:Button Icon="ArrowSync24"
-                           Content="Synchronize"
-                           IsEnabled="{Binding ViewModel.IsDeviceConnected}"
+                           Content="{Binding ViewModel.SyncButtonCaption, Mode=OneWay}"
                            Command="{Binding ViewModel.ExecuteSyncCommand, Mode=OneWay}"
+                           CommandParameter="{Binding ViewModel.SyncButtonParameter, Mode=OneWay}"
                            Visibility="{Binding ViewModel.IsSyncRunning, Converter={StaticResource BoolToVisibilityInversionConverter}}" />
                 <ui:ProgressRing Visibility="{Binding ViewModel.IsSyncRunning, Converter={StaticResource BoolToVisibilityConverter}}"
                                  IsIndeterminate="True"
@@ -85,7 +98,8 @@
         <ui:CardControl Grid.Row="1"
                         Margin="0,12,0,0"
                         VerticalAlignment="Stretch"
-                        Icon="Archive24">
+                        Icon="Archive24"
+                        Visibility="{Binding ViewModel.IsDeviceProfileAvailable, Converter={StaticResource BoolToVisibilityConverter}}">
             <ui:CardControl.Header>
                 <StackPanel VerticalAlignment="Center">
                     <TextBlock FontSize="14"

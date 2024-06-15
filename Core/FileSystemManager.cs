@@ -5,6 +5,9 @@ namespace SupernoteDesktopClient.Core
 {
     public static class FileSystemManager
     {
+        public const string BACKUP_FOLDER = "Backup";
+        public const string ARCHIVE_FOLDER = "Archive";
+
         public static void ForceDeleteDirectory(string path)
         {
             var directory = new DirectoryInfo(path) { Attributes = FileAttributes.Normal };
@@ -60,6 +63,15 @@ namespace SupernoteDesktopClient.Core
             {
                 // errors while deleting temporary files
             }
+        }
+
+        public static string GetFolderByType(string folderType, string serialNumberHash)
+        {
+            string folder = GetApplicationFolder();
+            if (String.IsNullOrWhiteSpace(folder) == false && serialNumberHash.Contains("N/A") == false)
+                return Path.Combine(folder, $@"Device\{serialNumberHash}\{folderType}");
+            else
+                return null;
         }
     }
 }

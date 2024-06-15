@@ -82,8 +82,10 @@ namespace SupernoteDesktopClient.Models
 
                     using (FileStream fileStream = new FileStream(item.FileSystemInfo.FullName, FileMode.Open, FileAccess.Read))
                     {
+                        Policy conversionPolicy = SettingsManager.Instance.Settings.Conversion.StrictModeEnabled == true ? Policy.Strict : Policy.Loose;
+
                         Parser parser = new Parser();
-                        Notebook notebook = parser.LoadNotebook(fileStream, Policy.Strict);
+                        Notebook notebook = parser.LoadNotebook(fileStream, conversionPolicy);
 
                         if (notebook.TotalPages > 0)
                         {
@@ -115,7 +117,7 @@ namespace SupernoteDesktopClient.Models
             }
             catch (Exception ex)
             {
-                WeakReferenceMessenger.Default.Send(new ConversionFailedMessage("Document conversion failed."));
+                WeakReferenceMessenger.Default.Send(new ConversionFailedMessage($"Document conversion failed. {ex.Message}."));
 
                 Log.Error("Error while converting a document: {EX}", ex);
             }

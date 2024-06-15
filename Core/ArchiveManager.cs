@@ -10,11 +10,17 @@ namespace SupernoteDesktopClient.Core
     {
         public static void Archive(string backupFolder, string archiveFolder, int maxArchivesToKeep)
         {
-            string currentDateTime = String.Format("{0:yyyyMMdd_HHmmss}", DateTime.Now);
-            string archiveFileName = $"{currentDateTime}_{Path.GetFileName(backupFolder)}.zip";
+            if (Directory.Exists(backupFolder) == true)
+            {
+                string currentDateTime = String.Format("{0:yyyyMMdd_HHmmss}", DateTime.Now);
+                string archiveFileName = $"{currentDateTime}_{Path.GetFileName(backupFolder)}.zip";
 
-            if (CreateArchive(backupFolder, Path.Combine(archiveFolder, archiveFileName)) == true)
-                PurgeOldArchives(archiveFolder, Path.GetFileName(backupFolder), maxArchivesToKeep);
+                if (CreateArchive(backupFolder, Path.Combine(archiveFolder, archiveFileName)) == true)
+                    PurgeOldArchives(archiveFolder, Path.GetFileName(backupFolder), maxArchivesToKeep);
+
+                // delete existing storage folder if exists
+                FileSystemManager.ForceDeleteDirectory(backupFolder);
+            }
         }
 
         public static ObservableCollection<Models.ArchiveFileAttributes> GetArchivesList(string archiveFolder)

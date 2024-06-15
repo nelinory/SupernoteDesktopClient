@@ -4,10 +4,12 @@ using CommunityToolkit.Mvvm.Messaging;
 using SupernoteDesktopClient.Core;
 using SupernoteDesktopClient.Extensions;
 using SupernoteDesktopClient.Messages;
+using SupernoteDesktopClient.Models;
 using SupernoteDesktopClient.Services.Contracts;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Wpf.Ui.Common;
 using Wpf.Ui.Common.Interfaces;
 
 namespace SupernoteDesktopClient.ViewModels
@@ -61,12 +63,55 @@ namespace SupernoteDesktopClient.ViewModels
         [ObservableProperty]
         private string _updateDetails = String.Empty;
 
+        [ObservableProperty]
+        private bool _isDeviceProfileAvailable;
+
+        public List<string> DeviceProfilesItemSource
+        {
+            get
+            {
+                var deviceProfiles = new List<string>();
+                foreach (KeyValuePair<string, SupernoteInfo> kvp in SettingsManager.Instance.Settings.DeviceProfiles)
+                {
+                    deviceProfiles.Add($"{kvp.Key} ({kvp.Value.Model})");
+                }
+
+                return deviceProfiles;
+            }
+        }
+        
+        public int DeviceProfilesSelectedItem
+        {
+            get
+            {
+                int index = -1;
+
+                SupernoteInfo activeProfileHash = SettingsManager.Instance.Settings.DeviceProfiles.Where(p => p.Value.Active == true).FirstOrDefault().Value;
+                if (activeProfileHash!= null && string.IsNullOrWhiteSpace(activeProfileHash.SerialNumberHash) == false)
+                    index = DeviceProfilesItemSource.FindIndex(p => p == $"{activeProfileHash.SerialNumberHash} ({activeProfileHash.Model})");
+
+                return index == -1 ? 0 : index;
+            }
+            set
+            {
+                // clear active state
+                foreach (KeyValuePair<string, SupernoteInfo> kvp in SettingsManager.Instance.Settings.DeviceProfiles)
+                {
+                    kvp.Value.Active = false;
+                }
+
+                SettingsManager.Instance.Settings.DeviceProfiles.ElementAt(value).Value.Active = true;
+                
+                UpdateDashboard();
+            }
+        }
+
         public void OnNavigatedTo()
         {
             DiagnosticLogger.Log($"{this}");
 
             UpdateDashboard();
-            RefreshUpdateStatus(false).Await();
+            RefreshUpdateStatusAsync(false).Await();
         }
 
         public void OnNavigatedFrom()
@@ -78,16 +123,16 @@ namespace SupernoteDesktopClient.ViewModels
             // services
             _mediaDeviceService = mediaDeviceService;
 
-            // Register a message subscriber
+            // register a message subscriber
             WeakReferenceMessenger.Default.Register<MediaDeviceChangedMessage>(this, (r, m) => { UpdateDashboard(); });
 
             // check for updates on startup
             if (SettingsManager.Instance.Settings.General.AutomaticUpdateCheckEnabled == true)
-                RefreshUpdateStatus(true).Await();
+                RefreshUpdateStatusAsync(true).Await();
         }
 
         [RelayCommand]
-        private void CopySerialNumberToClipboard(string serialNumber)
+        private static void CopySerialNumberToClipboard(string serialNumber)
         {
             System.Windows.Clipboard.SetText(serialNumber);
         }
@@ -116,16 +161,20 @@ namespace SupernoteDesktopClient.ViewModels
             DeviceUsedSpace = (_mediaDeviceService.IsDeviceConnected == true) ? $"{(totalSpace - freeSpace).GetDataSizeAsString()} / {totalSpace.GetDataSizeAsString()} ({DeviceUsedSpacePercentage.ToString("F2")}% used space)" : "N/A";
 
             IsDeviceConnected = _mediaDeviceService.IsDeviceConnected;
+            IsDeviceProfileAvailable = _mediaDeviceService.SupernoteInfo.SerialNumberHash != "N/A";
+
+            // refresh profiles dropdown control
+            OnPropertyChanged(nameof(DeviceProfilesSelectedItem));
         }
 
-        private async Task RefreshUpdateStatus(bool updateRequested)
+        private async Task RefreshUpdateStatusAsync(bool updateRequested)
         {
             (bool updateAvailable, string updateMessage, string updateDetails) result;
 
             if (updateRequested == true)
-                result = await UpdateManager.CheckForUpdate();
+                result = await UpdateManager.CheckForUpdateAsync();
             else
-                result = UpdateManager.GetUpdateDetails();
+                result = await UpdateManager.GetUpdateDetails();
 
             IsUpdateAvailable = result.updateAvailable;
             UpdateMessage = result.updateMessage;

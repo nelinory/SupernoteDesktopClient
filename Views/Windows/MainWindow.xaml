@@ -24,26 +24,64 @@
     </ui:UiWindow.Resources>
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <ui:NavigationCompact x:Name="RootNavigation"
-                              Grid.Column="0"
-                              Footer="{Binding ViewModel.NavigationFooter, Mode=TwoWay}"
-                              Frame="{Binding ElementName=RootFrame, Mode=OneWay}"
-                              Items="{Binding ViewModel.NavigationItems, Mode=TwoWay}"
-                              Navigated="RootNavigation_Navigated">
-        </ui:NavigationCompact>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <ui:NavigationCompact x:Name="RootNavigation"
+                                  Grid.Column="0"
+                                  Footer="{Binding ViewModel.NavigationFooter, Mode=TwoWay}"
+                                  Frame="{Binding ElementName=RootFrame, Mode=OneWay}"
+                                  Items="{Binding ViewModel.NavigationItems, Mode=TwoWay}"
+                                  Navigated="RootNavigation_Navigated">
+            </ui:NavigationCompact>
+
+            <Border Grid.Column="1"
+                    Background="{DynamicResource ControlFillColorDefaultBrush}"
+                    CornerRadius="8,0,0,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Frame x:Name="RootFrame"
+                           Grid.Row="1" />
+                    <ui:Breadcrumb x:Name="Breadcrumb"
+                                   Grid.Row="0"
+                                   Margin="50,32"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Top"
+                                   FontSize="28"
+                                   Navigation="{Binding ElementName=RootNavigation, Mode=OneWay}" />
+
+                    <ui:Snackbar x:Name="RootSnackbar"
+                                 Grid.Row="1"
+                                 Timeout="4000"
+                                 MaxWidth="700" />
+                </Grid>
+            </Border>
+        </Grid>
+
+        <ui:Dialog x:Name="RootDialog"
+                   Grid.Row="0"
+                   Grid.RowSpan="2"
+                   ButtonLeftVisibility="Collapsed"
+                   ButtonRightAppearance="Primary"
+                   DialogHeight="210"/>
 
         <ui:TitleBar Title="Supernote Desktop Client"
+                     ForceShutdown="False"
                      UseSnapLayout="True"
+                     Icon="pack://application:,,,/Assets/application_icon_256.png"
                      MinimizeToTray="{Binding ViewModel.MinimizeToTrayEnabled, Mode=OneWay}"
-                     Grid.Row="0"
-                     Grid.Column="0"
-                     Grid.ColumnSpan="2"
-                     Margin="42,-3,0,0">
+                     Grid.Row="0">
             <ui:TitleBar.Header>
                 <StackPanel HorizontalAlignment="Right">
                     <ui:Badge Padding="6"
@@ -86,29 +124,5 @@
                 </ui:NotifyIcon>
             </ui:TitleBar.Tray>
         </ui:TitleBar>
-
-        <Grid Grid.Column="1">
-            <Border Margin="0,46,0,0"
-                    CornerRadius="8,0,0,0">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Frame x:Name="RootFrame"
-                           Grid.Row="1" />
-                    <ui:Breadcrumb x:Name="Breadcrumb"
-                                   Grid.Row="0"
-                                   Margin="56,32"
-                                   HorizontalAlignment="Left"
-                                   VerticalAlignment="Top"
-                                   FontSize="28"
-                                   Navigation="{Binding ElementName=RootNavigation, Mode=OneWay}" />
-                </Grid>
-            </Border>
-            <ui:Snackbar x:Name="RootSnackbar"
-                         Timeout="4000"
-                         MaxWidth="700" />
-        </Grid>
     </Grid>
 </ui:UiWindow>

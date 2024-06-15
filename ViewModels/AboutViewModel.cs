@@ -29,7 +29,7 @@ namespace SupernoteDesktopClient.ViewModels
         {
             DiagnosticLogger.Log($"{this}");
 
-            RefreshUpdateStatus(false).Await();
+            RefreshUpdateStatusAsync(false).Await();
         }
 
         public void OnNavigatedFrom()
@@ -46,17 +46,17 @@ namespace SupernoteDesktopClient.ViewModels
         {
             IsUpdateCheckEnabled = false;
 
-            await RefreshUpdateStatus(true);
+            await RefreshUpdateStatusAsync(true);
         }
 
-        private async Task RefreshUpdateStatus(bool updateRequested)
+        private async Task RefreshUpdateStatusAsync(bool updateRequested)
         {
             (bool updateAvailable, string updateMessage, string updateDetails) result;
 
             if (updateRequested == true)
-                result = await UpdateManager.CheckForUpdate();
+                result = await UpdateManager.CheckForUpdateAsync();
             else
-                result = UpdateManager.GetUpdateDetails();
+                result = await UpdateManager.GetUpdateDetails();
 
             IsUpdateAvailable = result.updateAvailable;
             UpdateMessage = result.updateMessage;

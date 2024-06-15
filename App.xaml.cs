@@ -43,11 +43,13 @@ namespace SupernoteDesktopClient
                 services.AddSingleton<IThemeService, ThemeService>();
                 services.AddSingleton<ITaskBarService, TaskBarService>();
                 services.AddSingleton<ISnackbarService, SnackbarService>();
+                services.AddSingleton<IDialogService, DialogService>();
 
                 // Custom services
                 services.AddSingleton<IUsbHubDetector, UsbHubDetector>();
                 services.AddSingleton<IMediaDeviceService, MediaDeviceService>();
-                services.AddSingleton<ISyncService, SyncService>();
+                services.AddKeyedSingleton<ISyncService, UsbSyncService>(SyncMode.UsbSync);
+                services.AddKeyedSingleton<ISyncService, WifiSyncService>(SyncMode.WifiSync);
 
                 // Service containing navigation, same as INavigationWindow... but without window
                 services.AddSingleton<INavigationService, NavigationService>();
@@ -70,17 +72,6 @@ namespace SupernoteDesktopClient
             })
             .UseSerilog()
             .Build();
-
-        /// <summary>
-        /// Gets registered service.
-        /// </summary>
-        /// <typeparam name="T">Type of the service to get.</typeparam>
-        /// <returns>Instance of the service or <see langword="null"/>.</returns>
-        public static T GetService<T>()
-            where T : class
-        {
-            return _host.Services.GetService(typeof(T)) as T;
-        }
 
         /// <summary>
         /// Occurs when the application is loading.

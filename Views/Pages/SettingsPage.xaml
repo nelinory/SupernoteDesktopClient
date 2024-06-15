@@ -2,7 +2,6 @@
            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-           xmlns:converters="clr-namespace:SupernoteDesktopClient.Converters"
            xmlns:local="clr-namespace:SupernoteDesktopClient.Views.Pages"
            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
            xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
@@ -13,12 +12,8 @@
            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
            mc:Ignorable="d">
 
-    <ui:UiPage.Resources>
-        <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
-    </ui:UiPage.Resources>
-
     <ui:DynamicScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="56,0">
+        <StackPanel Margin="50,0">
             <TextBlock FontSize="18"
                        FontWeight="Medium"
                        Text="General" />
@@ -140,7 +135,7 @@
                 </ui:CardControl.Header>
                 <ui:ToggleSwitch IsChecked="{Binding ViewModel.AutomaticSyncOnConnect, Mode=TwoWay}" />
             </ui:CardControl>
-            <ui:CardControl Margin="0,12,0,12"
+            <ui:CardControl Margin="0,12,0,0"
                             Icon="ArchiveSettings24">
                 <ui:CardControl.Header>
                     <StackPanel Grid.Column="0"
@@ -158,6 +153,27 @@
                           ItemsSource="{Binding ViewModel.MaxDeviceArchivesItemSource}"
                           SelectedIndex="{Binding ViewModel.MaxDeviceArchivesSelectedItem}">
                 </ComboBox>
+            </ui:CardControl>
+
+            <TextBlock Margin="0,22,0,0"
+                       FontSize="18"
+                       FontWeight="Medium"
+                       Text="Conversion" />
+
+            <ui:CardControl Margin="0,12,0,12"
+                            Icon="ConvertRange24">
+                <ui:CardControl.Header>
+                    <StackPanel Grid.Column="0"
+                                VerticalAlignment="Center">
+                        <TextBlock FontSize="14"
+                                   FontWeight="Medium"
+                                   Text="Use strict mode" />
+                        <TextBlock FontSize="12"
+                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                   Text="Strict mode allows viewing notes only if the library supports the exact note version. If you cannot view a note, turning off this option may help." />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch IsChecked="{Binding ViewModel.StrictModeEnabled, Mode=TwoWay}" />
             </ui:CardControl>
         </StackPanel>
     </ui:DynamicScrollViewer>

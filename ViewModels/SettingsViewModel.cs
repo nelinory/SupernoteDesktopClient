@@ -76,6 +76,12 @@ namespace SupernoteDesktopClient.ViewModels
             set { SettingsManager.Instance.Settings.Sync.MaxDeviceArchives = MaxDeviceArchivesItemSource[value]; }
         }
 
+        public bool StrictModeEnabled
+        {
+            get { return SettingsManager.Instance.Settings.Conversion.StrictModeEnabled; }
+            set { SettingsManager.Instance.Settings.Conversion.StrictModeEnabled = value; }
+        }
+
         public void OnNavigatedTo()
         {
             DiagnosticLogger.Log($"{this}");
@@ -94,7 +100,7 @@ namespace SupernoteDesktopClient.ViewModels
 
         private void OnThemeChanged(ThemeType currentTheme, Color systemAccent)
         {
-            // Update the theme if it has been changed elsewhere than in the settings.
+            // update the theme if it has been changed elsewhere than in the settings
             if (CurrentTheme != currentTheme)
             {
                 CurrentTheme = currentTheme;
@@ -114,7 +120,7 @@ namespace SupernoteDesktopClient.ViewModels
 
         private void NotifySettingsChangedSubscribers(string settingName)
         {
-            // Notify all subscribers
+            // notify all subscribers
             WeakReferenceMessenger.Default.Send(new SettingsChangedMessage(settingName));
         }
     }

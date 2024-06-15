@@ -24,7 +24,7 @@ namespace SupernoteDesktopClient.Views.Windows
 
         public ViewModels.MainWindowViewModel ViewModel { get; }
 
-        public MainWindow(ViewModels.MainWindowViewModel viewModel, IPageService pageService, INavigationService navigationService, ISnackbarService snackbarService)
+        public MainWindow(ViewModels.MainWindowViewModel viewModel, IPageService pageService, INavigationService navigationService, ISnackbarService snackbarService, IDialogService dialogService)
         {
             ViewModel = viewModel;
             DataContext = this;
@@ -37,6 +37,7 @@ namespace SupernoteDesktopClient.Views.Windows
 
             navigationService.SetNavigationControl(RootNavigation);
             snackbarService.SetSnackbarControl(RootSnackbar);
+            dialogService.SetDialogControl(RootDialog);
 
             Theme.Apply((ThemeType)Enum.Parse(typeof(ThemeType), SettingsManager.Instance.Settings.General.CurrentTheme), BackgroundType.Mica, true);
         }
@@ -113,7 +114,7 @@ namespace SupernoteDesktopClient.Views.Windows
 
         #region NotifyIcon Context Menu
 
-        // This is not following MVVM, due to the inability of the RelayCommand to get data bind context for NotifyIcon context menu
+        // this is not following MVVM, due to the inability of the RelayCommand to get data bind context for NotifyIcon context menu
 
         private void NotifyIcon_LeftDoubleClick(NotifyIcon sender, RoutedEventArgs e)
         {

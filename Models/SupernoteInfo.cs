@@ -22,5 +22,7 @@ namespace SupernoteDesktopClient.Models
 
         [JsonIgnore]
         public string RootFolder { get; set; } = "N/A";
+
+        public bool Active { get; set; } = false;
     }
 }

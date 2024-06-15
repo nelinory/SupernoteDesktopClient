@@ -16,20 +16,23 @@
 
     <ui:UiPage.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter" />
     </ui:UiPage.Resources>
 
     <ui:DynamicScrollViewer>
-        <Grid Margin="56,10"
+        <Grid Margin="50,10"
               VerticalAlignment="Top">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
+
             <TextBlock Grid.Row="0"
                        VerticalAlignment="Center"
                        FontSize="28"
                        FontWeight="Medium"
                        Text="{Binding Source={x:Static sys:DateTime.Today}, StringFormat='{}{0:dddd, MMMM dd, yyyy}'}" />
+
             <ui:CardControl Grid.Row="0"
                             Margin="0,12,0,0"
                             HorizontalAlignment="Right"
@@ -65,10 +68,20 @@
                     </Grid>
                 </ui:CardAction>
 
+                <ui:InfoBar Margin="0,12,0,0"
+                            Title="Dashboard:"
+                            Message="There are no local profiles of a Supernote device. Please, synchronize a Supernote device by using the USB-C connection."
+                            IsClosable="False"
+                            IsOpen="True"
+                            Severity="Informational"
+                            VerticalAlignment="Top"
+                            Visibility="{Binding ViewModel.IsDeviceProfileAvailable, Converter={StaticResource BoolToVisibilityInversionConverter}}" />
+
                 <ui:CardControl Margin="0,12,0,0"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
-                                Icon="Notebook24">
+                                Icon="Notebook24"
+                                Visibility="{Binding ViewModel.IsDeviceProfileAvailable, Converter={StaticResource BoolToVisibilityConverter}}">
                     <ui:CardControl.Header>
                         <StackPanel VerticalAlignment="Center">
                             <TextBlock FontSize="14"
@@ -79,6 +92,20 @@
                                        Text="Model number" />
                         </StackPanel>
                     </ui:CardControl.Header>
+                    <StackPanel Orientation="Horizontal"
+                                Visibility="{Binding ViewModel.IsDeviceConnected, Converter={StaticResource BoolToVisibilityInversionConverter}}">
+                        <TextBlock Margin="0,0,10,0"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Center"
+                                   FontSize="14"
+                                   FontWeight="Medium"
+                                   Text="Supernote profiles:" />
+                        <ComboBox MinWidth="20"
+                                  HorizontalAlignment="Left"
+                                  ItemsSource="{Binding ViewModel.DeviceProfilesItemSource, Mode=OneTime}"
+                                  SelectedIndex="{Binding ViewModel.DeviceProfilesSelectedItem}">
+                        </ComboBox>
+                    </StackPanel>
                 </ui:CardControl>
                 <ui:CardControl Margin="0,12,0,0"
                                 HorizontalAlignment="Stretch"
