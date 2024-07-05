@@ -1,4 +1,4 @@
-﻿<ui:UiPage x:Class="SupernoteDesktopClient.Views.Pages.AboutPage"
+﻿<Page x:Class="SupernoteDesktopClient.Views.Pages.AboutPage"
            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -13,9 +13,9 @@
            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
            mc:Ignorable="d">
 
-    <ui:UiPage.Resources>
+    <Page.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-    </ui:UiPage.Resources>
+    </Page.Resources>
 
     <StackPanel Margin="50,0">
         <TextBlock Margin="0,0,0,8"
@@ -43,7 +43,7 @@
                            VerticalAlignment="Center"
                            FontSize="14"
                            Text="{Binding ViewModel.UpdateMessage}"/>
-                <ui:Hyperlink Grid.Column="1"
+                <ui:HyperlinkButton Grid.Column="1"
                               Margin="0,1,0,0"
                               VerticalAlignment="Center"
                               Cursor="Hand"
@@ -57,11 +57,11 @@
                    FontSize="14"
                    FontWeight="Medium"
                    Text="Links" />
-        <ui:Hyperlink Cursor="Hand"
+        <ui:HyperlinkButton Cursor="Hand"
                       Content="Github project website"
                       Icon="Link24"
                       NavigateUri="https://github.com/nelinory/SupernoteDesktopClient" />
-        <ui:Hyperlink Cursor="Hand"
+        <ui:HyperlinkButton Cursor="Hand"
                       Content="Github project releases"
                       Icon="Link24"
                       NavigateUri="https://github.com/nelinory/SupernoteDesktopClient/releases/latest" />
@@ -76,49 +76,49 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0">
-                <ui:Hyperlink Cursor="Hand"
+                <ui:HyperlinkButton Cursor="Hand"
                               Content="CommunityToolkit.Mvvm"
                               Icon="Link24"
                               NavigateUri="https://github.com/CommunityToolkit/dotnet" />
-                <ui:Hyperlink Cursor="Hand"
+                <ui:HyperlinkButton Cursor="Hand"
                               Content="MediaDevices"
                               Icon="Link24"
                               NavigateUri="https://github.com/Bassman2/MediaDevices" />
-                <ui:Hyperlink Cursor="Hand"
+                <ui:HyperlinkButton Cursor="Hand"
                               Content="Microsoft.Extensions.Hosting"
                               Icon="Link24"
                               NavigateUri="https://www.nuget.org/packages/Microsoft.Extensions.Hosting" />
-                <ui:Hyperlink Cursor="Hand"
+                <ui:HyperlinkButton Cursor="Hand"
                               Content="Microsoft.Toolkit.Uwp.Notifications"
                               Icon="Link24"
                               NavigateUri="https://github.com/CommunityToolkit/WindowsCommunityToolkit" />
-                <ui:Hyperlink Cursor="Hand"
+                <ui:HyperlinkButton Cursor="Hand"
                               Content="Serilog"
                               Icon="Link24"
                               NavigateUri="https://serilog.net" />
-                <ui:Hyperlink Cursor="Hand"
+                <ui:HyperlinkButton Cursor="Hand"
                               Content="Serilog.Sinks.File"
                               Icon="Link24"
                               NavigateUri="https://serilog.net" />
-                <ui:Hyperlink Cursor="Hand"
+                <ui:HyperlinkButton Cursor="Hand"
                               Content="System.Management"
                               Icon="Link24"
                               NavigateUri="https://www.nuget.org/packages/System.Management" />
-                <ui:Hyperlink Cursor="Hand"
+                <ui:HyperlinkButton Cursor="Hand"
                               Content="Wpfui"
                               Icon="Link24"
                               NavigateUri="https://github.com/lepoco/wpfui" />
             </StackPanel>
             <StackPanel Grid.Column="1">
-                <ui:Hyperlink Cursor="Hand"
+                <ui:HyperlinkButton Cursor="Hand"
                               Content="fluentui-system-icons"
                               Icon="Link24"
                               NavigateUri="https://github.com/microsoft/fluentui-system-icons" />
-                <ui:Hyperlink Cursor="Hand"
+                <ui:HyperlinkButton Cursor="Hand"
                               Content="SupernoteSharp"
                               Icon="Link24"
                               NavigateUri="https://github.com/nelinory/SupernoteSharp" />                
             </StackPanel>
         </Grid>
     </StackPanel>
-</ui:UiPage>
+</Page>

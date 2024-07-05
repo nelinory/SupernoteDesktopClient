@@ -6,7 +6,7 @@ using SupernoteDesktopClient.Messages;
 using System.Collections.Generic;
 using System.Windows.Media;
 using Wpf.Ui.Appearance;
-using Wpf.Ui.Common.Interfaces;
+using Wpf.Ui.Controls;
 
 namespace SupernoteDesktopClient.ViewModels
 {
@@ -15,13 +15,13 @@ namespace SupernoteDesktopClient.ViewModels
         private const int DEFAULT_MAX_ARCHIVE_DEVICE_INDEX = 2; // 7 archives
 
         [ObservableProperty]
-        private ThemeType _currentTheme = ThemeType.Unknown;
+        private ApplicationTheme _currentTheme = ApplicationTheme.Unknown;
 
         [ObservableProperty]
-        private bool isThemeSwitchChecked = (Theme.GetAppTheme() == ThemeType.Dark);
+        private bool isThemeSwitchChecked = (ApplicationThemeManager.GetAppTheme() == ApplicationTheme.Dark);
 
         [ObservableProperty]
-        private string appThemeName = Theme.GetAppTheme().ToString();
+        private string appThemeName = ApplicationThemeManager.GetAppTheme().ToString();
 
         public bool RememberAppWindowPlacement
         {
@@ -93,29 +93,29 @@ namespace SupernoteDesktopClient.ViewModels
 
         public SettingsViewModel()
         {
-            CurrentTheme = Theme.GetAppTheme();
+            CurrentTheme = ApplicationThemeManager.GetAppTheme();
 
-            Theme.Changed += OnThemeChanged;
+            ApplicationThemeManager.Changed += OnThemeChanged;
         }
 
-        private void OnThemeChanged(ThemeType currentTheme, Color systemAccent)
+        private void OnThemeChanged(ApplicationTheme currentTheme, Color systemAccent)
         {
             // update the theme if it has been changed elsewhere than in the settings
             if (CurrentTheme != currentTheme)
             {
                 CurrentTheme = currentTheme;
-                AppThemeName = Theme.GetAppTheme().ToString();
-                IsThemeSwitchChecked = (Theme.GetAppTheme() == ThemeType.Dark);
+                AppThemeName = ApplicationThemeManager.GetAppTheme().ToString();
+                IsThemeSwitchChecked = (ApplicationThemeManager.GetAppTheme() == ApplicationTheme.Dark);
             }
         }
 
         [RelayCommand]
         private void OnToggleTheme()
         {
-            Theme.Apply(Theme.GetAppTheme() == ThemeType.Light ? ThemeType.Dark : ThemeType.Light);
-            AppThemeName = Theme.GetAppTheme().ToString();
+            ApplicationThemeManager.Apply(ApplicationThemeManager.GetAppTheme() == ApplicationTheme.Light ? ApplicationTheme.Dark : ApplicationTheme.Light);
+            AppThemeName = ApplicationThemeManager.GetAppTheme().ToString();
 
-            SettingsManager.Instance.Settings.General.CurrentTheme = Theme.GetAppTheme().ToString();
+            SettingsManager.Instance.Settings.General.CurrentTheme = ApplicationThemeManager.GetAppTheme().ToString();
         }
 
         private void NotifySettingsChangedSubscribers(string settingName)

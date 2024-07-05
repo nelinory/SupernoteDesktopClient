@@ -5,14 +5,12 @@ using SupernoteDesktopClient.Core;
 using SupernoteDesktopClient.Messages;
 using SupernoteDesktopClient.Services.Contracts;
 using SupernoteDesktopClient.Views.Pages;
+using System;
 using System.Collections.ObjectModel;
 using System.Windows;
+using Wpf.Ui;
 using Wpf.Ui.Appearance;
-using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
-using Wpf.Ui.Controls.Interfaces;
-using Wpf.Ui.Controls.Navigation;
-using Wpf.Ui.Mvvm.Contracts;
 
 namespace SupernoteDesktopClient.ViewModels
 {
@@ -28,10 +26,10 @@ namespace SupernoteDesktopClient.ViewModels
         private bool _isDeviceConnected;
 
         [ObservableProperty]
-        private ObservableCollection<INavigationControl> _navigationItems = new();
+        private ObservableCollection<object> _navigationItems = new();
 
         [ObservableProperty]
-        private ObservableCollection<INavigationControl> _navigationFooter = new();
+        private ObservableCollection<object> _navigationFooter = new();
 
         [ObservableProperty]
         private bool _minimizeToTrayEnabled = SettingsManager.Instance.Settings.General.MinimizeToTrayEnabled;
@@ -62,70 +60,62 @@ namespace SupernoteDesktopClient.ViewModels
 
         private void BuildNavigationMenu()
         {
-            NavigationItems = new ObservableCollection<INavigationControl>
+            NavigationItems = new ObservableCollection<object>
             {
-                new NavigationItem()
+                new NavigationViewItem()
                 {
                     Content = "Dashboard",
-                    PageTag = "dashboard",
-                    ToolTip = "Dashboard",
-                    Icon = SymbolRegular.Home24,
-                    PageType = typeof(DashboardPage)
+                    Icon = new SymbolIcon { Symbol = SymbolRegular.Home24 },
+                    TargetPageType = typeof(DashboardPage)
                 },
-                new NavigationSeparator(),
-                new NavigationItem()
+                new NavigationViewItemSeparator(),
+                new NavigationViewItem()
                 {
                     Content = "Sync",
-                    PageTag = "sync",
-                    ToolTip = "Sync",
-                    Icon = SymbolRegular.ArrowSyncCircle24,
-                    PageType = typeof(SyncPage)
+                    Icon = new SymbolIcon { Symbol = SymbolRegular.ArrowSyncCircle24 },
+                    TargetPageType = typeof(SyncPage)
                 },
-                new NavigationItem()
+                new NavigationViewItem()
                 {
                     Content = "Explorer",
-                    PageTag = "explorer",
-                    ToolTip = "Explorer",
-                    Icon = SymbolRegular.FolderOpen24,
+                    Icon = new SymbolIcon { Symbol = SymbolRegular.FolderOpen24 },
                     IsEnabled = true,
-                    PageType = typeof(ExplorerPage)
+                    TargetPageType = typeof(ExplorerPage)
                 }
             };
 
-            NavigationFooter = new ObservableCollection<INavigationControl>
+            NavigationFooter = new ObservableCollection<object>
             {
-                new NavigationItem()
+                new NavigationViewItem()
                 {
                     Content = "Theme",
                     ToolTip = "Theme",
-                    Icon = SymbolRegular.DarkTheme24,
+                    Icon = new SymbolIcon { Symbol = SymbolRegular.DarkTheme24 },
                     Command = new RelayCommand(ToggleTheme)
                 },
-                new NavigationItem()
+                new NavigationViewItem()
                 {
                     Content = "Settings",
-                    PageTag = "settings",
                     ToolTip = "Settings",
-                    Icon = SymbolRegular.Settings24,
-                    PageType = typeof(SettingsPage)
+                    Icon = new SymbolIcon { Symbol = SymbolRegular.Settings24 },
+                    TargetPageType = typeof(SettingsPage)
                 },
-                new NavigationSeparator(),
-                new NavigationItem()
+                new NavigationViewItemSeparator(),
+                new NavigationViewItem()
                 {
                     Content = "About",
-                    PageTag = "about",
                     ToolTip = "About",
-                    Icon = SymbolRegular.QuestionCircle24,
-                    PageType = typeof(AboutPage)
+                    Icon = new SymbolIcon { Symbol = SymbolRegular.QuestionCircle24 },
+                    TargetPageType = typeof(AboutPage)
                 }
             };
         }
 
         private void ToggleTheme()
         {
-            Theme.Apply(Theme.GetAppTheme() == ThemeType.Light ? ThemeType.Dark : ThemeType.Light);
+            ApplicationThemeManager.Apply(ApplicationThemeManager.GetAppTheme() == ApplicationTheme.Light ? ApplicationTheme.Dark : ApplicationTheme.Light);
 
-            SettingsManager.Instance.Settings.General.CurrentTheme = Theme.GetAppTheme().ToString();
+            SettingsManager.Instance.Settings.General.CurrentTheme = ApplicationThemeManager.GetAppTheme().ToString();
         }
 
         private void UsbHubDetector_UsbHubStateChanged(string deviceId, bool isConnected)
@@ -137,9 +127,9 @@ namespace SupernoteDesktopClient.ViewModels
                 if (SettingsManager.Instance.Settings.Sync.ShowNotificationOnDeviceStateChange == true)
                 {
                     if (isConnected == true)
-                        _snackbarService.Show("Information", $"Device: {deviceId} connected.", SymbolRegular.Notebook24, ControlAppearance.Success);
+                        _snackbarService.Show("Information", $"Device: {deviceId} connected.", ControlAppearance.Success, new SymbolIcon { Symbol = SymbolRegular.Notebook24 }, TimeSpan.FromSeconds(4));
                     else
-                        _snackbarService.Show("Information", $"Device disconnected.", SymbolRegular.Notebook24, ControlAppearance.Caution);
+                        _snackbarService.Show("Information", "Device disconnected.", ControlAppearance.Caution, new SymbolIcon { Symbol = SymbolRegular.Notebook24 }, TimeSpan.FromSeconds(4));
                 }
 
                 // auto sync on connect

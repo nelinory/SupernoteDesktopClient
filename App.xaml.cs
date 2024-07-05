@@ -13,8 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using Wpf.Ui.Mvvm.Contracts;
-using Wpf.Ui.Mvvm.Services;
+using Wpf.Ui;
 
 namespace SupernoteDesktopClient
 {
@@ -43,7 +42,7 @@ namespace SupernoteDesktopClient
                 services.AddSingleton<IThemeService, ThemeService>();
                 services.AddSingleton<ITaskBarService, TaskBarService>();
                 services.AddSingleton<ISnackbarService, SnackbarService>();
-                services.AddSingleton<IDialogService, DialogService>();
+                services.AddSingleton<IContentDialogService, ContentDialogService>();
 
                 // Custom services
                 services.AddSingleton<IUsbHubDetector, UsbHubDetector>();
@@ -55,20 +54,20 @@ namespace SupernoteDesktopClient
                 services.AddSingleton<INavigationService, NavigationService>();
 
                 // Main window with navigation
-                services.AddScoped<INavigationWindow, Views.Windows.MainWindow>();
-                services.AddScoped<ViewModels.MainWindowViewModel>();
+                services.AddSingleton<INavigationWindow, Views.Windows.MainWindow>();
+                services.AddSingleton<ViewModels.MainWindowViewModel>();
 
                 // Views and ViewModels
-                services.AddScoped<Views.Pages.AboutPage>();
-                services.AddScoped<ViewModels.AboutViewModel>();
-                services.AddScoped<Views.Pages.DashboardPage>();
-                services.AddScoped<ViewModels.DashboardViewModel>();
-                services.AddScoped<Views.Pages.ExplorerPage>();
-                services.AddScoped<ViewModels.ExplorerViewModel>();
-                services.AddScoped<Views.Pages.SettingsPage>();
-                services.AddScoped<ViewModels.SettingsViewModel>();
-                services.AddScoped<Views.Pages.SyncPage>();
-                services.AddScoped<ViewModels.SyncViewModel>();
+                services.AddSingleton<Views.Pages.AboutPage>();
+                services.AddSingleton<ViewModels.AboutViewModel>();
+                services.AddSingleton<Views.Pages.DashboardPage>();
+                services.AddSingleton<ViewModels.DashboardViewModel>();
+                services.AddSingleton<Views.Pages.ExplorerPage>();
+                services.AddSingleton<ViewModels.ExplorerViewModel>();
+                services.AddSingleton<Views.Pages.SettingsPage>();
+                services.AddSingleton<ViewModels.SettingsViewModel>();
+                services.AddSingleton<Views.Pages.SyncPage>();
+                services.AddSingleton<ViewModels.SyncViewModel>();
             })
             .UseSerilog()
             .Build();

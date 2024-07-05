@@ -10,9 +10,9 @@ using SupernoteDesktopClient.Services.Contracts;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Wpf.Ui.Common.Interfaces;
-using Wpf.Ui.Controls.Interfaces;
-using Wpf.Ui.Mvvm.Contracts;
+using Wpf.Ui;
+using Wpf.Ui.Controls;
+using Wpf.Ui.Extensions;
 
 namespace SupernoteDesktopClient.ViewModels
 {
@@ -22,7 +22,7 @@ namespace SupernoteDesktopClient.ViewModels
         private readonly IMediaDeviceService _mediaDeviceService;
         private readonly ISyncService _usbSyncService;
         private readonly ISyncService _wifiSyncService;
-        private readonly IDialogControl _dialogControlService;
+        private readonly IContentDialogService _contentDialogService;
 
         [ObservableProperty]
         private bool _isUsbDeviceConnected;
@@ -77,13 +77,13 @@ namespace SupernoteDesktopClient.ViewModels
         {
         }
 
-        public SyncViewModel(IMediaDeviceService mediaDeviceService, IServiceProvider serviceProvider, IDialogService dialogService)
+        public SyncViewModel(IMediaDeviceService mediaDeviceService, IServiceProvider serviceProvider, IContentDialogService contentDialogService)
         {
             // services
             _mediaDeviceService = mediaDeviceService;
             _usbSyncService = serviceProvider.GetKeyedService<ISyncService>(SyncMode.UsbSync);
             _wifiSyncService = serviceProvider.GetKeyedService<ISyncService>(SyncMode.WifiSync);
-            _dialogControlService = dialogService.GetDialogControl();
+            _contentDialogService = contentDialogService;
 
             // register a message subscriber
             WeakReferenceMessenger.Default.Register<MediaDeviceChangedMessage>(this, (r, m) => { UpdateSync(m.Value); });
@@ -104,11 +104,21 @@ namespace SupernoteDesktopClient.ViewModels
                     await _wifiSyncService.Sync();
                 else
                 {
-                    _dialogControlService.ButtonRightName = "OK";
+                    //_contentDialogService.ButtonRightName = "OK";
 
-                    await _dialogControlService.ShowAndWaitAsync("Validation Error", result.message);
+                    //await _contentDialogService.ShowAndWaitAsync("Validation Error", result.message);
 
-                    _dialogControlService.Hide();
+                    //_contentDialogService.Hide();
+                    await _contentDialogService.ShowSimpleDialogAsync(
+                        new SimpleContentDialogCreateOptions()
+                        {
+                            Title = "Validation Error",
+                            Content = result.message,
+                            PrimaryButtonText = "Save",
+                            SecondaryButtonText = "Don't Save",
+                            CloseButtonText = "Cancel",
+                        }
+                    );
                 }
             }
 

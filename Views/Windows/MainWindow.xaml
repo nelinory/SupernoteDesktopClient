@@ -1,27 +1,27 @@
-﻿<ui:UiWindow x:Class="SupernoteDesktopClient.Views.Windows.MainWindow"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:converters="clr-namespace:SupernoteDesktopClient.Converters"
-             xmlns:local="clr-namespace:SupernoteDesktopClient.Views.Windows"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-             Width="1200"
-             Height="700"
-             MinWidth="1100"
-             MinHeight="600"
-             Title="Supernote Desktop Client"
-             d:DataContext="{d:DesignInstance local:MainWindow,
-                                     IsDesignTimeCreatable=False}"
-             ExtendsContentIntoTitleBar="True"
-             WindowBackdropType="Auto"
-             WindowCornerPreference="Default"
-             WindowStartupLocation="CenterScreen"
-             mc:Ignorable="d">
+﻿<ui:FluentWindow x:Class="SupernoteDesktopClient.Views.Windows.MainWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:converters="clr-namespace:SupernoteDesktopClient.Converters"
+                 xmlns:local="clr-namespace:SupernoteDesktopClient.Views.Windows"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:tray="http://schemas.lepo.co/wpfui/2022/xaml/tray"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 Width="1200"
+                 Height="700"
+                 MinWidth="1100"
+                 MinHeight="600"
+                 Title="Supernote Desktop Client"
+                 d:DataContext="{d:DesignInstance local:MainWindow, IsDesignTimeCreatable=False}"
+                 ExtendsContentIntoTitleBar="True"
+                 WindowBackdropType="Auto"
+                 WindowCornerPreference="Default"
+                 WindowStartupLocation="CenterScreen"
+                 mc:Ignorable="d">
 
-    <ui:UiWindow.Resources>
+    <ui:FluentWindow.Resources>
         <converters:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter" />
-    </ui:UiWindow.Resources>
+    </ui:FluentWindow.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -29,21 +29,30 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+        <ui:NavigationView x:Name="RootNavigation"
+                           Grid.Row="1"
+                           IsBackButtonVisible="Collapsed"
+                           IsPaneOpen="False"
+                           FrameMargin="0"
+                           BreadcrumbBar="{Binding ElementName=BreadcrumbBar}"
+                           MenuItemsSource="{Binding ViewModel.NavigationItems, Mode=TwoWay}"
+                           FooterMenuItemsSource="{Binding ViewModel.NavigationFooter, Mode=TwoWay}"
+                           Navigated="RootNavigation_Navigated">
+            <ui:NavigationView.Header>
+                <ui:BreadcrumbBar x:Name="BreadcrumbBar"
+                                  Margin="50,32"
+                                  HorizontalAlignment="Left"
+                                  VerticalAlignment="Top"
+                                  FontSize="28" />
+            </ui:NavigationView.Header>
+            <ui:NavigationView.ContentOverlay>
+                <Grid>
+                    <ui:SnackbarPresenter x:Name="RootSnackbar" />
+                </Grid>
+            </ui:NavigationView.ContentOverlay>
+        </ui:NavigationView>
 
-            <ui:NavigationCompact x:Name="RootNavigation"
-                                  Grid.Column="0"
-                                  Footer="{Binding ViewModel.NavigationFooter, Mode=TwoWay}"
-                                  Frame="{Binding ElementName=RootFrame, Mode=OneWay}"
-                                  Items="{Binding ViewModel.NavigationItems, Mode=TwoWay}"
-                                  Navigated="RootNavigation_Navigated">
-            </ui:NavigationCompact>
-
-            <Border Grid.Column="1"
+        <!--<Border Grid.Column="1"
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
                     CornerRadius="8,0,0,0">
                 <Grid>
@@ -66,22 +75,25 @@
                                  Timeout="4000"
                                  MaxWidth="700" />
                 </Grid>
-            </Border>
-        </Grid>
+            </Border>-->
 
-        <ui:Dialog x:Name="RootDialog"
+        <ContentPresenter x:Name="RootDialog"
+                          Grid.Row="1" />
+
+        <!--<ui:Dialog x:Name="RootDialog"
                    Grid.Row="0"
                    Grid.RowSpan="2"
                    ButtonLeftVisibility="Collapsed"
                    ButtonRightAppearance="Primary"
-                   DialogHeight="210"/>
+                   DialogHeight="210" />-->
 
         <ui:TitleBar Title="Supernote Desktop Client"
                      ForceShutdown="False"
-                     UseSnapLayout="True"
-                     Icon="pack://application:,,,/Assets/application_icon_256.png"
-                     MinimizeToTray="{Binding ViewModel.MinimizeToTrayEnabled, Mode=OneWay}"
                      Grid.Row="0">
+            <!--MinimizeToTray="{Binding ViewModel.MinimizeToTrayEnabled, Mode=OneWay}"-->
+            <ui:TitleBar.Icon>
+                <ui:ImageIcon Source="pack://application:,,,/Assets/application_icon_256.png" />
+            </ui:TitleBar.Icon>
             <ui:TitleBar.Header>
                 <StackPanel HorizontalAlignment="Right">
                     <ui:Badge Padding="6"
@@ -91,38 +103,37 @@
                     <ui:Badge Margin="160,11,0,0">Offline Mode</ui:Badge>
                 </Span>-->
             </ui:TitleBar.Header>
-            <ui:TitleBar.Tray>
-                <!-- Font: Franklin Gothic Demibold / 130px #464646 -->
-                <ui:NotifyIcon Icon="pack://application:,,,/Assets/application_icon_256.png"
-                               MenuOnRightClick="True"
-                               FocusOnLeftClick="False"
-                               LeftDoubleClick="NotifyIcon_LeftDoubleClick"
-                               TooltipText="Supernote Desktop Client">
-                    <ui:NotifyIcon.Menu>
-                        <ContextMenu>
-                            <ui:MenuItem Header="Home"
-                                         Tag="home"
-                                         SymbolIcon="Home24"
-                                         Click="NotifyIcon_MenuItemClick" />
-                            <ui:MenuItem Header="Sync"
-                                         Tag="sync"
-                                         SymbolIcon="ArrowSyncCircle24"
-                                         Click="NotifyIcon_MenuItemClick" />
-                            <Separator />
-                            <ui:MenuItem Header="Settings"
-                                         Tag="settings"
-                                         SymbolIcon="Settings24"
-                                         Click="NotifyIcon_MenuItemClick" />
-                            <Separator />
-                            <ui:MenuItem Header="Exit"
-                                         Tag="exit"
-                                         SymbolIcon="Power24"
-                                         Click="NotifyIcon_MenuItemClick">
-                            </ui:MenuItem>
-                        </ContextMenu>
-                    </ui:NotifyIcon.Menu>
-                </ui:NotifyIcon>
-            </ui:TitleBar.Tray>
         </ui:TitleBar>
+
+        <!-- Font: Franklin Gothic Demibold / 130px #464646 -->
+        <tray:NotifyIcon Icon="pack://application:,,,/Assets/application_icon_256.png"
+                         MenuOnRightClick="True"
+                         FocusOnLeftClick="False"
+                         LeftDoubleClick="NotifyIcon_LeftDoubleClick"
+                         TooltipText="Supernote Desktop Client">
+            <tray:NotifyIcon.Menu>
+                <ContextMenu>
+                    <ui:MenuItem Header="Home"
+                                 Tag="home"
+                                 Icon="{ui:SymbolIcon Home24}"
+                                 Click="NotifyIcon_MenuItemClick" />
+                    <ui:MenuItem Header="Sync"
+                                 Tag="sync"
+                                 Icon="{ui:SymbolIcon ArrowSyncCircle24}"
+                                 Click="NotifyIcon_MenuItemClick" />
+                    <Separator />
+                    <ui:MenuItem Header="Settings"
+                                 Tag="settings"
+                                 Icon="{ui:SymbolIcon Settings24}"
+                                 Click="NotifyIcon_MenuItemClick" />
+                    <Separator />
+                    <ui:MenuItem Header="Exit"
+                                 Tag="exit"
+                                 Icon="{ui:SymbolIcon Power24}"
+                                 Click="NotifyIcon_MenuItemClick">
+                    </ui:MenuItem>
+                </ContextMenu>
+            </tray:NotifyIcon.Menu>
+        </tray:NotifyIcon>
     </Grid>
-</ui:UiWindow>
+</ui:FluentWindow>

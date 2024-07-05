@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows;
-using Wpf.Ui.Mvvm.Contracts;
+using Wpf.Ui;
 
 namespace SupernoteDesktopClient.Services
 {
