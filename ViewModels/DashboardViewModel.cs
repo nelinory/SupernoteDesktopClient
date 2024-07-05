@@ -8,6 +8,7 @@ using SupernoteDesktopClient.Models;
 using SupernoteDesktopClient.Services.Contracts;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Wpf.Ui.Common.Interfaces;
@@ -66,11 +67,11 @@ namespace SupernoteDesktopClient.ViewModels
         [ObservableProperty]
         private bool _isDeviceProfileAvailable;
 
-        public List<string> DeviceProfilesItemSource
+        public ObservableCollection<string> DeviceProfilesItemSource
         {
             get
             {
-                var deviceProfiles = new List<string>();
+                var deviceProfiles = new ObservableCollection<string>();
                 foreach (KeyValuePair<string, SupernoteInfo> kvp in SettingsManager.Instance.Settings.DeviceProfiles)
                 {
                     deviceProfiles.Add($"{kvp.Key} ({kvp.Value.Model})");
@@ -79,7 +80,7 @@ namespace SupernoteDesktopClient.ViewModels
                 return deviceProfiles;
             }
         }
-        
+
         public int DeviceProfilesSelectedItem
         {
             get
@@ -87,8 +88,13 @@ namespace SupernoteDesktopClient.ViewModels
                 int index = -1;
 
                 SupernoteInfo activeProfileHash = SettingsManager.Instance.Settings.DeviceProfiles.Where(p => p.Value.Active == true).FirstOrDefault().Value;
-                if (activeProfileHash!= null && string.IsNullOrWhiteSpace(activeProfileHash.SerialNumberHash) == false)
-                    index = DeviceProfilesItemSource.FindIndex(p => p == $"{activeProfileHash.SerialNumberHash} ({activeProfileHash.Model})");
+                if (activeProfileHash != null && string.IsNullOrWhiteSpace(activeProfileHash.SerialNumberHash) == false)
+                {
+                    index = DeviceProfilesItemSource.IndexOf($"{activeProfileHash.SerialNumberHash} ({activeProfileHash.Model})");
+                    
+                    // refresh profiles dropdown control source
+                    OnPropertyChanged(nameof(DeviceProfilesItemSource));
+                }
 
                 return index == -1 ? 0 : index;
             }
@@ -101,7 +107,7 @@ namespace SupernoteDesktopClient.ViewModels
                 }
 
                 SettingsManager.Instance.Settings.DeviceProfiles.ElementAt(value).Value.Active = true;
-                
+
                 UpdateDashboard();
             }
         }
@@ -163,7 +169,7 @@ namespace SupernoteDesktopClient.ViewModels
             IsDeviceConnected = _mediaDeviceService.IsDeviceConnected;
             IsDeviceProfileAvailable = _mediaDeviceService.SupernoteInfo.SerialNumberHash != "N/A";
 
-            // refresh profiles dropdown control
+            // refresh profiles dropdown control index
             OnPropertyChanged(nameof(DeviceProfilesSelectedItem));
         }
 
