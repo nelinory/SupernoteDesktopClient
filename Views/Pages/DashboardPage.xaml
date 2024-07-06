@@ -102,7 +102,7 @@
                                    Text="Supernote profiles:" />
                         <ComboBox MinWidth="20"
                                   HorizontalAlignment="Left"
-                                  ItemsSource="{Binding ViewModel.DeviceProfilesItemSource, Mode=OneTime}"
+                                  ItemsSource="{Binding ViewModel.DeviceProfilesItemSource, Mode=OneWay}"
                                   SelectedIndex="{Binding ViewModel.DeviceProfilesSelectedItem}">
                         </ComboBox>
                     </StackPanel>
