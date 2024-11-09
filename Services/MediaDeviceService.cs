@@ -4,6 +4,7 @@ using SupernoteDesktopClient.Extensions;
 using SupernoteDesktopClient.Models;
 using SupernoteDesktopClient.Services.Contracts;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SupernoteDesktopClient.Services
@@ -11,6 +12,8 @@ namespace SupernoteDesktopClient.Services
     public class MediaDeviceService : IMediaDeviceService
     {
         private const string SUPERNOTE_DEVICE_ID = "VID_2207&PID_0011";
+        private const string SUPERNOTE_DESCRIPTION = "supernote";
+        private const string NOMAD_DESCRIPTION = "nomad";
 
         private MediaDriveInfo _driveInfo;
 
@@ -39,7 +42,14 @@ namespace SupernoteDesktopClient.Services
 
         public void RefreshMediaDeviceInfo()
         {
-            MediaDevice tmpDevice = MediaDevice.GetDevices().Where(p => p.DeviceId.Contains(SUPERNOTE_DEVICE_ID, System.StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            //MediaDevice tmpDevice = MediaDevice.GetDevices().Where(p => p.DeviceId.Contains(SUPERNOTE_DEVICE_ID, System.StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            MediaDevice tmpDevice = MediaDevice.GetDevices().Where(p => p.Description.Contains(SUPERNOTE_DESCRIPTION, System.StringComparison.InvariantCultureIgnoreCase)
+                                                                    || p.Description.Contains(NOMAD_DESCRIPTION, System.StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+
+#if DEBUG
+            if (tmpDevice != null)
+                Debug.WriteLine($"Usb Device: {tmpDevice?.DeviceId ?? "N/A"}, Description: {tmpDevice?.Description ?? "N/A"}");
+#endif
 
             if (_supernoteManager == null)
                 _supernoteManager = tmpDevice;
@@ -106,7 +116,10 @@ namespace SupernoteDesktopClient.Services
                 }
             }
 
-            DiagnosticLogger.Log($"Device: {(_supernoteManager == null ? "N/A" : _supernoteManager)}, DriveInfo: {(_driveInfo == null ? "N/A" : _driveInfo)}");
+            DiagnosticLogger.Log($"Usb Device: {_supernoteManager?.DeviceId ?? "N/A"}, " +
+                                    $"Description: {_supernoteManager?.Description ?? "N/A"}, " +
+                                    $"Model: {_supernoteManager?.Model ?? "N/A"}, " +
+                                    $"DriveInfo: {_driveInfo?.TotalSize.GetDataSizeAsString() ?? "N/A"}");
         }
     }
 }
