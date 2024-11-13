@@ -41,7 +41,7 @@ For release milestones, please check the project board: https://github.com/users
 
 ### How to build
 - Clone SDC repository
-- Open SupernoteDesktopClient solution in Visual Studio 2022 and build it
+- Open SupernoteDesktopClient solution in [Visual Studio Community 2022](https://visualstudio.microsoft.com/vs/community) and build it
 
 ### Screenshots
 ##### Dashboard
