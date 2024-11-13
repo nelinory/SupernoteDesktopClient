@@ -12,6 +12,7 @@ namespace SupernoteDesktopClient.Services
     public class MediaDeviceService : IMediaDeviceService
     {
         private const string SUPERNOTE_DEVICE_ID = "VID_2207&PID_0011";
+        private const string NOMAD_DEVICE_ID = "VID_2207&PID_0007";
         private const string SUPERNOTE_DESCRIPTION = "supernote";
         private const string NOMAD_DESCRIPTION = "nomad";
 
@@ -42,8 +43,9 @@ namespace SupernoteDesktopClient.Services
 
         public void RefreshMediaDeviceInfo()
         {
-            //MediaDevice tmpDevice = MediaDevice.GetDevices().Where(p => p.DeviceId.Contains(SUPERNOTE_DEVICE_ID, System.StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
-            MediaDevice tmpDevice = MediaDevice.GetDevices().Where(p => p.Description.Contains(SUPERNOTE_DESCRIPTION, System.StringComparison.InvariantCultureIgnoreCase)
+            MediaDevice tmpDevice = MediaDevice.GetDevices().Where(p => p.DeviceId.Contains(SUPERNOTE_DEVICE_ID, System.StringComparison.InvariantCultureIgnoreCase)
+                                                                    || p.DeviceId.Contains(NOMAD_DEVICE_ID, System.StringComparison.InvariantCultureIgnoreCase)
+                                                                    || p.Description.Contains(SUPERNOTE_DESCRIPTION, System.StringComparison.InvariantCultureIgnoreCase)
                                                                     || p.Description.Contains(NOMAD_DESCRIPTION, System.StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
 
 #if DEBUG
