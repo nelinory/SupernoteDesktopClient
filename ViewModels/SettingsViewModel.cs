@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using SupernoteDesktopClient.Core;
-using SupernoteDesktopClient.Messages;
 using System.Collections.Generic;
 using System.Windows.Media;
 using Wpf.Ui.Appearance;
@@ -32,11 +31,7 @@ namespace SupernoteDesktopClient.ViewModels
         public bool MinimizeToTrayEnabled
         {
             get { return SettingsManager.Instance.Settings.General.MinimizeToTrayEnabled; }
-            set
-            {
-                SettingsManager.Instance.Settings.General.MinimizeToTrayEnabled = value;
-                NotifySettingsChangedSubscribers(SettingsChangedMessage.MINIMIZE_TO_TRAY_ENABLED);
-            }
+            set { SettingsManager.Instance.Settings.General.MinimizeToTrayEnabled = value; }
         }
 
         public bool AutomaticUpdateCheckEnabled
@@ -116,12 +111,6 @@ namespace SupernoteDesktopClient.ViewModels
             AppThemeName = ApplicationThemeManager.GetAppTheme().ToString();
 
             SettingsManager.Instance.Settings.General.CurrentTheme = ApplicationThemeManager.GetAppTheme().ToString();
-        }
-
-        private void NotifySettingsChangedSubscribers(string settingName)
-        {
-            // notify all subscribers
-            WeakReferenceMessenger.Default.Send(new SettingsChangedMessage(settingName));
         }
     }
 }

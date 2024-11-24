@@ -31,9 +31,6 @@ namespace SupernoteDesktopClient.ViewModels
         [ObservableProperty]
         private ObservableCollection<object> _navigationFooter = new();
 
-        [ObservableProperty]
-        private bool _minimizeToTrayEnabled = SettingsManager.Instance.Settings.General.MinimizeToTrayEnabled;
-
         public MainWindowViewModel(ISnackbarService snackbarService, IUsbHubDetector usbHubDetector, INavigationService navigationService, IMediaDeviceService mediaDeviceService)
         {
             // services
@@ -46,13 +43,6 @@ namespace SupernoteDesktopClient.ViewModels
             _usbHubDetector.UsbHubStateChanged += UsbHubDetector_UsbHubStateChanged;
 
             BuildNavigationMenu();
-
-            // register a message subscriber
-            WeakReferenceMessenger.Default.Register<SettingsChangedMessage>(this, (r, m) =>
-            {
-                if (m.Value == SettingsChangedMessage.MINIMIZE_TO_TRAY_ENABLED)
-                    MinimizeToTrayEnabled = SettingsManager.Instance.Settings.General.MinimizeToTrayEnabled;
-            });
 
             // offline mode indicator
             IsDeviceConnected = _mediaDeviceService.IsDeviceConnected;

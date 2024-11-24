@@ -31,7 +31,7 @@
 
         <ui:NavigationView x:Name="RootNavigation"
                            Grid.Row="1"
-                           IsBackButtonVisible="Visible" 
+                           IsBackButtonVisible="Collapsed" 
                            IsPaneOpen="False"
                            FrameMargin="0"
                            BreadcrumbBar="{Binding ElementName=BreadcrumbBar}"

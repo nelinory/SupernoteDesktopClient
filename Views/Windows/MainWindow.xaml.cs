@@ -104,6 +104,12 @@ namespace SupernoteDesktopClient.Views.Windows
             BreadcrumbBar.Visibility = (e.Page.GetType() == typeof(DashboardPage)) ? Visibility.Collapsed : Visibility.Visible;
         }
 
+        private void TitleBar_MinimizeClicked(TitleBar sender, RoutedEventArgs args)
+        {
+            if (SettingsManager.Instance.Settings.General.MinimizeToTrayEnabled == true)
+                Visibility = Visibility.Hidden;
+        }
+
         #region NotifyIcon Context Menu
 
         // this is not following MVVM, due to the inability of the RelayCommand to get data bind context for NotifyIcon context menu
@@ -163,11 +169,5 @@ namespace SupernoteDesktopClient.Views.Windows
         }
 
         #endregion
-
-        // TODO: Minimize to tray implementation cleanup
-        private void TitleBar_MinimizeClicked(TitleBar sender, RoutedEventArgs args)
-        {
-            Visibility = Visibility.Hidden;
-        }
     }
 }
