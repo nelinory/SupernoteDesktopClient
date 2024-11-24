@@ -4,12 +4,12 @@ using SupernoteDesktopClient.Core;
 using SupernoteDesktopClient.Messages;
 using SupernoteDesktopClient.Models;
 using SupernoteDesktopClient.Services.Contracts;
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
-using Wpf.Ui.Common;
-using Wpf.Ui.Common.Interfaces;
-using Wpf.Ui.Mvvm.Contracts;
+using Wpf.Ui;
+using Wpf.Ui.Controls;
 
 namespace SupernoteDesktopClient.ViewModels
 {
@@ -55,7 +55,7 @@ namespace SupernoteDesktopClient.ViewModels
                 // events are invoked on a separate thread
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    _snackbarService.Show("Conversion Error", m.Value, SymbolRegular.DocumentError24, ControlAppearance.Danger);
+                    _snackbarService.Show("Conversion Error", m.Value, ControlAppearance.Danger, new SymbolIcon { Symbol = SymbolRegular.DocumentError24 }, TimeSpan.FromSeconds(4));
                 });
             });
         }

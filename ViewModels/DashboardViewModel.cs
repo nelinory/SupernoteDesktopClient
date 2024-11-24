@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Wpf.Ui.Common.Interfaces;
+using Wpf.Ui.Controls;
 
 namespace SupernoteDesktopClient.ViewModels
 {
@@ -20,8 +20,8 @@ namespace SupernoteDesktopClient.ViewModels
         // services
         private readonly IMediaDeviceService _mediaDeviceService;
 
-        private const string CONNECTED_STATUS_ICON_ON = "PlugConnected24";
-        private const string CONNECTED_STATUS_ICON_OFF = "PlugDisconnected24";
+        private const SymbolRegular CONNECTED_STATUS_ICON_ON = SymbolRegular.PlugConnected24;
+        private const SymbolRegular CONNECTED_STATUS_ICON_OFF = SymbolRegular.PlugDisconnected24;
         private const string CONNECTED_STATUS_TEXT_ON = "Connected";
         private const string CONNECTED_STATUS_TEXT_OFF = "Disconnected";
 
@@ -29,7 +29,7 @@ namespace SupernoteDesktopClient.ViewModels
         private bool _isDeviceConnected;
 
         [ObservableProperty]
-        private string _connectedStatusIcon = CONNECTED_STATUS_ICON_OFF;
+        private SymbolRegular _connectedStatusIcon = CONNECTED_STATUS_ICON_OFF;
 
         [ObservableProperty]
         private string _connectedStatusText;
@@ -44,7 +44,7 @@ namespace SupernoteDesktopClient.ViewModels
         private string _serialNumberMasked;
 
         [ObservableProperty]
-        private string _batteryPowerIcon = "Battery124";
+        private SymbolRegular _batteryPowerIcon = SymbolRegular.Battery124;
 
         [ObservableProperty]
         private string _batteryPowerText;
@@ -158,9 +158,9 @@ namespace SupernoteDesktopClient.ViewModels
                 batteryPower = _mediaDeviceService.SupernoteInfo.PowerLevel.ToString().Substring(0, 1);
             else
                 batteryPower = _mediaDeviceService.SupernoteInfo.PowerLevel.ToString().Substring(0, 2);
-            BatteryPowerIcon = (_mediaDeviceService.IsDeviceConnected == true) ? $"Battery{batteryPower}24" : "Battery124";
+            BatteryPowerIcon = (SymbolRegular)((_mediaDeviceService.IsDeviceConnected == true) ? Enum.Parse(typeof(SymbolRegular), $"Battery{batteryPower}24") : SymbolRegular.Battery124);
             BatteryPowerText = (_mediaDeviceService.IsDeviceConnected == true) ? _mediaDeviceService.SupernoteInfo.PowerLevel + "%" : "N/A";
-
+            
             long freeSpace = _mediaDeviceService.SupernoteInfo.AvailableFreeSpace;
             long totalSpace = _mediaDeviceService.SupernoteInfo.TotalSpace;
             DeviceUsedSpacePercentage = (_mediaDeviceService.IsDeviceConnected == true) ? ((totalSpace - freeSpace) / (decimal)totalSpace) * 100 : 0;

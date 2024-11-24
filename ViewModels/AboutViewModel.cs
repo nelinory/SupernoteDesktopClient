@@ -4,7 +4,7 @@ using SupernoteDesktopClient.Core;
 using SupernoteDesktopClient.Extensions;
 using System;
 using System.Threading.Tasks;
-using Wpf.Ui.Common.Interfaces;
+using Wpf.Ui.Controls;
 
 namespace SupernoteDesktopClient.ViewModels
 {

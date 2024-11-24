@@ -1,10 +1,11 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using Wpf.Ui.Mvvm.Contracts;
+using Wpf.Ui;
 
 namespace SupernoteDesktopClient.Services
 {
@@ -44,11 +45,9 @@ namespace SupernoteDesktopClient.Services
         /// </summary>
         private async Task HandleActivationAsync()
         {
-            await Task.CompletedTask;
-
-            if (!Application.Current.Windows.OfType<Views.Windows.MainWindow>().Any())
+            if (Application.Current.Windows.OfType<Views.Windows.MainWindow>().Any() == false)
             {
-                _navigationWindow = (_serviceProvider.GetService(typeof(INavigationWindow)) as INavigationWindow)!;
+                _navigationWindow = _serviceProvider.GetRequiredService<INavigationWindow>();
                 _navigationWindow!.ShowWindow();
 
                 _navigationWindow.Navigate(typeof(Views.Pages.DashboardPage));

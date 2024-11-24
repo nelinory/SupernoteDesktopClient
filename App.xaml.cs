@@ -13,8 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using Wpf.Ui.Mvvm.Contracts;
-using Wpf.Ui.Mvvm.Services;
+using Wpf.Ui;
 
 namespace SupernoteDesktopClient
 {
@@ -37,13 +36,13 @@ namespace SupernoteDesktopClient
             {
                 // App Host
                 services.AddHostedService<ApplicationHostService>();
-
+                
                 // Framework services
                 services.AddSingleton<IPageService, PageService>();
                 services.AddSingleton<IThemeService, ThemeService>();
                 services.AddSingleton<ITaskBarService, TaskBarService>();
                 services.AddSingleton<ISnackbarService, SnackbarService>();
-                services.AddSingleton<IDialogService, DialogService>();
+                services.AddSingleton<IContentDialogService, ContentDialogService>();
 
                 // Custom services
                 services.AddSingleton<IUsbHubDetector, UsbHubDetector>();
@@ -51,7 +50,7 @@ namespace SupernoteDesktopClient
                 services.AddKeyedSingleton<ISyncService, UsbSyncService>(SyncMode.UsbSync);
                 services.AddKeyedSingleton<ISyncService, WifiSyncService>(SyncMode.WifiSync);
 
-                // Service containing navigation, same as INavigationWindow... but without window
+                // Service containing navigation
                 services.AddSingleton<INavigationService, NavigationService>();
 
                 // Main window with navigation

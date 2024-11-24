@@ -1,24 +1,24 @@
-﻿<ui:UiPage x:Class="SupernoteDesktopClient.Views.Pages.SyncPage"
-           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-           xmlns:converters="clr-namespace:SupernoteDesktopClient.Converters"
-           xmlns:local="clr-namespace:SupernoteDesktopClient.Views.Pages"
-           xmlns:models="clr-namespace:SupernoteDesktopClient.Models"
-           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-           xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-           d:DataContext="{d:DesignInstance local:SyncPage, IsDesignTimeCreatable=False}"
-           d:DesignHeight="450"
-           d:DesignWidth="800"
-           d:Background="{DynamicResource ApplicationBackgroundBrush}"
-           Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-           mc:Ignorable="d">
+﻿<Page x:Class="SupernoteDesktopClient.Views.Pages.SyncPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:converters="clr-namespace:SupernoteDesktopClient.Converters"
+      xmlns:local="clr-namespace:SupernoteDesktopClient.Views.Pages"
+      xmlns:models="clr-namespace:SupernoteDesktopClient.Models"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      d:DataContext="{d:DesignInstance local:SyncPage, IsDesignTimeCreatable=False}"
+      d:DesignHeight="450"
+      d:DesignWidth="800"
+      d:Background="{DynamicResource ApplicationBackgroundBrush}"
+      Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+      mc:Ignorable="d">
 
-    <ui:UiPage.Resources>
+    <Page.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:BoolToVisibilityInversionConverter x:Key="BoolToVisibilityInversionConverter" />
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
-    </ui:UiPage.Resources>
+    </Page.Resources>
 
     <Grid Margin="50,0">
         <Grid.RowDefinitions>
@@ -37,7 +37,7 @@
 
         <ui:CardControl Grid.Row="0"
                         VerticalAlignment="Stretch"
-                        Icon="DocumentSync24"
+                        Icon="{ui:SymbolIcon DocumentSync24}"
                         Visibility="{Binding ViewModel.IsDeviceProfileAvailable, Converter={StaticResource BoolToVisibilityConverter}}">
             <ui:CardControl.Header>
                 <Grid>
@@ -75,7 +75,7 @@
                                     ClearButtonEnabled="{Binding ViewModel.IsUsbDeviceConnected, Converter={StaticResource InverseBooleanConverter}}"
                                     Text="{Binding ViewModel.SourceLocation, Mode=TwoWay}" />
                         <ui:TextBox Grid.Column="1"
-                                    Icon="HardDrive20"
+                                    Icon="{ui:SymbolIcon HardDrive20}"
                                     Margin="10, 12, 0, 0"
                                     IsReadOnly="True"
                                     ClearButtonEnabled="False"
@@ -84,7 +84,7 @@
                 </Grid>
             </ui:CardControl.Header>
             <Grid Width="150px">
-                <ui:Button Icon="ArrowSync24"
+                <ui:Button Icon="{ui:SymbolIcon ArrowSync24}"
                            Content="{Binding ViewModel.SyncButtonCaption, Mode=OneWay}"
                            Command="{Binding ViewModel.ExecuteSyncCommand, Mode=OneWay}"
                            CommandParameter="{Binding ViewModel.SyncButtonParameter, Mode=OneWay}"
@@ -98,7 +98,7 @@
         <ui:CardControl Grid.Row="1"
                         Margin="0,12,0,0"
                         VerticalAlignment="Stretch"
-                        Icon="Archive24"
+                        Icon="{ui:SymbolIcon Archive24}"
                         Visibility="{Binding ViewModel.IsDeviceProfileAvailable, Converter={StaticResource BoolToVisibilityConverter}}">
             <ui:CardControl.Header>
                 <StackPanel VerticalAlignment="Center">
@@ -136,18 +136,18 @@
                 <ScrollViewer Grid.Column="1"
                               CanContentScroll="True"
                               VerticalScrollBarVisibility="Auto">
-                    <ListView ItemsSource="{Binding ViewModel.ArchiveFiles, Mode=OneWay}"
+                    <ui:ListView ItemsSource="{Binding ViewModel.ArchiveFiles, Mode=OneWay}"
                               Margin="40, -5, 0, 0"
                               IsEnabled="False">
-                        <ListView.Template>
+                        <ui:ListView.Template>
                             <ControlTemplate TargetType="ListBox">
                                 <Border BorderBrush="{TemplateBinding BorderBrush}"
                                         BorderThickness="{TemplateBinding BorderBrush}">
                                     <ItemsPresenter />
                                 </Border>
                             </ControlTemplate>
-                        </ListView.Template>
-                        <ListView.ItemTemplate>
+                        </ui:ListView.Template>
+                        <ui:ListView.ItemTemplate>
                             <DataTemplate DataType="models:File">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -163,11 +163,10 @@
                                                HorizontalAlignment="Left"
                                                FontSize="14"
                                                FontWeight="Medium"
-                                               TextWrapping="WrapWithOverflow"
                                                Text="{Binding Name}" />
                                     <TextBlock Grid.Row="1"
                                                Grid.Column="0"
-                                               HorizontalAlignment="Left"
+                                               HorizontalAlignment="Left"                                       
                                                FontSize="12"
                                                Text="{Binding CreateDateTime}" />
                                     <TextBlock Grid.Row="0"
@@ -177,10 +176,10 @@
                                                Text="{Binding SizeAsString}" />
                                 </Grid>
                             </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                        </ui:ListView.ItemTemplate>
+                    </ui:ListView>
                 </ScrollViewer>
             </Grid>
         </ui:Card>
     </Grid>
-</ui:UiPage>
+</Page>

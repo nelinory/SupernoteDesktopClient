@@ -1,4 +1,4 @@
-﻿<ui:UiPage x:Class="SupernoteDesktopClient.Views.Pages.SettingsPage"
+﻿<Page x:Class="SupernoteDesktopClient.Views.Pages.SettingsPage"
            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -18,7 +18,7 @@
                        FontWeight="Medium"
                        Text="General" />
             <ui:CardControl Margin="0,12,0,0"
-                            Icon="WindowArrowUp24">
+                            Icon="{ui:SymbolIcon WindowArrowUp24}">
                 <ui:CardControl.Header>
                     <StackPanel Grid.Column="0"
                                 VerticalAlignment="Center">
@@ -33,7 +33,7 @@
                 <ui:ToggleSwitch IsChecked="{Binding ViewModel.RememberAppWindowPlacement, Mode=TwoWay}" />
             </ui:CardControl>
             <ui:CardControl Margin="0,12,0,0"
-                            Icon="ArrowMinimize24">
+                            Icon="{ui:SymbolIcon ArrowMinimize24}">
                 <ui:CardControl.Header>
                     <StackPanel Grid.Column="0"
                                 VerticalAlignment="Center">
@@ -48,7 +48,7 @@
                 <ui:ToggleSwitch IsChecked="{Binding ViewModel.MinimizeToTrayEnabled, Mode=TwoWay}" />
             </ui:CardControl>
             <ui:CardControl Margin="0,12,0,0"
-                            Icon="DarkTheme24">
+                            Icon="{ui:SymbolIcon DarkTheme24}">
                 <ui:CardControl.Header>
                     <StackPanel Grid.Column="0"
                                 VerticalAlignment="Center">
@@ -70,7 +70,7 @@
                 </Grid>
             </ui:CardControl>
             <ui:CardControl Margin="0,12,0,0"
-                            Icon="PhoneUpdate24">
+                            Icon="{ui:SymbolIcon PhoneUpdate24}">
                 <ui:CardControl.Header>
                     <StackPanel Grid.Column="0"
                                 VerticalAlignment="Center">
@@ -85,7 +85,7 @@
                 <ui:ToggleSwitch IsChecked="{Binding ViewModel.AutomaticUpdateCheckEnabled, Mode=TwoWay}" />
             </ui:CardControl>            
             <ui:CardControl Margin="0,12,0,0"
-                            Icon="BriefcaseMedical24">
+                            Icon="{ui:SymbolIcon BriefcaseMedical24}">
                 <ui:CardControl.Header>
                     <StackPanel Grid.Column="0"
                                 VerticalAlignment="Center">
@@ -106,7 +106,7 @@
                        Text="Synchronization" />
 
             <ui:CardControl Margin="0,12,0,0"
-                            Icon="Chat24">
+                            Icon="{ui:SymbolIcon Chat24}">
                 <ui:CardControl.Header>
                     <StackPanel Grid.Column="0"
                                 VerticalAlignment="Center">
@@ -121,7 +121,7 @@
                 <ui:ToggleSwitch IsChecked="{Binding ViewModel.ShowNotificationOnDeviceStateChange, Mode=TwoWay}" />
             </ui:CardControl>
             <ui:CardControl Margin="0,12,0,0"
-                            Icon="ArrowSyncCheckmark24">
+                            Icon="{ui:SymbolIcon ArrowSyncCheckmark24}">
                 <ui:CardControl.Header>
                     <StackPanel Grid.Column="0"
                                 VerticalAlignment="Center">
@@ -136,7 +136,7 @@
                 <ui:ToggleSwitch IsChecked="{Binding ViewModel.AutomaticSyncOnConnect, Mode=TwoWay}" />
             </ui:CardControl>
             <ui:CardControl Margin="0,12,0,0"
-                            Icon="ArchiveSettings24">
+                            Icon="{ui:SymbolIcon ArchiveSettings24}">
                 <ui:CardControl.Header>
                     <StackPanel Grid.Column="0"
                                 VerticalAlignment="Center">
@@ -161,7 +161,7 @@
                        Text="Conversion" />
 
             <ui:CardControl Margin="0,12,0,12"
-                            Icon="ConvertRange24">
+                            Icon="{ui:SymbolIcon ConvertRange24}">
                 <ui:CardControl.Header>
                     <StackPanel Grid.Column="0"
                                 VerticalAlignment="Center">
@@ -177,4 +177,4 @@
             </ui:CardControl>
         </StackPanel>
     </ui:DynamicScrollViewer>
-</ui:UiPage>
+</Page>

@@ -1,4 +1,4 @@
-﻿using Wpf.Ui.Common.Interfaces;
+﻿using Wpf.Ui.Controls;
 
 namespace SupernoteDesktopClient.Views.Pages
 {
@@ -15,6 +15,7 @@ namespace SupernoteDesktopClient.Views.Pages
         public AboutPage(ViewModels.AboutViewModel viewModel)
         {
             ViewModel = viewModel;
+            DataContext = this;
 
             InitializeComponent();
         }

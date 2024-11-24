@@ -10,9 +10,9 @@ using SupernoteDesktopClient.Services.Contracts;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Wpf.Ui.Common.Interfaces;
-using Wpf.Ui.Controls.Interfaces;
-using Wpf.Ui.Mvvm.Contracts;
+using Wpf.Ui;
+using Wpf.Ui.Controls;
+using Wpf.Ui.Extensions;
 
 namespace SupernoteDesktopClient.ViewModels
 {
@@ -22,7 +22,7 @@ namespace SupernoteDesktopClient.ViewModels
         private readonly IMediaDeviceService _mediaDeviceService;
         private readonly ISyncService _usbSyncService;
         private readonly ISyncService _wifiSyncService;
-        private readonly IDialogControl _dialogControlService;
+        private readonly IContentDialogService _contentDialogControlService;
 
         [ObservableProperty]
         private bool _isUsbDeviceConnected;
@@ -40,7 +40,7 @@ namespace SupernoteDesktopClient.ViewModels
         private string _sourceLocationDescription;
 
         [ObservableProperty]
-        private string _sourceLocationIcon;
+        private SymbolRegular _sourceLocationIcon;
 
         [ObservableProperty]
         private string _sourceLocationPlaceholderText;
@@ -77,13 +77,13 @@ namespace SupernoteDesktopClient.ViewModels
         {
         }
 
-        public SyncViewModel(IMediaDeviceService mediaDeviceService, IServiceProvider serviceProvider, IDialogService dialogService)
+        public SyncViewModel(IMediaDeviceService mediaDeviceService, IServiceProvider serviceProvider, IContentDialogService contentDialogService)
         {
             // services
             _mediaDeviceService = mediaDeviceService;
             _usbSyncService = serviceProvider.GetKeyedService<ISyncService>(SyncMode.UsbSync);
             _wifiSyncService = serviceProvider.GetKeyedService<ISyncService>(SyncMode.WifiSync);
-            _dialogControlService = dialogService.GetDialogControl();
+            _contentDialogControlService = contentDialogService;
 
             // register a message subscriber
             WeakReferenceMessenger.Default.Register<MediaDeviceChangedMessage>(this, (r, m) => { UpdateSync(m.Value); });
@@ -104,11 +104,8 @@ namespace SupernoteDesktopClient.ViewModels
                     await _wifiSyncService.Sync();
                 else
                 {
-                    _dialogControlService.ButtonRightName = "OK";
-
-                    await _dialogControlService.ShowAndWaitAsync("Validation Error", result.message);
-
-                    _dialogControlService.Hide();
+                    IsSyncRunning = false;
+                    await _contentDialogControlService.ShowAlertAsync("Validation Error", result.message, "OK");
                 }
             }
 
@@ -134,7 +131,7 @@ namespace SupernoteDesktopClient.ViewModels
                 SourceLocation = _mediaDeviceService.SupernoteInfo.RootFolder;
                 SourceLocationCaption = "Source location";
                 SourceLocationDescription = "Device source location";
-                SourceLocationIcon = "Notebook24";
+                SourceLocationIcon = SymbolRegular.Notebook24;
                 SourceLocationPlaceholderText = "N/A";
                 BackupLocation = _usbSyncService.BackupLocation ?? "N/A";
                 SyncButtonCaption = "Usb Synchronize";
@@ -145,7 +142,7 @@ namespace SupernoteDesktopClient.ViewModels
                 SourceLocation = SettingsManager.Instance.Settings.Sync.SourceLocation;
                 SourceLocationCaption = "Source web address";
                 SourceLocationDescription = "Browse & Access address";
-                SourceLocationIcon = "Wifi124";
+                SourceLocationIcon = SymbolRegular.Wifi124;
                 SourceLocationPlaceholderText = "http://XXX.XXX.XXX.XXX:8089";
                 BackupLocation = _wifiSyncService.BackupLocation ?? "N/A";
                 SyncButtonCaption = "Wifi Synchronize";

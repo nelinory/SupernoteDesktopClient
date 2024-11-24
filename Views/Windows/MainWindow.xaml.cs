@@ -4,13 +4,11 @@ using SupernoteDesktopClient.Views.Pages;
 using System;
 using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Interop;
+using Wpf.Ui;
 using Wpf.Ui.Appearance;
-using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
-using Wpf.Ui.Controls.Interfaces;
-using Wpf.Ui.Mvvm.Contracts;
+using Wpf.Ui.Tray.Controls;
 
 namespace SupernoteDesktopClient.Views.Windows
 {
@@ -24,7 +22,7 @@ namespace SupernoteDesktopClient.Views.Windows
 
         public ViewModels.MainWindowViewModel ViewModel { get; }
 
-        public MainWindow(ViewModels.MainWindowViewModel viewModel, IPageService pageService, INavigationService navigationService, ISnackbarService snackbarService, IDialogService dialogService)
+        public MainWindow(ViewModels.MainWindowViewModel viewModel, IPageService pageService, INavigationService navigationService, ISnackbarService snackbarService, IContentDialogService contentDialogService)
         {
             ViewModel = viewModel;
             DataContext = this;
@@ -36,31 +34,25 @@ namespace SupernoteDesktopClient.Views.Windows
             SetPageService(pageService);
 
             navigationService.SetNavigationControl(RootNavigation);
-            snackbarService.SetSnackbarControl(RootSnackbar);
-            dialogService.SetDialogControl(RootDialog);
+            snackbarService.SetSnackbarPresenter(RootSnackbar);
+            contentDialogService.SetDialogHost(RootDialog);
 
-            Theme.Apply((ThemeType)Enum.Parse(typeof(ThemeType), SettingsManager.Instance.Settings.General.CurrentTheme), BackgroundType.Mica, true);
+            ApplicationThemeManager.Apply((ApplicationTheme)Enum.Parse(typeof(ApplicationTheme), SettingsManager.Instance.Settings.General.CurrentTheme), WindowBackdropType.Mica, true);
         }
 
         #region INavigationWindow methods
 
-        public Frame GetFrame()
-            => RootFrame;
+        //public Frame GetFrame() => RootFrame;
 
-        public INavigation GetNavigation()
-            => RootNavigation;
+        //public INavigationView GetNavigation() => RootNavigation;
 
-        public bool Navigate(Type pageType)
-            => RootNavigation.Navigate(pageType);
+        public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
 
-        public void SetPageService(IPageService pageService)
-            => RootNavigation.PageService = pageService;
+        public void SetPageService(IPageService pageService) => RootNavigation.SetPageService(pageService);
 
-        public void ShowWindow()
-            => Show();
+        public void ShowWindow() => Show();
 
-        public void CloseWindow()
-            => Close();
+        public void CloseWindow() => Close();
 
         #endregion INavigationWindow methods
 
@@ -103,13 +95,13 @@ namespace SupernoteDesktopClient.Views.Windows
             FileSystemManager.CleanupTempConversionFiles();
         }
 
-        private void RootNavigation_Navigated(INavigation sender, RoutedNavigationEventArgs e)
+        private void RootNavigation_Navigated(INavigationView sender, NavigatedEventArgs e)
         {
-            if (sender is not NavigationCompact)
+            if (sender is not NavigationView)
                 return;
 
             // hide breadcrumb header for target DashboardPage
-            Breadcrumb.Visibility = (e.CurrentPage.PageType == typeof(DashboardPage)) ? Visibility.Collapsed : Visibility.Visible;
+            BreadcrumbBar.Visibility = (e.Page.GetType() == typeof(DashboardPage)) ? Visibility.Collapsed : Visibility.Visible;
         }
 
         #region NotifyIcon Context Menu
@@ -121,6 +113,7 @@ namespace SupernoteDesktopClient.Views.Windows
             ShowApplicationWindow();
         }
 
+        // TODO: Re-implement as MVVM
         private void NotifyIcon_MenuItemClick(object sender, RoutedEventArgs e)
         {
             switch (((FrameworkElement)sender).Tag.ToString())
@@ -131,6 +124,10 @@ namespace SupernoteDesktopClient.Views.Windows
                     break;
                 case "sync":
                     Navigate(typeof(SyncPage));
+                    ShowApplicationWindow();
+                    break;
+                case "explorer":
+                    Navigate(typeof(ExplorerPage));
                     ShowApplicationWindow();
                     break;
                 case "settings":
@@ -155,6 +152,22 @@ namespace SupernoteDesktopClient.Views.Windows
                 this.WindowState = WindowState.Normal;
         }
 
+        INavigationView INavigationWindow.GetNavigation()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetServiceProvider(IServiceProvider serviceProvider)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
+
+        // TODO: Minimize to tray implementation cleanup
+        private void TitleBar_MinimizeClicked(TitleBar sender, RoutedEventArgs args)
+        {
+            Visibility = Visibility.Hidden;
+        }
     }
 }
