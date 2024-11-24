@@ -22,7 +22,7 @@ namespace SupernoteDesktopClient.Views.Windows
 
         public ViewModels.MainWindowViewModel ViewModel { get; }
 
-        public MainWindow(ViewModels.MainWindowViewModel viewModel, IPageService pageService, INavigationService navigationService, ISnackbarService snackbarService, IContentDialogService contentDialogService)
+        public MainWindow(ViewModels.MainWindowViewModel viewModel, INavigationService navigationService, ISnackbarService snackbarService, IContentDialogService contentDialogService)
         {
             ViewModel = viewModel;
             DataContext = this;
@@ -31,7 +31,6 @@ namespace SupernoteDesktopClient.Views.Windows
             Closing += OnClosing;
 
             InitializeComponent();
-            SetPageService(pageService);
 
             navigationService.SetNavigationControl(RootNavigation);
             snackbarService.SetSnackbarPresenter(RootSnackbar);
@@ -42,13 +41,13 @@ namespace SupernoteDesktopClient.Views.Windows
 
         #region INavigationWindow methods
 
-        //public Frame GetFrame() => RootFrame;
-
-        //public INavigationView GetNavigation() => RootNavigation;
-
         public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
 
-        public void SetPageService(IPageService pageService) => RootNavigation.SetPageService(pageService);
+        public void SetPageService(IPageService pageService) => throw new NotImplementedException();
+
+        public void SetServiceProvider(IServiceProvider serviceProvider) => throw new NotImplementedException();
+
+        INavigationView INavigationWindow.GetNavigation() => throw new NotImplementedException();
 
         public void ShowWindow() => Show();
 
@@ -156,16 +155,6 @@ namespace SupernoteDesktopClient.Views.Windows
 
             if (this.WindowState == WindowState.Minimized)
                 this.WindowState = WindowState.Normal;
-        }
-
-        INavigationView INavigationWindow.GetNavigation()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetServiceProvider(IServiceProvider serviceProvider)
-        {
-            throw new NotImplementedException();
         }
 
         #endregion

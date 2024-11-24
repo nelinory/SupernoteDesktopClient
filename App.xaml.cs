@@ -38,7 +38,6 @@ namespace SupernoteDesktopClient
                 services.AddHostedService<ApplicationHostService>();
                 
                 // Framework services
-                services.AddSingleton<IPageService, PageService>();
                 services.AddSingleton<IThemeService, ThemeService>();
                 services.AddSingleton<ITaskBarService, TaskBarService>();
                 services.AddSingleton<ISnackbarService, SnackbarService>();
