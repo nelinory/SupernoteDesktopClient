@@ -31,6 +31,15 @@ namespace SupernoteDesktopClient.ViewModels
         [ObservableProperty]
         private ObservableCollection<object> _navigationFooter = new();
 
+        [ObservableProperty]
+        private WindowState _mainWindowState;
+
+        [ObservableProperty]
+        private Visibility _mainWindowVisibility;
+
+        [ObservableProperty]
+        private bool _mainWindowShowInTaskbar;
+
         public MainWindowViewModel(ISnackbarService snackbarService, IUsbHubDetector usbHubDetector, INavigationService navigationService, IMediaDeviceService mediaDeviceService)
         {
             // services
@@ -38,7 +47,7 @@ namespace SupernoteDesktopClient.ViewModels
             _usbHubDetector = usbHubDetector;
             _navigationService = navigationService;
             _mediaDeviceService = mediaDeviceService;
-            
+
             // event handler
             _usbHubDetector.UsbHubStateChanged += UsbHubDetector_UsbHubStateChanged;
 
@@ -46,6 +55,57 @@ namespace SupernoteDesktopClient.ViewModels
 
             // offline mode indicator
             IsDeviceConnected = _mediaDeviceService.IsDeviceConnected;
+        }
+
+        [RelayCommand]
+        private void Minimize()
+        {
+            if (SettingsManager.Instance.Settings.General.MinimizeToTrayEnabled == true)
+            {
+                MainWindowShowInTaskbar = true; // preventing the weird glitch of just window title showing on minimize
+                MainWindowState = WindowState.Minimized;
+                MainWindowVisibility = Visibility.Hidden;
+                MainWindowShowInTaskbar = false;
+            }
+        }
+
+        [RelayCommand]
+        private void TrayIconContextMenu(string tag)
+        {
+            switch (tag)
+            {
+                case "home":
+                    _navigationService.Navigate(typeof(DashboardPage));
+                    ShowApplicationWindow();
+                    break;
+                case "sync":
+                    _navigationService.Navigate(typeof(SyncPage));
+                    ShowApplicationWindow();
+                    break;
+                case "explorer":
+                    _navigationService.Navigate(typeof(ExplorerPage));
+                    ShowApplicationWindow();
+                    break;
+                case "settings":
+                    _navigationService.Navigate(typeof(SettingsPage));
+                    ShowApplicationWindow();
+                    break;
+                default: // exit
+                    Application.Current.Shutdown();
+                    break;
+            }
+        }
+
+        [RelayCommand]
+        private void ShowApplicationWindow()
+        {
+            if (MainWindowVisibility == Visibility.Hidden)
+                MainWindowVisibility = Visibility.Visible;
+
+            if (MainWindowState == WindowState.Minimized)
+                MainWindowState = WindowState.Normal;
+
+            MainWindowShowInTaskbar = true;
         }
 
         private void BuildNavigationMenu()

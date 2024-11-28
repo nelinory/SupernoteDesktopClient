@@ -7,6 +7,7 @@
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:tray="http://schemas.lepo.co/wpfui/2022/xaml/tray"
                  xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 xmlns:behaviours="http://schemas.microsoft.com/xaml/behaviors"
                  Width="1200"
                  Height="700"
                  MinWidth="1100"
@@ -17,6 +18,9 @@
                  WindowBackdropType="Auto"
                  WindowCornerPreference="Default"
                  WindowStartupLocation="CenterScreen"
+                 WindowState="{Binding ViewModel.MainWindowState}"
+                 Visibility="{Binding ViewModel.MainWindowVisibility}"
+                 ShowInTaskbar="{Binding ViewModel.MainWindowShowInTaskbar}"
                  mc:Ignorable="d">
 
     <ui:FluentWindow.Resources>
@@ -59,8 +63,12 @@
 
         <ui:TitleBar Title="Supernote Desktop Client"
                      ForceShutdown="False"
-                     MinimizeClicked="TitleBar_MinimizeClicked"
                      Grid.Row="0">
+            <behaviours:Interaction.Triggers>
+                <behaviours:EventTrigger EventName="MinimizeClicked">
+                    <behaviours:InvokeCommandAction Command="{Binding ViewModel.MinimizeCommand}" />
+                </behaviours:EventTrigger>
+            </behaviours:Interaction.Triggers>
             <ui:TitleBar.Icon>
                 <ui:ImageIcon Source="pack://application:,,,/Assets/application_icon_256.png" />
             </ui:TitleBar.Icon>
@@ -79,33 +87,42 @@
         <tray:NotifyIcon Icon="pack://application:,,,/Assets/application_icon_256.png"
                          MenuOnRightClick="True"
                          FocusOnLeftClick="False"
-                         LeftDoubleClick="NotifyIcon_LeftDoubleClick"
-                         TooltipText="Supernote Desktop Client">
+                         TooltipText="Supernote Desktop Client"
+                         Name="notifyIcon">
+            <behaviours:Interaction.Triggers>
+                <behaviours:EventTrigger EventName="LeftDoubleClick">
+                    <behaviours:InvokeCommandAction Command="{Binding ViewModel.ShowApplicationWindowCommand}" />
+                </behaviours:EventTrigger>
+            </behaviours:Interaction.Triggers>            
             <tray:NotifyIcon.Menu>
                 <ContextMenu>
                     <ui:MenuItem Header="Home"
                                  Tag="home"
                                  Icon="{ui:SymbolIcon Home24}"
-                                 Click="NotifyIcon_MenuItemClick" />
+                                 Command="{Binding ViewModel.TrayIconContextMenuCommand, Mode=OneWay}"
+                                 CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Tag}" />
                     <ui:MenuItem Header="Sync"
                                  Tag="sync"
                                  Icon="{ui:SymbolIcon ArrowSyncCircle24}"
-                                 Click="NotifyIcon_MenuItemClick" />
+                                 Command="{Binding ViewModel.TrayIconContextMenuCommand, Mode=OneWay}"
+                                 CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Tag}" />
                     <ui:MenuItem Header="Explorer"
                                  Tag="explorer"
                                  Icon="{ui:SymbolIcon FolderOpen24}"
-                                 Click="NotifyIcon_MenuItemClick" />                    
+                                 Command="{Binding ViewModel.TrayIconContextMenuCommand, Mode=OneWay}"
+                                 CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Tag}" />                  
                     <Separator />
                     <ui:MenuItem Header="Settings"
                                  Tag="settings"
                                  Icon="{ui:SymbolIcon Settings24}"
-                                 Click="NotifyIcon_MenuItemClick" />
+                                 Command="{Binding ViewModel.TrayIconContextMenuCommand, Mode=OneWay}"
+                                 CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Tag}" />
                     <Separator />
                     <ui:MenuItem Header="Exit"
                                  Tag="exit"
                                  Icon="{ui:SymbolIcon Power24}"
-                                 Click="NotifyIcon_MenuItemClick">
-                    </ui:MenuItem>
+                                 Command="{Binding ViewModel.TrayIconContextMenuCommand, Mode=OneWay}"
+                                 CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Tag}" />
                 </ContextMenu>
             </tray:NotifyIcon.Menu>
         </tray:NotifyIcon>

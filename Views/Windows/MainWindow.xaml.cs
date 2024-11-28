@@ -8,7 +8,6 @@ using System.Windows.Interop;
 using Wpf.Ui;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
-using Wpf.Ui.Tray.Controls;
 
 namespace SupernoteDesktopClient.Views.Windows
 {
@@ -35,6 +34,9 @@ namespace SupernoteDesktopClient.Views.Windows
             navigationService.SetNavigationControl(RootNavigation);
             snackbarService.SetSnackbarPresenter(RootSnackbar);
             contentDialogService.SetDialogHost(RootDialog);
+
+            // Explicitly set the DataContext on the tray icon, context menu is not part of the ViewModel visual tree and therefore does not inherit the ViewModel DataContext
+            notifyIcon.Menu.DataContext = this;
 
             ApplicationThemeManager.Apply((ApplicationTheme)Enum.Parse(typeof(ApplicationTheme), SettingsManager.Instance.Settings.General.CurrentTheme), WindowBackdropType.Mica, true);
         }
@@ -102,61 +104,5 @@ namespace SupernoteDesktopClient.Views.Windows
             // hide breadcrumb header for target DashboardPage
             BreadcrumbBar.Visibility = (e.Page.GetType() == typeof(DashboardPage)) ? Visibility.Collapsed : Visibility.Visible;
         }
-
-        private void TitleBar_MinimizeClicked(TitleBar sender, RoutedEventArgs args)
-        {
-            if (SettingsManager.Instance.Settings.General.MinimizeToTrayEnabled == true)
-                Visibility = Visibility.Hidden;
-        }
-
-        #region NotifyIcon Context Menu
-
-        // this is not following MVVM, due to the inability of the RelayCommand to get data bind context for NotifyIcon context menu
-
-        private void NotifyIcon_LeftDoubleClick(NotifyIcon sender, RoutedEventArgs e)
-        {
-            ShowApplicationWindow();
-        }
-
-        // TODO: Re-implement as MVVM
-        private void NotifyIcon_MenuItemClick(object sender, RoutedEventArgs e)
-        {
-            switch (((FrameworkElement)sender).Tag.ToString())
-            {
-                case "home":
-                    Navigate(typeof(DashboardPage));
-                    ShowApplicationWindow();
-                    break;
-                case "sync":
-                    Navigate(typeof(SyncPage));
-                    ShowApplicationWindow();
-                    break;
-                case "explorer":
-                    Navigate(typeof(ExplorerPage));
-                    ShowApplicationWindow();
-                    break;
-                case "settings":
-                    Navigate(typeof(SettingsPage));
-                    ShowApplicationWindow();
-                    break;
-                default: // exit
-                    this.CloseWindow();
-                    break;
-            }
-        }
-
-        private void ShowApplicationWindow()
-        {
-            // show the minimized to tray main window
-            if (this.Visibility == Visibility.Hidden)
-                this.ShowWindow();
-            else
-                this.Activate();
-
-            if (this.WindowState == WindowState.Minimized)
-                this.WindowState = WindowState.Normal;
-        }
-
-        #endregion
     }
 }
